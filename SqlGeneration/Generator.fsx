@@ -1,6 +1,4 @@
-﻿//module SqlGenerator
-
-type Entry  = {FieldName:string; FieldValue:string; IsNumber:bool; IsPrimaryKey:bool} 
+﻿type Entry  = {FieldName:string; FieldValue:string; IsNumber:bool; IsPrimaryKey:bool} 
     with 
         member x.FormatValue = 
               match x.IsNumber with 
