@@ -1,0 +1,29 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+
+<script src="~/Scripts/jquery.signalR-2.0.3.min.js"></script>
+<script src="~/signalr/hubs"></script>
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+
+
+
+<script type="text/javascript">
+
+    $(function () {
+
+        var processorNotification = $.connection.processorHub;
+        $.connection.hub.logging = true;
+
+        processorNotification.client.broadcastProcessorStats = function (percentage) {
+            alert(percentage);
+        };
+        $.connection.hub.start();
+
+    });
+
+
+</script>
