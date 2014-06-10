@@ -13,7 +13,7 @@ namespace Dashboard.Models
             Clients.All.broadcastProcessorStats(percentage);
         }
 
-        public static void SendProcessorUpdate(int percentage)
+        public static void SendProcessorUpdate(float percentage)
         {
             var context = GlobalHost.ConnectionManager.GetHubContext<ProcessorHub>();
 

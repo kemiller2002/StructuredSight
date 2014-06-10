@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Dashboard.Models;
 using Microsoft.AspNet.SignalR;
+using Dashboard.Models;
 
 namespace Dashboard.Controllers
 {
@@ -17,9 +18,6 @@ namespace Dashboard.Controllers
 
         public ActionResult Processor()
         {
-
-            ProcessorHub.SendProcessorUpdate(23);
-
             return View("index");
         }
 

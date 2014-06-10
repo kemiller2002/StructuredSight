@@ -9,21 +9,45 @@
 <script src="~/signalr/hubs"></script>
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 
+<script type="text/javascript">
+
+</script>
+
+<div id="chart_div">
+
+
+</div>
+
+
 
 
 <script type="text/javascript">
+    google.load("visualization", "1", { packages: ["imagesparkline"] });
 
     $(function () {
+
+        var dataItems = [['Processor Percentage']];
+
+
+        var drawChart = function () {
+
+            var data = google.visualization.arrayToDataTable(dataItems);
+
+            var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'));
+            chart.draw(data, { width: 800, height: 500, showAxisLines: false, showValueLabels: false, labelPosition: 'left' });
+        }
+
+        //google.setOnLoadCallback(drawChart);
 
         var processorNotification = $.connection.processorHub;
         $.connection.hub.logging = true;
 
         processorNotification.client.broadcastProcessorStats = function (percentage) {
-            alert(percentage);
+            dataItems.push([percentage]);
+            drawChart();
         };
+
         $.connection.hub.start();
 
     });
-
-
 </script>
