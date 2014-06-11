@@ -34,10 +34,8 @@
             var data = google.visualization.arrayToDataTable(dataItems);
 
             var chart = new google.visualization.ImageSparkLine(document.getElementById('chart_div'));
-            chart.draw(data, { width: 800, height: 500, showAxisLines: false, showValueLabels: false, labelPosition: 'left' });
+            chart.draw(data, { width: 400, height: 200, showAxisLines: false, showValueLabels: false, labelPosition: 'left' });
         }
-
-        //google.setOnLoadCallback(drawChart);
 
         var processorNotification = $.connection.processorHub;
         $.connection.hub.logging = true;
