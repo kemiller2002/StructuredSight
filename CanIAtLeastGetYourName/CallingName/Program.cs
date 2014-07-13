@@ -18,6 +18,9 @@ namespace StructuredSight.CallerExample
             
             prog.DoApplicationThings();
 
+            Console.WriteLine("Reflection Call");
+            Console.WriteLine("");
+
             prog.ReflectionCall();
 
             Console.ReadLine();
@@ -29,13 +32,8 @@ namespace StructuredSight.CallerExample
             var typeInfo = typeof(StructuredSight.CallerExample.Logging.Logger);
 
             var method = typeInfo.GetMethod("Log");
-
-            /*
-             * method.Invoke(null, new[] { "Reflection Method" });  
-             * //Runtime Error!  Default parameters don't work with reflection.  They have to specified!
-             */
-
-            method.Invoke(null, new object [] { "Reflection Method", "My Method", "My File Path", 0 });  
+            
+            method.Invoke(null, new[] { "Reflection Method", Type.Missing, Type.Missing, Type.Missing });  
         }
 
 

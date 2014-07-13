@@ -18,6 +18,8 @@ namespace StructuredSight.CallerExample.Logging
             Console.WriteLine("\tFile Path: " + filePath);
             Console.WriteLine("\tLine Number: " + lineNumber);
             Console.WriteLine("\tMethod Name: " + methodName);
+            Console.WriteLine("");
+
         }
     }
 }
