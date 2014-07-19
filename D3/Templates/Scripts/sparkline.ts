@@ -1,4 +1,4 @@
-var d3: any;
+﻿var d3: any;
 
 
 interface ICalculate {
