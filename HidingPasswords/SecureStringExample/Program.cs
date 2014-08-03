@@ -16,22 +16,28 @@ namespace SecureStringExample
             Console.Write("Enter Passphrase: ");
             using (var passphrase = GetPassphraseFromConsole())
             {
-                var arPass = new char[passphrase.Length];
-
                 Console.WriteLine("Your password:");
 
-                RuntimeHelpers.ExecuteCodeWithGuaranteedCleanup(
-                    (uData) =>
-                    {
-                        unsafe
+                RuntimeHelpers.PrepareConstrainedRegions();
+
+                unsafe
+                {
+                    var arPass = new char[passphrase.Length];
+                    
+                    var handle = new GCHandle();
+
+                    System.IntPtr ptr = System.IntPtr.Zero;
+
+                    ptr = Marshal.SecureStringToBSTR(passphrase);
+
+                    char* ptrPassword = (char*)ptr;
+
+                    RuntimeHelpers.ExecuteCodeWithGuaranteedCleanup(
+                        (uData) =>
                         {
-                            var handle = System.Runtime.InteropServices.GCHandle.Alloc(arPass, System.Runtime.InteropServices.GCHandleType.Pinned);
+                            handle = GCHandle.Alloc(arPass, System.Runtime.InteropServices.GCHandleType.Pinned);
 
-                            System.IntPtr ptr = System.IntPtr.Zero;
-
-                            ptr = Marshal.SecureStringToBSTR(passphrase);
-
-                            char* ptrPassword = (char*)ptr;
+                            ptrPassword = (char*)ptr;
 
                             char* ptrArPass = (char*)handle.AddrOfPinnedObject();
 
@@ -41,19 +47,29 @@ namespace SecureStringExample
                             }
 
                             Console.WriteLine(arPass);
-                        }
+                        },
 
-                    },
-
-                    (uData, ifExceptionThrown) =>
-                    {
-                        for (var ii = 0; ii < arPass.Length; ii++)
+                        (uData, exceptionThrown) =>
                         {
-                            arPass[ii] = '\0';
-                        }
-                    },
-                    null
-                    );
+                            if (exceptionThrown) 
+                            { 
+                                Console.WriteLine("Exception thrown.");
+                            }
+
+                            Marshal.ZeroFreeBSTR(ptr);
+
+                            for (var ii = 0; ii < arPass.Length; ii++)
+                            {
+                                arPass[ii] = '\0';
+                            }
+
+                            handle.Free();
+
+
+                        },
+                            null
+                        );
+                }
             }
 
         }
