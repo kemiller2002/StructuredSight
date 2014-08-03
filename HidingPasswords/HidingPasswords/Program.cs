@@ -12,18 +12,16 @@ namespace HidingPasswords
 
 
         string _storedPassphraseInCode = "This is my password hardcoded into the assembly.";
-
         string _passphrase;
 
         private Program()
         {
-            _passphrase = ConfigurationManager.AppSettings["passphrase"]; 
+            _passphrase = ConfigurationManager.AppSettings["passphrase"];
         }
 
 
         static void Main(string[] args)
         {
-
             var p = new Program();
             p.CheckPassword();
         }
@@ -44,8 +42,6 @@ namespace HidingPasswords
             }
 
             Console.ReadLine();
-
-
         }
 
 
