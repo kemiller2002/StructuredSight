@@ -1,0 +1,136 @@
+<html>
+<head></head>
+
+<body>
+
+<svg id="svgOne" width="2000" height="2000"></svg>
+
+
+<script>
+function createRectangle (position, bounds, stroke, fill){ 
+		var empty = '#ffffff';
+		var isEmpty = true;
+				
+        var svgns = "http://www.w3.org/2000/svg";
+        var rect = document.createElementNS(svgns, 'rect');
+			rect.setAttributeNS(null, 'x', position.x);
+			rect.setAttributeNS(null, 'y', position.y);
+			rect.setAttributeNS(null, 'height', bounds.height);
+			rect.setAttributeNS(null, 'width', bounds.width);
+			rect.setAttributeNS(null, 'fill', empty);
+			rect.setAttributeNS(null, 'stroke', stroke);
+		
+		rect.toggle = function () {
+
+			rect.setAttributeNS(null, 'fill', (isEmpty) ? fill : empty);
+			
+			isEmpty = !isEmpty;
+		}
+		
+        return rect;
+}
+
+
+//        document.getElementById('svgOne').appendChild(rect);
+
+
+/*var rect = createRectangle(0,0,100,calculateRatio(100), '#000000', '#FFFFFF');
+document.getElementById('svgOne').appendChild(rect);
+
+
+var secondWidth = 100 * 1.168 - 100;
+
+var rect = createRectangle(100,0,100,secondWidth, '#000000', '#00FFFF');
+document.getElementById('svgOne').appendChild(rect);
+*/
+
+function Bounds (h,w) {
+	var self = this;
+	self.height = h ;
+	self.width = w;
+}
+
+Bounds.prototype.calculateNewBounds = function (){
+	function calculateBound (n1, n2){
+		return (n1 > n2) ? (n1 - n2) : n1;
+	}
+
+	return new Bounds(
+		calculateBound(this.height, this.width),
+		calculateBound(this.width, this.height) 
+	);
+}
+
+
+function append(rect){return document.getElementById('svgOne').appendChild(rect);}
+
+function calculateNewCoordindates(bounds, position){
+	var x = position.x, y = position.y;
+	
+	return {
+		x	: (x < y || x === y)? x : x - y,
+		y  	: (y < x || x === y)? y : y - x
+	}
+}
+
+function createTimerClock(totalSeconds, secondsLeft, bHeight, fnAppend) {
+	var arrCounter = [];
+
+	var position = {x:0,y:0};
+	var bounds = new Bounds(bHeight, bHeight * 1.618);
+	
+	while(totalSeconds > 0) {
+
+		var rec = createRectangle(position,  bounds,'#000000', '#0f00a');
+
+		bounds = bounds.calculateNewBounds();
+		position = calculateNewCoordindates(bounds, position);
+
+		arrCounter.push(rec);
+		fnAppend(rec);
+		totalSeconds--;
+	}
+	
+	function Counter (arr){
+		self = this; 
+		var timerArray = arr, counter = timerArray.length - 1;
+		
+		self.increment = function () {
+			if (counter < 0){
+				counter = timerArray.length - 1;
+				for(var ii = 0; ii <= counter; ii++){
+					timerArray[ii].toggle();
+				}
+
+			}
+			
+			arr[counter].toggle();
+			counter--;
+		}
+		
+		
+	}
+	return new Counter(arrCounter);
+}
+
+
+
+var counter = createTimerClock(10,1,75,append);
+counter.increment();
+
+setInterval(counter.increment, 1000);
+
+
+
+</script>
+
+
+
+</body>
+
+
+
+
+
+
+</html>
