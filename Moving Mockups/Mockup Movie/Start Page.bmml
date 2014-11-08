@@ -1,0 +1,27 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="1131" measuredH="457" mockupW="764" mockupH="400">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="367" y="57" w="764" h="400" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::DateChooser" x="403" y="149" w="-1" h="-1" measuredW="132" measuredH="25" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <state>focused</state>
+        <text>%20%207/10/2014%20%20%20%20</text>
+      </controlProperties>
+    </control>
+    <control controlID="2" controlTypeID="com.balsamiq.mockups::Button" x="550" y="148" w="-1" h="-1" measuredW="100" measuredH="27" zOrder="2" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>Show%20Entries%26bm%3BShow%20Entries.bmml%26bm%3BShow%20Entries.bmml%26bm%3BShow%20Entries.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22183%2C91%2C283%2C118%22%20href%3D%22Show%2520Entries.bmml%22%20alt%3D%22Show%20Entries%22%20id%3D%222%22/%3E</map>
+        <text>Show%20Entries</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::StickyNote" x="685" y="147" w="-1" h="-1" measuredW="109" measuredH="123" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>People%20Requesting%20Time%20Off</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
