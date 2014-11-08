@@ -1,0 +1,22 @@
+<mockup version="1.0" skin="sketch" fontFace="Balsamiq Sans" measuredW="791" measuredH="533" mockupW="589" mockupH="514">
+  <controls>
+    <control controlID="0" controlTypeID="com.balsamiq.mockups::BrowserWindow" x="202" y="19" w="589" h="514" measuredW="450" measuredH="400" zOrder="0" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>A%20Web%20Page%0Ahttp%3A//</text>
+      </controlProperties>
+    </control>
+    <control controlID="1" controlTypeID="com.balsamiq.mockups::Button" x="305" y="376" w="332" h="27" measuredW="111" measuredH="27" zOrder="1" locked="false" isInGroup="-1">
+      <controlProperties>
+        <href>Pagetw%26bm%3BPagetw.bmml%26bm%3BPagetw.bmml%26bm%3BPagetw.bmml</href>
+        <map>%3Carea%20shape%3D%22rect%22%20coords%3D%22103%2C357%2C435%2C384%22%20href%3D%22Pagetw.bmml%22%20alt%3D%22Pagetw%22%20id%3D%221%22/%3E</map>
+        <text>New%20Projection</text>
+      </controlProperties>
+    </control>
+    <control controlID="3" controlTypeID="com.balsamiq.mockups::LineChart" x="305" y="141" w="332" h="220" measuredW="187" measuredH="175" zOrder="2" locked="false" isInGroup="-1"/>
+    <control controlID="4" controlTypeID="com.balsamiq.mockups::StickyNote" x="652" y="129" w="132" h="123" measuredW="109" measuredH="123" zOrder="3" locked="false" isInGroup="-1">
+      <controlProperties>
+        <text>Server%20Resource%20Dashboard</text>
+      </controlProperties>
+    </control>
+  </controls>
+</mockup>
