@@ -6,7 +6,9 @@ try
       "Server=localhost\sqlexpress;Database=Scratch;Integrated Security=sspi"
     
     let procedure = 
-      "RAISERROR ('I''m a little teapot.', 11, 0) WITH NOWAIT"
+      @"PRINT 'HELLO WORLD'
+        GO
+        PRINT 'HELLO WORLD AGAIN'"
     
     
     use connection = new SqlConnection(connectionString)
