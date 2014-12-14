@@ -20,11 +20,11 @@ let GetTableFullName(schema:string)(table:string) =
                                     
 let AddIdentityInsertWrapper (schema:string) (tableName:string) (sql:string) = 
     let table = GetTableFullName schema tableName
-    printf @"SET IDENTITY_INSERT %s ON
+    sprintf @"SET IDENTITY_INSERT %s ON
 
 %s 
     
-SET IDENTITY_INSERT %s OFF"
+SET IDENTITY_INSERT %s OFF" table sql table
 
 let GenerateInsertStatement (schema:string) (tableName:string) (fields:Entry seq) = 
     let joinWithType = fun (seperator:string )(x:string seq) -> System.String.Join(seperator, x)
