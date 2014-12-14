@@ -7,13 +7,30 @@
         
         member x.FormatName = sprintf "[%s]" x.FieldName
 
+let Notify (message:string) = sprintf "RAISERROR('%s', 0, 0) WITH NOWAIT" message
+
 let GenerateComparison (field:Entry) = 
     sprintf "%s=%s" field.FormatName field.FormatValue
+ 
+let GetTableFullName(schema:string)(table:string) =  
+    match schema with 
+    | s when System.String.IsNullOrWhiteSpace(schema) -> sprintf "[%s]" table
+    | _ -> sprintf "[%s].[%s]" schema table
+
                                     
+let AddIdentityInsertWrapper (schema:string) (tableName:string) (sql:string) = 
+    let table = GetTableFullName schema tableName
+    printf @"SET IDENTITY_INSERT %s ON
 
+%s 
+    
+SET IDENTITY_INSERT %s OFF"
 
-let GenerateInsertStatement (table:string) (fields:Entry seq) = 
+let GenerateInsertStatement (schema:string) (tableName:string) (fields:Entry seq) = 
     let joinWithType = fun (seperator:string )(x:string seq) -> System.String.Join(seperator, x)
+    
+    let table = GetTableFullName schema tableName
+
     let joinConditional = joinWithType "
     AND
     "
@@ -24,8 +41,7 @@ let GenerateInsertStatement (table:string) (fields:Entry seq) =
         let qualifier =  fields     
                                   |> Seq.where(fun(x)->x.IsPrimaryKey)
                                   |> Seq.map (fun x-> GenerateComparison x) 
-                                  |> (fun(x) -> System.String.Join("
-                                  ", x))
+                                  |> (fun(x) -> joinConditional x)
 
         sprintf @"
 IF NOT EXISTS (SELECT * FROM %s WHERE %s)
@@ -47,8 +63,10 @@ END
 
         let fieldNames = fields |> Seq.map(fun x -> x.FormatName) |> join
 
+        let notifyComplete = Notify <| (sprintf "INSERT ran for %s" table)
+
         sprintf @"
-        INSERT INTO [%s]
+        INSERT INTO %s
         (
             %s
         )   
@@ -56,20 +74,30 @@ END
         (
             %s
         )
-        " table fieldNames values
 
+        %s 
+
+        " table fieldNames values notifyComplete
 
     let update (table:string) (fields:Entry seq)  =
-        let comparison  = fields |> Seq.map(fun x -> GenerateComparison x)
+        let notPrimaryKey = fields |> Seq.where (fun x -> not x.IsPrimaryKey)
+        let comparison  = notPrimaryKey |> Seq.map(fun x -> GenerateComparison x)
         let set = comparison |> join
         let where = fields |> Seq.where (fun x -> x.IsPrimaryKey) |>
                         Seq.map(fun x -> GenerateComparison x) |> joinConditional
 
-        sprintf @"
-         UPDATE %s
-         SET %s
-         WHERE %s
-        " table set where 
+        
+
+        if notPrimaryKey |> Seq.length = 0 then
+            Notify <| (sprintf "NO UPDATE RAN FOR %s WHERE: %s.  All update fields were primary keys." table where)
+        else 
+            let notifyComplete = Notify <| (sprintf "UPDATE ran for %s with %s" table where)
+            sprintf @"
+             UPDATE %s
+             SET %s
+             WHERE %s
+             %s
+            " table set where notifyComplete 
         
     appendConditional (insert table fields) (update table fields)
 

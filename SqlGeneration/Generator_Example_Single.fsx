@@ -4,6 +4,7 @@ open Generator
 
 
 let tableName = "Users"
+let schemaName = "dbo"
 
 let fields = seq {
             //This is the Entry record.  Defined in the other fsx file.
@@ -13,7 +14,7 @@ let fields = seq {
 }
 
 
-let insertStatments = GenerateInsertStatement tableName fields
+let insertStatments = GenerateInsertStatement schemaName tableName fields
 
 //prints to console or fsi. 
 printfn "%s" insertStatments
