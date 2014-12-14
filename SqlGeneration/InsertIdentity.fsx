@@ -15,9 +15,9 @@ let fields = seq {
 
 let insertStatments = GenerateInsertStatement schemaName tableName fields
 
-//prints to console or fsi. 
 let fullSql = AddIdentityInsertWrapper schemaName tableName insertStatments
 
+//prints to console or fsi. 
 printfn "%s" fullSql
 
 //This line writes it to a text file.
