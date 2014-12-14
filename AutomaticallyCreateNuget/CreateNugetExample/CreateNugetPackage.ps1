@@ -15,7 +15,13 @@ $nuget = "C:\Utilities\Nuget\NuGet.exe"
     $false  {  Write-Host "nuspec file not found at: $projectPath. Creating"
                & $nuget spec $projectPath | Write-Host 
                [xml]$file = Get-Content $nuspecFilePath
+
                $file.package.metadata.id = $targetName
+               
+               $file.package.metadata.RemoveChild($file.package.metadata.SelectSingleNode("licenseUrl")) | Out-Null
+               $file.package.metadata.RemoveChild($file.package.metadata.SelectSingleNode("projectUrl")) | Out-Null 
+               $file.package.metadata.RemoveChild($file.package.metadata.SelectSingleNode("iconUrl")) | Out-Null 
+
                $file.Save($nuspecFilePath)
 
                $file
@@ -31,7 +37,7 @@ $nuspecContent.package.metadata.version = $assemblyVersion.ToString()
 
 $nuspecContent.Save($nuspecFilePath)
 
-#& $nuget pack $nuspecFilePath
+& $nuget pack $projectPath -IncludeReferencedProjects
 
 if( ($Error.Count > 0) -and !$suppressExitCode){
         Write-Host "Errors found"
