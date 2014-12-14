@@ -2,8 +2,7 @@
     [string] $projectPath,
     [string] $projectFileExt,
     [string] $targetPath,
-    [string] $targetName,
-    [switch] $suppressExitCode 
+    [string] $targetName
 )
 
 $nuspecFilePath = "$projectPath.nuspec"
@@ -22,24 +21,18 @@ $nuget = "C:\Utilities\Nuget\NuGet.exe"
                $file.package.metadata.RemoveChild($file.package.metadata.SelectSingleNode("projectUrl")) | Out-Null 
                $file.package.metadata.RemoveChild($file.package.metadata.SelectSingleNode("iconUrl")) | Out-Null 
 
-               $file.Save($nuspecFilePath)
-
                $file
             }
-    $true   {[xml]$file = Get-Content $nuspecFilePath}
+    $true   {Get-Content $nuspecFilePath}
     
 }
 
+$assemblyVersion = [System.Reflection.Assembly]::LoadFile($targetPath).GetName().Version.ToString()
 
-$assemblyVersion = [System.Reflection.Assembly]::LoadFile($targetPath).GetName().Version
+Write-Host "Setting assembly version to: $assemblyVersion"
 
-$nuspecContent.package.metadata.version = $assemblyVersion.ToString()
+$nuspecContent.package.metadata.version = $assemblyVersion
 
 $nuspecContent.Save($nuspecFilePath)
 
 & $nuget pack $projectPath -IncludeReferencedProjects
-
-if( ($Error.Count > 0) -and !$suppressExitCode){
-        Write-Host "Errors found"
-        [System.Environment]::Exit(1)
-}

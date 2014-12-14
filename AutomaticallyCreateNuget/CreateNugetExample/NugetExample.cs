@@ -8,5 +8,11 @@ namespace CreateNugetExample
 {
     public class ExampleClass
     {
+
+        public string ReturnStringAsExample()
+        {
+            return OtherNeededAssembly.HelloWorld.SayHello();
+        }
+
     }
 }
