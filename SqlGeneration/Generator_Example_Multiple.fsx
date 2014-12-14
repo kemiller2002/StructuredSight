@@ -21,11 +21,6 @@ let multipleInserts = seq {
          yield {FieldName="Password"; FieldValue = "woof"; IsNumber=false; IsPrimaryKey = false} 
     }
 
-    yield seq {
-         yield {FieldName="UserId"; FieldValue = "2"; IsNumber=true; IsPrimaryKey=true} 
-         yield {FieldName="RoleId"; FieldValue = "1"; IsNumber=true; IsPrimaryKey = true}
-    }
-
 
 }
 
