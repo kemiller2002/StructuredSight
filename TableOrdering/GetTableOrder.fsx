@@ -2,7 +2,7 @@
 open System.Data.SqlClient
 
 
-let connectionString = "Data Source=localhost\sqlExpress;Initial Catalog=Scratch;Integrated Security=SSPI;"
+let connectionString = "Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;"
 
 type Table = {Id:int; TableName:string; SchemaName:string}
 type TableRelationship = {ForiegnKey:Table; PrimaryKey:Table}
@@ -29,8 +29,7 @@ let tables = [
 
 ]
 
-let findInList (tables: Table seq) (id:int) = 
-    tables |> Seq.find(fun(x) ->x.Id = id)
+let findInList (tables: Table seq) (id:int) = tables |> Seq.find(fun(x) ->x.Id = id)
 let findTable = findInList tables
 
 
@@ -42,17 +41,18 @@ let relationships = [
     reader.Close()
 ]
 
+//relationships |> Seq.iter (fun x -> printfn "%s %s" x.ForiegnKey.TableName x.PrimaryKey.TableName)
+
 let relationshipGroup = relationships |> Seq.groupBy(fun(x) -> x.ForiegnKey) |> Seq.map(fun(x) -> let p, c = x;  
                                                                                                   (p , c |> Seq.toList)
-                                                                                       )
+                                                                                       ) 
+
 let rec GetTableOrder (rs: (Table * TableRelationship list) seq) (lookup: Table) = 
     let findRelation = fun(x) ->
                         let fk, _ = x   
                         lookup.Id = fk.Id
 
     let found = Seq.tryFind findRelation rs
-
-    
 
     match found with 
     | None -> [lookup]
@@ -63,7 +63,7 @@ let rec GetTableOrder (rs: (Table * TableRelationship list) seq) (lookup: Table)
         | _ -> 
                 [
                     for r in relations do 
-                        yield! GetTableOrder rs fkT
+                        yield! GetTableOrder rs r.PrimaryKey
                 ]
 
 
@@ -74,4 +74,8 @@ let GetTables  (rGroup) (tables) =
         } |> Seq.distinct 
  
 
-GetTables relationshipGroup tables |> Seq.iter(fun(x)->printfn "%s.%s" x.SchemaName x.TableName)
+let orderedList = GetTables relationshipGroup tables
+
+let masterList =  Seq.append orderedList tables |> Seq.distinct
+
+masterList |> Seq.iter(fun(x)->printfn "%s.%s" x.SchemaName x.TableName)
