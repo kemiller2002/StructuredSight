@@ -50,7 +50,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>Powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; $(ProjectDir)CreateNugetPackage.ps1 "$(ProjectPath)" "$(ProjectExt)" "$(TargetPath)" "$(TargetName)"</PostBuildEvent>
+    <PostBuildEvent>Powershell Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser; $(ProjectDir)CreateNugetPackage.ps1 "$(ProjectPath)" "$(ProjectExt)" "$(TargetPath)" "$(TargetName)" $(ConfigurationName)</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

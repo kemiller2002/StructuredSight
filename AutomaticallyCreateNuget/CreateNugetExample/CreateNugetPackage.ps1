@@ -2,7 +2,9 @@
     [string] $projectPath,
     [string] $projectFileExt,
     [string] $targetPath,
-    [string] $targetName
+    [string] $targetName,
+    [string] $configurationName
+
 )
 
 $nuspecFilePath = "$projectPath.nuspec"
@@ -39,4 +41,4 @@ $nuspecContent.package.metadata.version = $assemblyVersion
 
 $nuspecContent.Save($nuspecFilePath)
 
-& $nuget pack $projectPath -IncludeReferencedProjects
+& $nuget pack $projectPath -IncludeReferencedProjects -Properties Configuration=$configurationName
