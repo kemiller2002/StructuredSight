@@ -2,7 +2,7 @@
 open System.Data.SqlClient
 
 
-let connectionString = "Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;"
+let connectionString = "Data Source=localhost\sqlExpress;Initial Catalog=KeyDeployment;Integrated Security=SSPI;"
 
 type Table = {Id:int; TableName:string; SchemaName:string}
 type TableRelationship = {ForiegnKey:Table; PrimaryKey:Table}
