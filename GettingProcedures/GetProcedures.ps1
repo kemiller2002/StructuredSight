@@ -1,4 +1,17 @@
-﻿param(
+﻿<#  
+.SYNOPSIS  
+  Connects to Sql Server and Pulls the Stored Procedure and Function Code.
+.DESCRIPTION
+ The script connects to SQL Server and accesses data from the INFORMATION_SCHEMA.ROUTINES view and pulls the code.  It reformats the script and prepends code to create a "shell" procedure if it doesn't exist in a target environment, so it won't fail on creation or alteration of a procedure.  The files are saved in the target directory with a naming convention of Schema.Procedure.Sql and automatically filters out all procedures prepended in the name with fn_ or sp_ as those are supposed to be system functions for SQL Server.
+.NOTES
+ Author: Kevin Miller
+ Site: structuredsight.com
+ License: Creative Commons -BY
+
+#>
+
+
+param(
     [string] $connectionString
     ,[string] $outputFilesLocation
 )
