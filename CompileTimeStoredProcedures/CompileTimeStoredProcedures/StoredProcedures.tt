@@ -1,0 +1,100 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Data" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Data.SqlClient" #>
+<#@ include file="Classes.tt"#>
+<#@ output extension=".cs" #>
+
+
+<#
+
+
+
+	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=KeyDeployment;Integrated Security=SSPI;";
+
+//		command.CommandText = "SELECT Name, Object_Id FROM sys.procedures WHERE Name NOT LIKE 'sp_%'";
+
+
+	var getProc = new Func<SqlCommand, IEnumerable<Procedure>>(x=>{
+		x.CommandText = "SELECT Name, Object_Id FROM sys.procedures WHERE Name NOT LIKE 'sp_%'";
+
+		var reader = x.ExecuteReader ();
+		var l = new List<Procedure>();
+		
+		while(reader.Read())
+		{
+			l.Add(new Procedure{
+				 Name = (string)reader[0]
+				,ObjectId = (int)reader[1]
+            });
+        }
+
+		return l;
+    });
+
+
+	
+		var getParms = new Func<SqlCommand, IEnumerable<Parameter>>(x=>{
+			x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
+				t.name as pType, t.max_length, has_default_value
+				FROM sys.parameters p JOIN sys.types t ON p.system_type_id = t.system_type_id";
+			
+				var reader = x.ExecuteReader ();
+			var l = new List<Parameter>();
+			
+			while(reader.Read())
+			{
+				l.Add(new Parameter{
+						ParameterId = (int)reader[0],
+						ObjectId = (int)reader[1],
+					    Name = (string)reader[2],
+					    PType = (string) reader[3],
+					    MaxLength = (short)reader[4],
+					    HasDefaultValue = (bool)reader[5]
+		    });
+		}
+   
+		return l;
+   });
+
+
+	
+		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, getProc);
+		var parameters = DbConnection.Invoke<IEnumerable<Parameter>>(connectString, getParms);
+#>
+
+namespace glbl
+{
+
+<#foreach(var p in procedures)
+  {
+	var currentParameters = parameters.Where (x=>x.ObjectId == p.ObjectId);
+  #>
+
+  [Query("<#=p.Name#>")]
+  public class <#=p.Name#>
+  {
+	<#
+      foreach(var parm in currentParameters)
+      {
+
+
+
+
+
+      }
+
+	#>
+
+
+  }
+
+
+
+}
+
+
+<#}#>
