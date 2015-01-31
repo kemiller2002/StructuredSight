@@ -12,17 +12,69 @@
 	{
 		public string Name;
 		public int ObjectId;
+		public string CSName {get {return Name.Replace("_", "");}}
     }
 #>
 
 <#+
 	public class Parameter {
 		public string Name;
+		public string CSName {get {return Name.Replace("_", "");}}
 		public int ParameterId;
 		public int ObjectId;
-		public string PType;
+		public string ParameterType;
 		public short MaxLength;
 		public bool HasDefaultValue;
+
+		public string CSType {get {return Parameters.GetParameterType(ParameterType);}}
+
+    }
+
+
+	public static class Parameters {
+		public static string GetParameterType(string sqlType)
+		{
+					switch (sqlType) 
+					{
+						case "bigint": {return "long";}
+						case "binary": {return "stream";}
+						case "bit": {return "bool";}
+						case "char": {return "string";}
+						case "date": 
+						case "datetime": 
+						case "datetime2": {return "DateTime";}
+						case "datetimeoffset": {return "";}
+						case "decimal": {return "";}
+						case "float": {return "";}
+						case "geography": {return "";}
+						case "geometry": {return "";}
+						case "hierarchyid": {return "";}
+						case "image": {return "stream";}
+						case "int": {return "int";}
+						case "money": {return "float";}
+						case "nchar": {return "string";}
+						case "ntext": {return "string";}
+						case "numeric": {return "float";}
+						case "nvarchar": {return "string";}
+						case "real": {return "float";}
+						case "smalldatetime": {return "DateTime";}
+						case "smallint": {return "short";}
+						case "smallmoney": {return "money";}
+						case "sysname": {return "string";}
+						case "text": {return "string";}
+						case "time": {return "DateTime";}
+						case "timestamp": {return "Binary";}
+						case "tinyint": {return "byte";}
+						case "uniqueidentifier": {return "Guid";}
+						case "varbinary": {return "stream";}
+						case "varchar": {return "string";}
+						case "xml": {return "string";}
+                    }
+
+					throw new Exception("Type not found: " + sqlType);
+
+        }
+
     }
 
 
