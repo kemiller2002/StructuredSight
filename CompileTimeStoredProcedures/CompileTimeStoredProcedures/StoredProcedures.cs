@@ -11,7 +11,7 @@ namespace glbl
 
     public partial class CategoryTableType
     {
-        public int CategoryID { get; set; }
+        public int? CategoryID { get; set; }
         public string CategoryName { get; set; }
     }
 
@@ -20,39 +20,40 @@ namespace glbl
 
 
 
-  [Query("InsertUpdateLogEntry")]
+  [Query("dbo.InsertUpdateLogEntry")]
   public partial class InsertUpdateLogEntry
-  {
+{
 
   	public InsertUpdateLogEntry (
-		int Major,
-int Minor,
-int Patch,
-string ProductName
+		int major,
+int minor,
+int patch,
+string productName
 	)
 	{
-		this.Major = Major;
-this.Minor = Minor;
-this.Patch = Patch;
-this.ProductName = ProductName;
+		Major = major;
+Minor = minor;
+Patch = patch;
+ProductName = productName;
 	}
 	
 
-		private readonly int _Major;
-private readonly int _Minor;
-private readonly int _Patch;
-private readonly string _ProductName;
+		private readonly int _major;
+private readonly int _minor;
+private readonly int _patch;
+private readonly string _productName;
 
-		[QueryParameter("@Major")] 
- public int Major{get {return _Major;}}
-[QueryParameter("@Minor")] 
- public int Minor{get {return _Minor;}}
-[QueryParameter("@Patch")] 
- public int Patch{get {return _Patch;}}
-[QueryParameter("@ProductName")] 
- public string ProductName{get {return _ProductName;}}
+		[QueryColumn("@Major")] 
+ public int Major{get {return _major;}}
+[QueryColumn("@Minor")] 
+ public int Minor{get {return _minor;}}
+[QueryColumn("@Patch")] 
+ public int Patch{get {return _patch;}}
+[QueryColumn("@ProductName")] 
+ public string ProductName{get {return _productName;}}
 
-  }
+	}
+
 
 }
 

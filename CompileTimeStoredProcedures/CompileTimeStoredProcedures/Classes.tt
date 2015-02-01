@@ -8,83 +8,118 @@
 
 
 <#+ 
-	public class Procedure 
-	{
-		public string Name;
-		public long ObjectId;
-		public string CSName {get {return Name.Replace("_", "");}}
-    }
-#>
 
-<#+
-	public class Parameter {
+	public abstract class BaseObject {
+		public string Name;
+		public int ObjectId;
+
+		public string Header {get {return "public partial class " + Name + "\r\n{" ;}}
+		public string Footer {get {return "}";}}
+    }
+
+
+
+	public interface IDataType
+	{
+		string Type {get;set;}
+		bool AllowsNull{get;set;}
+    }
+
+
+		public class Column : IDataType{
 		public string Name;
 		public string CSName {get {return Name.Replace("_", "").Replace("@", "");}}
 		public int ParameterId;
 		public int ObjectId;
-		public string ParameterType;
+		public string Type {get;set;}
 		public short MaxLength;
-		public bool HasDefaultValue;
+		public bool AllowsNull {get;set;}
 
-		public string CSType {get {return Parameters.GetParameterType(ParameterType);}}
+		public string CamelCase {get {return CSName[0].ToString().ToLower() + CSName.Substring(1);}}
 
-    }
-
-	public class Column {
-		public string Name;
-		public int ObjectId;
-		public string ColumnType;
-		public string CSType {get {return Parameters.GetParameterType(ColumnType);}}
+		public string CSType {get {return Parameters.GetParameterType(this);}}
 
     }
 
-	public class Table {
-		public string Name;
-		public int ObjectId;
+
+	public class Table : BaseObject {
 
 		public IEnumerable<Column> Columns;
     }
 
 
+	public class Procedure : BaseObject
+	{
+		public string CSName {get {return Name.Replace("_", "");}}
+		public string Schema;
+		public string FullName {get {return Schema + "." + Name;}}
+
+		public IEnumerable<Column> Columns;
+    }
+#>
+
+<#+
+
+
+
+
+	//public class Column : IDataType {
+	//	public string Name;
+	//	public int ObjectId;
+	//	public string Type {get;set;}
+	//	public bool AllowsNull {get;set;}
+	//	public string CSType {get {return Parameters.GetParameterType(this);}}
+    //}
+
 	public static class Parameters {
-		public static string GetParameterType(string sqlType)
+		public static string GetParameterType(IDataType data)
 		{
-					switch (sqlType) 
+					switch (data.Type) 
 					{
-						case "bigint": {return "long";}
+						case "bigint": {return "long" + (data.AllowsNull ? "?" : "");}
+
+						case "varbinary":
+						case "image": 
 						case "binary": {return "stream";}
-						case "bit": {return "bool";}
-						case "char": {return "string";}
+
+						case "bit": {return "bool" + (data.AllowsNull ? "?" : "");}
+
 						case "date": 
 						case "datetime": 
-						case "datetime2": {return "DateTime";}
+						case "smalldatetime":
+						case "time":
+						case "datetime2": {return "DateTime" + (data.AllowsNull ? "?" : "");}
+
 						case "datetimeoffset": {return "";}
-						case "decimal": {return "";}
-						case "float": {return "";}
+						case "decimal": {return "" + (data.AllowsNull ? "?" : "");}
+						case "float": {return "" + (data.AllowsNull ? "?" : "");}
 						case "geography": {return "";}
 						case "geometry": {return "";}
-						case "hierarchyid": {return "";}
-						case "image": {return "stream";}
-						case "int": {return "int";}
-						case "money": {return "float";}
-						case "nchar": {return "string";}
-						case "ntext": {return "string";}
-						case "numeric": {return "float";}
-						case "nvarchar": {return "string";}
-						case "real": {return "float";}
-						case "smalldatetime": {return "DateTime";}
-						case "smallint": {return "short";}
-						case "smallmoney": {return "money";}
-						case "sysname": {return "string";}
-						case "text": {return "string";}
-						case "time": {return "DateTime";}
+
+						case "hierarchyid": 
+						case "int": {return "int" + (data.AllowsNull ? "?" : "");}
+
+						case "money": 
+						case "numeric": 
+						case "real": {return "float" + (data.AllowsNull ? "?" : "");}
+
+						case "nchar":
+						case "ntext": 
+						case "smallint": {return "short"+ (data.AllowsNull ? "?" : "");}
+						case "smallmoney": {return "money" + (data.AllowsNull ? "?" : "");}
+
 						case "timestamp": {return "Binary";}
-						case "tinyint": {return "byte";}
-						case "uniqueidentifier": {return "Guid";}
-						case "varbinary": {return "stream";}
-						case "varchar": {return "string";}
+						case "tinyint": {return "byte"+ (data.AllowsNull ? "?" : "");}
+						case "uniqueidentifier": {return "Guid"+ (data.AllowsNull ? "?" : "");}
+
+						case "char": 
+						case "nvarchar": 
+						case "varchar": 
+						case "sysname": 
+						case "text": 
 						case "xml": {return "string";}
-						default : {return sqlType;}
+
+						default : {return data.Type;}
                     }
         }
 
