@@ -15,7 +15,7 @@
 
 
 
-	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=KeyDeployment;Integrated Security=SSPI;";
+	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;";
 
 //		command.CommandText = "SELECT Name, Object_Id FROM sys.procedures WHERE Name NOT LIKE 'sp_%'";
 
@@ -63,6 +63,52 @@
    });
 
 
+	var getColumnTypes = new Func<SqlCommand, IEnumerable<Column>>(x=>{
+			x.CommandText = @"SELECT Name, type_table_object_id FROM sys.table_types";
+			
+			var reader = x.ExecuteReader ();
+			var l = new List<Column>();
+			
+			while(reader.Read())
+			{
+				l.Add(
+					new Column
+                {
+					  Name  = (string) reader[1],
+					  ObjectId = (int) reader[0],
+					  ColumnType = (string) reader[2],
+
+                });
+			}
+   
+		return l;
+   });
+
+	var getTables = new Func<SqlCommand, IEnumerable<Table>>(x=>{
+			x.CommandText = @"SELECT Name, type_table_object_id FROM sys.table_types";
+			
+			var reader = x.ExecuteReader ();
+			var l = new List<Table>();
+			
+			while(reader.Read())
+			{
+				l.Add(
+					new Table
+                {
+					  Name  = (string)reader[1],
+					  ObjectId = (int)reader[0],
+					  Columns = DbConnection.Invoke<IEnumerable<Column>>(connectString, getColumnTypes)
+                });
+			}
+   
+		return l;
+   });
+
+
+
+
+
+
 	
 		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, getProc);
 		var parameters = DbConnection.Invoke<IEnumerable<Parameter>>(connectString, getParms);
@@ -77,25 +123,21 @@ namespace glbl
   #>
 
   [Query("<#=p.Name#>")]
-  public class <#=p.Name#>
+  public partial class <#=p.Name#>
   {
 
   	public <#=p.Name#> (
 		<#=String.Join("," + System.Environment.NewLine, currentParameters.Select(x=> x.CSType + " " + x.CSName))#>
 	)
 	{
-		<#=String.Join(System.Environment.NewLine, currentParameters.Select(x=> "this." + x.CSName + " " + x.CSName))#>
+		<#=String.Join(System.Environment.NewLine, currentParameters.Select(x=> "this." + x.CSName + " = " + x.CSName + ";"))#>
 	}
-	<#
+	
 
-	        foreach(var parm in currentParameters)
-      {#>
-	  
-			private readonly <#=parm.CSType#> _<#=parm.CSName#>
+		<#= String.Join(System.Environment.NewLine, currentParameters.Select (parm => "private readonly "  + parm.CSType + " _" + parm.CSName + ";")) #>
 
-			[QueryParameter("<#=parm.Name#>")]
-		    public <#=Parameters.GetParameterType(parm.ParameterType)#> <#=parm.CSName#> {get {return _<#=parm.CSName#>}}
-      <#}#>
+		<#=String.Join (System.Environment.NewLine, currentParameters.Select(parm => "[QueryParameter(\"" + parm.Name + "\")] \r\n public " + 
+							parm.CSType + " " + parm.CSName + "{get {return _" + parm.CSName + ";}}"))#>
 
   }
 
