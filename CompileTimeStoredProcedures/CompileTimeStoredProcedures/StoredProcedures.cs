@@ -9,6 +9,16 @@
 namespace glbl
 {
 
+    public partial class CategoryTableType
+    {
+        public int CategoryID { get; set; }
+        public string CategoryName { get; set; }
+    }
+
+		
+
+
+
 
   [Query("InsertUpdateLogEntry")]
   public partial class InsertUpdateLogEntry

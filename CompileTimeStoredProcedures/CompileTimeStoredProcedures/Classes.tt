@@ -84,10 +84,8 @@
 						case "varbinary": {return "stream";}
 						case "varchar": {return "string";}
 						case "xml": {return "string";}
+						default : {return sqlType;}
                     }
-
-					throw new Exception("Type not found: " + sqlType);
-
         }
 
     }
