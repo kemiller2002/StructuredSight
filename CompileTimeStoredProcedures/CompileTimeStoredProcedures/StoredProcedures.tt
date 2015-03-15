@@ -71,7 +71,7 @@ using System.Linq;
 		)
 		{
 			<#=String.Join(System.Environment.NewLine, procedure.Columns.Select(x=> "_" +  x.CamelCase + " = " + x.CamelCase + ";"))#>
-		} 
+		}  
 		
 			public String Query {get{return "<#=procedure.Name#>";}}
 			<#= String.Join(System.Environment.NewLine, procedure.Columns.Select (parm => "private readonly "  + parm.GetCSType(_tvpNamespace) + " _" + parm.CamelCase + ";")) #>
@@ -92,7 +92,7 @@ using System.Linq;
 				#><#=createProperty(returnField)#>
 				
 				<#
-			}
+			} 
   
 
 		#>

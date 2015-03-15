@@ -48,7 +48,7 @@ int patch
 _major = major;
 _minor = minor;
 _patch = patch;
-		} 
+		}  
 		
 			public String Query {get{return "InsertUpdateLogEntry";}}
 			private readonly string _productName;
@@ -86,7 +86,7 @@ private readonly int _patch;
 		)
 		{
 			
-		} 
+		}  
 		
 			public String Query {get{return "SelectLogEntry";}}
 			
@@ -102,15 +102,11 @@ private readonly int _patch;
 
 		public DateTime DateApplied {get;set;}
 				
-				public int UpdateLogId {get;set;}
-				
 				public int Major {get;set;}
 				
 				public int Minor {get;set;}
 				
 				public int Patch {get;set;}
-				
-				public int? ExampleField {get;set;}
 				
 				public string ProductName {get;set;}
 				
@@ -128,7 +124,7 @@ private readonly int _patch;
 		)
 		{
 			_categories = categories;
-		} 
+		}  
 		
 			public String Query {get{return "UseTempTable";}}
 			private readonly IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> _categories;
