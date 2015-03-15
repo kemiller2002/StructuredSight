@@ -1,10 +1,19 @@
 ﻿<#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Data" #>
+<#@ assembly name="C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.ConnectionInfo.dll" #>
+<#@ assembly name="C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Smo.dll"#>
+<#@ assembly name="C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.SqlEnum.dll"#>
+<#@ assembly name="C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.Management.Sdk.Sfc.dll" #> 
+<#@ assembly name="System.Xml" #>
+ 
+//C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.SmoEnum.dll
+
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Data.SqlClient" #>
+
 
 
 <#+ 
@@ -33,7 +42,8 @@
 		public string Type {get;set;}
 		public short MaxLength;
 		public bool AllowsNull {get;set;}
-
+		public bool IsOutput {get;set;}
+		
 		public string CamelCase {get {return CSName[0].ToString().ToLower() + CSName.Substring(1);}}
 
 		public string CSType {get {return Parameters.GetParameterType(this);}}
@@ -151,27 +161,56 @@
 
 	public static class HelperFunctions 
 	{
-		public static Func<SqlCommand, IEnumerable<Column>> GetParameters (int id) 
+		public static Func<SqlCommand, IEnumerable<Column>> GetParameters (int id, string procedureName) 
 		{
 			return new Func<SqlCommand, IEnumerable<Column>>(x=>{
 				x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
-					t.name as pType, t.max_length, has_default_value
+					t.name as pType, t.max_length, has_default_value, is_output
 					FROM sys.Parameters p JOIN sys.types t ON p.system_type_id = t.system_type_id
 					and Object_id = " + id;
 				
 				var reader = x.ExecuteReader ();
 				var l = new List<Column>();
 				
-				while(reader.Read())
-				{
-					l.Add(new Column{
-							ObjectId = (int)reader[1],
-						    Name = (string)reader[2],
-						    Type = (string) reader[3],
-						    MaxLength = (short)reader[4],
-						    AllowsNull = (bool)reader[5]
+				using (var sqlConnection = new SqlConnection(x.Connection.ConnectionString))
+                {
+					//build a "serverConnection" with the information of the "sqlConnection"
+					Microsoft.SqlServer.Management.Common.ServerConnection serverConnection = 
+					new Microsoft.SqlServer.Management.Common.ServerConnection(sqlConnection);
+
+					//The "serverConnection is used in the ctor of the Server.
+					var server = new Microsoft.SqlServer.Management.Smo.Server(serverConnection);
+
+					var database = server.Databases[sqlConnection.Database];
+					var parms = database.StoredProcedures[procedureName].Parameters;
+					foreach( Microsoft.SqlServer.Management.Smo.StoredProcedureParameter parm in parms)
+					{
+						l.Add(new Column{
+							ObjectId = parm.ID, 
+						    Name = parm.Name,
+						    Type = parm.DataType.ToString(), //(string) reader[3],
+						    MaxLength = 4,//(short)reader[4],
+						    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue), //(bool)reader[5],
+							IsOutput = parm.IsOutputParameter//(bool)reader[6]
 					});
-				}
+
+                    }
+
+					return l;
+                }
+
+
+				//while(reader.Read())
+				//{
+				//	l.Add(new Column{
+				//			ObjectId = (int)reader[1],
+				//		    Name = (string)reader[2],
+				//		    Type = (string) reader[3],
+				//		    MaxLength = (short)reader[4],
+				//		    AllowsNull = (bool)reader[5],
+				//			IsOutput = (bool)reader[6]
+				//	});
+				//}
    
 				return l;
             });
@@ -193,23 +232,25 @@
 					 Name = (string)reader[0]
 					,ObjectId = (int)reader[1]
 					,Schema = (string)reader[2]
-					,Columns = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, HelperFunctions.GetParameters((int)reader[1]))
+					,Columns = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, HelperFunctions.GetParameters((int)reader[1], (string)reader[0]))
 					,ReturnFields = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, 
-						HelperFunctions.GetReturnInformationForProcedure((string)reader[2]))
+						HelperFunctions.GetReturnInformationForProcedure((int)reader[1]))
 			    });
 			}
 
 			return l;
 		}
 
-		public static Func<SqlCommand, IEnumerable<Column>> GetReturnInformationForProcedure (string procedureName)
+		public static Func<SqlCommand, IEnumerable<Column>> GetReturnInformationForProcedure (int objectId)
 		{
-			string commandText = string.Format(@"SELECT column_ordinal, name, is_nullable, system_type_id, system_type_name, max_length
-									FROM sys.dm_exec_describe_first_result_set_for_object
-									(
-										OBJECT_ID('{0}'), 
-										NULL
-								);", procedureName);
+			string commandText = string.Format(@"SELECT column_ordinal, dm.name, dm.is_nullable, dm.system_type_id, t.name, dm.max_length --name, system_type_name
+							FROM sys.dm_exec_describe_first_result_set_for_object
+							(
+							  {0}, 
+							  NULL
+							) dm
+							JOIN sys.types t ON t.system_type_id = dm.system_type_id
+							", objectId);
 
 			return (command) => {
 				command.CommandText = commandText; 

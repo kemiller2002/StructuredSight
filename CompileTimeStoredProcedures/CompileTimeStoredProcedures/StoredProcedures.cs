@@ -1,9 +1,14 @@
 ﻿
+ 
+ 
+//C:\Program Files (x86)\Microsoft SQL Server\100\SDK\Assemblies\Microsoft.SqlServer.SmoEnum.dll
 
 
 
 
 
+
+using System;
 
 
 
@@ -28,33 +33,33 @@ public string CategoryName{get;set;}
 
 	  public partial class InsertUpdateLogEntry : IDbQuery {
 	
-	  	public InsertUpdateLogEntry (
-			int major,
+	  	public InsertUpdateLogEntry ( 
+			string productName,
+int major,
 int minor,
-int patch,
-string productName
+int patch
 		)
 		{
-			Major = major;
+			ProductName = productName;
+Major = major;
 Minor = minor;
 Patch = patch;
-ProductName = productName;
 		}
 		
 			public String Query {get{return "InsertUpdateLogEntry";}}
-			private readonly int _major;
+			private readonly string _productName;
+private readonly int _major;
 private readonly int _minor;
 private readonly int _patch;
-private readonly string _productName;
 	
-			[Parameter("@Major")] 
+			[Parameter("@ProductName")] 
+ public string ProductName{get {return _productName;}}
+[Parameter("@Major")] 
  public int Major{get {return _major;}}
 [Parameter("@Minor")] 
  public int Minor{get {return _minor;}}
 [Parameter("@Patch")] 
  public int Patch{get {return _patch;}}
-[Parameter("@ProductName")] 
- public string ProductName{get {return _productName;}}
 	
 		}
 	}
@@ -62,7 +67,7 @@ private readonly string _productName;
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
 		public partial class InsertUpdateLogEntry_Result {
-		public   {get;set;}		}
+				}
 	}
 
   namespace CompileTimeStoredProcedures.Query.dbo
@@ -70,7 +75,7 @@ private readonly string _productName;
 
 	  public partial class SelectLogEntry : IDbQuery {
 	
-	  	public SelectLogEntry (
+	  	public SelectLogEntry ( 
 			
 		)
 		{
@@ -87,9 +92,21 @@ private readonly string _productName;
 
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
-		public partial class SelectLogEntry_Result 
-        {
-		public   {get;set;}		
-        }
-}
+		public partial class SelectLogEntry_Result {
+		public DateTime DateApplied {get;set;}
+				
+				public int UpdateLogId {get;set;}
+				
+				public int Major {get;set;}
+				
+				public int Minor {get;set;}
+				
+				public int Patch {get;set;}
+				
+				public int? ExampleField {get;set;}
+				
+				public string ProductName {get;set;}
+				
+						}
+	}
 

@@ -1,5 +1,4 @@
-﻿
-<#@ assembly name="System.Core" #>
+﻿<#@ assembly name="System.Core" #>
 <#@ assembly name="System.Data" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
@@ -10,6 +9,7 @@
 <#@ include file="Classes.tt"#>
 <#@ output extension=".cs" #>
 
+using System;
 
 <#
 	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;";
@@ -23,13 +23,13 @@
 		var createResultColumnHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0}_Result {{", baseObject.Name));
 		var createProperty = new Func<Column, string>(c => {
 			var columnDataType = Parameters.GetParameterType(c);
-			
+			 
 			return string.Format("public {0} {1} {{get;set;}}", columnDataType, c.Name);});
 #>
 
 
 /*Start Table Valued Columns*/ 
-<#
+<# 
 	foreach(var t in tableValuedColumns)
 	{
 		#>
@@ -53,14 +53,16 @@
 
 <#foreach(var procedure in procedures)
   {
-	
+      try 
+      {	        
+		
   #>
   namespace CompileTimeStoredProcedures.Query.<#=procedure.Schema#>
   { 
 
 	  <#=createProcedureHeader(procedure)#>
 	
-	  	public <#=procedure.Name#> (
+	  	public <#=procedure.Name#> ( 
 			<#=String.Join("," + System.Environment.NewLine, procedure.Columns.Select(x=> x.CSType + " " + x.CamelCase))#>
 		)
 		{
@@ -82,7 +84,9 @@
 		<#
 			foreach(var returnField in procedure.ReturnFields)
 			{
-				#><#=createProperty(returnField)#><#
+				#><#=createProperty(returnField)#>
+				
+				<#
 			}
   
 
@@ -90,4 +94,18 @@
 		}
 	}
 
-<#}#>
+<#
+	        }
+      catch ( Exception ex )
+      {
+		
+          #>//{"Procedure": "<#=procedure.Name#>" Message: "<#=ex.Message#>"}<#
+      }
+
+	  
+	  
+	  }
+
+
+
+#>
