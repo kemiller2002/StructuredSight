@@ -40,10 +40,10 @@ int minor,
 int patch
 		)
 		{
-			ProductName = productName;
-Major = major;
-Minor = minor;
-Patch = patch;
+			_productName = productName;
+_major = major;
+_minor = minor;
+_patch = patch;
 		}
 		
 			public String Query {get{return "InsertUpdateLogEntry";}}
