@@ -12,162 +12,82 @@
 
 
 <#
-
-
-
 	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;";
 
 //		command.CommandText = "SELECT Name, Object_Id FROM sys.procedures WHERE Name NOT LIKE 'sp_%'";
 
-
-
-
-
-	var getParms = new Func<int, Func<SqlCommand, IEnumerable<Column>>> ( 
-			id => {return new Func<SqlCommand, IEnumerable<Column>>(x=>{
-			x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
-				t.name as pType, t.max_length, has_default_value
-				FROM sys.Parameters p JOIN sys.types t ON p.system_type_id = t.system_type_id
-				and Object_id = " + id;
+		var tableValuedColumns = DbConnection.Invoke<IEnumerable<Table>>(connectString, HelperFunctions.GetTables); 
+		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, HelperFunctions.GetProcedure);
+		var createProcedureHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0} : IDbQuery {{", baseObject.Name));
+		var createTableValuedColumnHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0} {{", baseObject.Name));
+		var createResultColumnHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0}_Result {{", baseObject.Name));
+		var createProperty = new Func<Column, string>(c => {
+			var columnDataType = Parameters.GetParameterType(c);
 			
-			var reader = x.ExecuteReader ();
-			var l = new List<Column>();
-			
-			while(reader.Read())
-			{
-				l.Add(new Column{
-						ObjectId = (int)reader[1],
-					    Name = (string)reader[2],
-					    Type = (string) reader[3],
-					    MaxLength = (short)reader[4],
-					    AllowsNull = (bool)reader[5]
-				});
-			}
-   
-		return l;
-            }
-					);
-			});
-
-
-		var getProc = new Func<SqlCommand, IEnumerable<Procedure>>(x=>{
-		x.CommandText = @"SELECT p.Name, Object_Id, s.name FROM sys.procedures p
-							JOIN sys.schemas s ON p.schema_id = s.schema_id
-							WHERE p.Name NOT LIKE 'sp_%'";
-
-		var reader = x.ExecuteReader ();
-		var l = new List<Procedure>();
-		
-		while(reader.Read())
-		{
-			l.Add(new Procedure{
-				 Name = (string)reader[0]
-				,ObjectId = (int)reader[1]
-				,Schema = (string)reader[2]
-				,Columns = DbConnection.Invoke<IEnumerable<Column>>(connectString, getParms((int)reader[1]))
-            });
-        }
-
-		return l;
-    });
-
-
-	var getColumnTypesForTable  = new Func<int, Func<SqlCommand, IEnumerable<Column>>>(
-	id => {
-		return new Func<SqlCommand, IEnumerable<Column>>(x=>{
-			x.CommandText = @"SELECT object_id, c.name, t.name, c.is_nullable FROM sys.columns c
-				join sys.types t ON c.system_type_id = t.system_type_id
-				WHERE t.name <> 'sysname' AND object_id = " + id;
-			
-			var reader = x.ExecuteReader ();
-			var l = new List<Column>();
-			
-			while(reader.Read())
-			{
-				l.Add(
-					new Column
-                {
-					  Name  = (string) reader[1],
-					  ObjectId = (int) reader[0],
-					  Type = (string) reader[2],
-					  AllowsNull = (bool) reader[3]
-                });
-			}
-   
-		return l;
-   });
-		});
-
-	var getTables = new Func<SqlCommand, IEnumerable<Table>>(x=>{
-			x.CommandText = @"SELECT type_table_object_id, Name FROM sys.table_types";
-			
-			var reader = x.ExecuteReader ();
-			var l = new List<Table>();
-			
-			while(reader.Read())
-			{
-				l.Add(
-					new Table
-                {
-					  Name  = (string)reader[1],
-					  ObjectId = (int)reader[0]
-					  ,Columns = DbConnection.Invoke<IEnumerable<Column>>(connectString, getColumnTypesForTable((int)reader[0]))
-                });
-			}
-   
-		return l;
-   });
-
-		var tableValuedColumns = DbConnection.Invoke<IEnumerable<Table>>(connectString, getTables); 
-		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, getProc);
+			return string.Format("public {0} {1} {{get;set;}}", columnDataType, c.Name);});
 #>
 
-namespace glbl
-{
 
+/*Start Table Valued Columns*/ 
 <#
 	foreach(var t in tableValuedColumns)
 	{
 		#>
-			<#=t.Header#>
+
+		namespace CompileTimeStoredProcedures.TableValuedParameter.<#=t.Schema#>
+		{ 
+			<#=createTableValuedColumnHeader(t)#>
 				<#=String.Join(System.Environment.NewLine, 
 					t.Columns.Select(x=>"public " + x.CSType + " " + x.Name + "{get;set;}"))#>
-			<#=t.Footer#>
+			}
+
+		}
 
 		<#
-
-
-	}
+		}
 #>
+/*End Table Valued Columns*/
+ 
 
 
 
-
-<#foreach(var p in procedures)
+<#foreach(var procedure in procedures)
   {
 	
   #>
+  namespace CompileTimeStoredProcedures.Query.<#=procedure.Schema#>
+  { 
 
-  [Query("<#=p.FullName#>")]
-  <#=p.Header#>
-
-  	public <#=p.Name#> (
-		<#=String.Join("," + System.Environment.NewLine, p.Columns.Select(x=> x.CSType + " " + x.CamelCase))#>
-	)
-	{
-		<#=String.Join(System.Environment.NewLine, p.Columns.Select(x=> x.CSName + " = " + x.CamelCase + ";"))#>
-	}
+	  <#=createProcedureHeader(procedure)#>
 	
+	  	public <#=procedure.Name#> (
+			<#=String.Join("," + System.Environment.NewLine, procedure.Columns.Select(x=> x.CSType + " " + x.CamelCase))#>
+		)
+		{
+			<#=String.Join(System.Environment.NewLine, procedure.Columns.Select(x=> x.CSName + " = " + x.CamelCase + ";"))#>
+		}
+		
+			public String Query {get{return "<#=procedure.Name#>";}}
+			<#= String.Join(System.Environment.NewLine, procedure.Columns.Select (parm => "private readonly "  + parm.CSType + " _" + parm.CamelCase + ";")) #>
+	
+			<#=String.Join (System.Environment.NewLine, procedure.Columns.Select(parm => "[Parameter(\"" + parm.Name + "\")] \r\n public " + 
+								parm.CSType + " " + parm.CSName + "{get {return _" + parm.CamelCase + ";}}"))#>
+	
+		}
+	}
 
-		<#= String.Join(System.Environment.NewLine, p.Columns.Select (parm => "private readonly "  + parm.CSType + " _" + parm.CamelCase + ";")) #>
+	namespace CompileTimeStoredProcedures.Result.<#=procedure.Schema#>
+	{ 
+		<#=createResultColumnHeader(procedure)#>
+		<#
+			foreach(var returnField in procedure.ReturnFields)
+			{
+				#><#=createProperty(returnField)#><#
+			}
+  
 
-		<#=String.Join (System.Environment.NewLine, p.Columns.Select(parm => "[QueryColumn(\"" + parm.Name + "\")] \r\n public " + 
-							parm.CSType + " " + parm.CSName + "{get {return _" + parm.CamelCase + ";}}"))#>
-
-	<#=p.Footer#>
-
-
-}
-
+		#>
+		}
+	}
 
 <#}#>

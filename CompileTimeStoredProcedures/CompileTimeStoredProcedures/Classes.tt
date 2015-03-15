@@ -12,9 +12,8 @@
 	public abstract class BaseObject {
 		public string Name;
 		public int ObjectId;
+		public string Schema {get;set;}
 
-		public string Header {get {return "public partial class " + Name + "\r\n{" ;}}
-		public string Footer {get {return "}";}}
     }
 
 
@@ -45,15 +44,16 @@
 	public class Table : BaseObject {
 
 		public IEnumerable<Column> Columns;
+
     }
 
 
 	public class Procedure : BaseObject
 	{
 		public string CSName {get {return Name.Replace("_", "");}}
-		public string Schema;
 		public string FullName {get {return Schema + "." + Name;}}
 
+		public IEnumerable<Column> ReturnFields;
 		public IEnumerable<Column> Columns;
     }
 #>
@@ -74,52 +74,52 @@
 	public static class Parameters {
 		public static string GetParameterType(IDataType data)
 		{
-					switch (data.Type) 
-					{
-						case "bigint": {return "long" + (data.AllowsNull ? "?" : "");}
+			switch (data.Type) 
+			{
+				case "bigint": {return "long" + (data.AllowsNull ? "?" : "");}
 
-						case "varbinary":
-						case "image": 
-						case "binary": {return "stream";}
+				case "varbinary":
+				case "image": 
+				case "binary": {return "byte[]";}
 
-						case "bit": {return "bool" + (data.AllowsNull ? "?" : "");}
+				case "bit": {return "bool" + (data.AllowsNull ? "?" : "");}
 
-						case "date": 
-						case "datetime": 
-						case "smalldatetime":
-						case "time":
-						case "datetime2": {return "DateTime" + (data.AllowsNull ? "?" : "");}
+				case "date": 
+				case "datetime": 
+				case "smalldatetime":
+				case "time":
+				case "datetime2": {return "DateTime" + (data.AllowsNull ? "?" : "");}
 
-						case "datetimeoffset": {return "";}
-						case "decimal": {return "" + (data.AllowsNull ? "?" : "");}
-						case "float": {return "" + (data.AllowsNull ? "?" : "");}
-						case "geography": {return "";}
-						case "geometry": {return "";}
+				case "datetimeoffset": {return "";}
+				case "decimal": {return "" + (data.AllowsNull ? "?" : "");}
+				case "float": {return "" + (data.AllowsNull ? "?" : "");}
+				case "geography": {return "";}
+				case "geometry": {return "";}
 
-						case "hierarchyid": 
-						case "int": {return "int" + (data.AllowsNull ? "?" : "");}
+				case "hierarchyid": 
+				case "int": {return "int" + (data.AllowsNull ? "?" : "");}
 
-						case "money": 
-						case "numeric": 
-						case "real": {return "float" + (data.AllowsNull ? "?" : "");}
+				case "money": 
+				case "numeric": 
+				case "real": {return "float" + (data.AllowsNull ? "?" : "");}
 
-						case "nchar":
-						case "ntext": 
-						case "smallint": {return "short"+ (data.AllowsNull ? "?" : "");}
-						case "smallmoney": {return "money" + (data.AllowsNull ? "?" : "");}
+				case "nchar":
+				case "ntext": 
+				case "smallint": {return "short"+ (data.AllowsNull ? "?" : "");}
+				case "smallmoney": {return "money" + (data.AllowsNull ? "?" : "");}
 
-						case "timestamp": {return "Binary";}
-						case "tinyint": {return "byte"+ (data.AllowsNull ? "?" : "");}
-						case "uniqueidentifier": {return "Guid"+ (data.AllowsNull ? "?" : "");}
+				case "timestamp": {return "Binary";}
+				case "tinyint": {return "byte"+ (data.AllowsNull ? "?" : "");}
+				case "uniqueidentifier": {return "Guid"+ (data.AllowsNull ? "?" : "");}
 
-						case "char": 
-						case "nvarchar": 
-						case "varchar": 
-						case "sysname": 
-						case "text": 
-						case "xml": {return "string";}
+				case "char": 
+				case "nvarchar": 
+				case "varchar": 
+				case "sysname": 
+				case "text": 
+				case "xml": {return "string";}
 
-						default : {return data.Type;}
+				default : {return data.Type;}
                     }
         }
 
@@ -147,6 +147,153 @@
 
 			
     }
+
+
+	public static class HelperFunctions 
+	{
+		public static Func<SqlCommand, IEnumerable<Column>> GetParameters (int id) 
+		{
+			return new Func<SqlCommand, IEnumerable<Column>>(x=>{
+				x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
+					t.name as pType, t.max_length, has_default_value
+					FROM sys.Parameters p JOIN sys.types t ON p.system_type_id = t.system_type_id
+					and Object_id = " + id;
+				
+				var reader = x.ExecuteReader ();
+				var l = new List<Column>();
+				
+				while(reader.Read())
+				{
+					l.Add(new Column{
+							ObjectId = (int)reader[1],
+						    Name = (string)reader[2],
+						    Type = (string) reader[3],
+						    MaxLength = (short)reader[4],
+						    AllowsNull = (bool)reader[5]
+					});
+				}
+   
+				return l;
+            });
+		}
+
+
+		public static IEnumerable<Procedure> GetProcedure (SqlCommand command)
+		{
+			command.CommandText = @"SELECT p.Name, Object_Id, s.name FROM sys.procedures p
+							JOIN sys.schemas s ON p.schema_id = s.schema_id
+							WHERE p.Name NOT LIKE 'sp_%'";
+
+			var reader = command.ExecuteReader ();
+			var l = new List<Procedure>();
+		
+			while(reader.Read())
+			{
+				l.Add(new Procedure{
+					 Name = (string)reader[0]
+					,ObjectId = (int)reader[1]
+					,Schema = (string)reader[2]
+					,Columns = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, HelperFunctions.GetParameters((int)reader[1]))
+					,ReturnFields = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, 
+						HelperFunctions.GetReturnInformationForProcedure((string)reader[2]))
+			    });
+			}
+
+			return l;
+		}
+
+		public static Func<SqlCommand, IEnumerable<Column>> GetReturnInformationForProcedure (string procedureName)
+		{
+			string commandText = string.Format(@"SELECT column_ordinal, name, is_nullable, system_type_id, system_type_name, max_length
+									FROM sys.dm_exec_describe_first_result_set_for_object
+									(
+										OBJECT_ID('{0}'), 
+										NULL
+								);", procedureName);
+
+			return (command) => {
+				command.CommandText = commandText; 
+
+				var reader = command.ExecuteReader ();
+				var l = new List<Column>();
+				
+				while(reader.Read())
+				{
+					l.Add(
+						new Column
+				    {
+						  Name  = reader.IsDBNull(1) ? "" : (string) reader[1],
+						  ObjectId = reader.IsDBNull(0)? 0 : (int) reader[0],
+						  Type = reader.IsDBNull(4) ? ""  : (string) reader[4],
+						  AllowsNull = reader.IsDBNull(2) ? false : (bool) reader[2]
+				    });
+				}
+   
+				return l;
+
+
+            };
+
+        }
+		
+
+
+
+	public static  Func<SqlCommand, IEnumerable<Column>> GetColumnTypesForTable  (int id )
+	{
+		return new Func<SqlCommand, IEnumerable<Column>>(x=>{
+			x.CommandText = @"SELECT object_id, c.name, t.name, c.is_nullable FROM sys.columns c
+				join sys.types t ON c.system_type_id = t.system_type_id
+				WHERE t.name <> 'sysname' AND object_id = " + id;
+			
+			var reader = x.ExecuteReader ();
+			var l = new List<Column>();
+			
+			while(reader.Read())
+			{
+				l.Add(
+					new Column
+                {
+					  Name  = (string) reader[1],
+					  ObjectId = (int) reader[0],
+					  Type = (string) reader[2],
+					  AllowsNull = (bool) reader[3]
+                });
+			}
+   			
+		return l;
+   });
+	}
+
+
+		public static  IEnumerable<Table> GetTables (SqlCommand command)
+		{
+				command.CommandText = @"SELECT type_table_object_id, t.Name, s.Name FROM sys.table_types t 
+					JOIN sys.schemas s ON t.schema_id = s.schema_id";
+				
+				var reader = command.ExecuteReader ();
+				var l = new List<Table>();
+				
+				while(reader.Read())
+				{
+					l.Add(
+							new Table
+							{
+								Name  = (string)reader[1],
+								ObjectId = (int)reader[0]
+								,Columns = DbConnection.Invoke<IEnumerable<Column>>
+									(command.Connection.ConnectionString, HelperFunctions.GetColumnTypesForTable((int)reader[0]))
+								,Schema = (string)reader[2]
+							});
+				}
+	
+				return l;
+		}
+
+
+    }
+
+
 
 
 #>
