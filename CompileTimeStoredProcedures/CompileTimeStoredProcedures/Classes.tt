@@ -34,7 +34,8 @@
     }
 
 
-		public class Column : IDataType{
+	public class Column : IDataType
+	{
 		public string Name;
 		public string CSName {get {return Name.Replace("_", "").Replace("@", "");}}
 		public int ParameterId;
@@ -43,10 +44,16 @@
 		public short MaxLength;
 		public bool AllowsNull {get;set;}
 		public bool IsOutput {get;set;}
+		public string Schema {get;set;}
 		
 		public string CamelCase {get {return CSName[0].ToString().ToLower() + CSName.Substring(1);}}
 
-		public string CSType {get {return Parameters.GetParameterType(this);}}
+		public string GetCSType (string prefixNamespace) 
+		{
+				var type = Parameters.GetParameterType(this);
+			    var additionalNamespace = string.IsNullOrWhiteSpace(prefixNamespace) ? "" : prefixNamespace + "." ;
+				return (type == null) ? String.Format("IEnumerable<{0}{1}.{2}>", additionalNamespace, Schema, Type) : type;
+		}
 
     }
 
@@ -129,7 +136,7 @@
 				case "text": 
 				case "xml": {return "string";}
 
-				default : {return data.Type;}
+				default : {return null;}
                     }
         }
 
@@ -166,10 +173,23 @@
 			return new Func<SqlCommand, IEnumerable<Column>>(x=>{
 				x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
 					t.name as pType, t.max_length, has_default_value, is_output
-					FROM sys.Parameters p JOIN sys.types t ON p.system_type_id = t.system_type_id
-					and Object_id = " + id;
+					,s.name
+					FROM 
+						sys.Parameters p 
+					JOIN sys.types t ON p.system_type_id = t.system_type_id
+					JOIN sys.schemas s ON t.schema_id = s.schema_id
+					WHERE
+					Object_id = " + id;
 				
 				var reader = x.ExecuteReader ();
+				
+				var parameterSchemaInformation = new List<Tuple<int,string>>();
+
+				while(reader.Read()){
+					parameterSchemaInformation.Add(new Tuple<int,string>((int)reader[0], (string)reader[7]));
+                }
+
+
 				var l = new List<Column>();
 				
 				using (var sqlConnection = new SqlConnection(x.Connection.ConnectionString))
@@ -188,31 +208,18 @@
 						l.Add(new Column{
 							ObjectId = parm.ID, 
 						    Name = parm.Name,
-						    Type = parm.DataType.ToString(), //(string) reader[3],
-						    MaxLength = 4,//(short)reader[4],
-						    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue), //(bool)reader[5],
-							IsOutput = parm.IsOutputParameter//(bool)reader[6]
+						    Type = parm.DataType.ToString(), 
+						    MaxLength = 4,
+						    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue),
+							IsOutput = parm.IsOutputParameter
+							,Schema = (parameterSchemaInformation.FirstOrDefault(pSc=>pSc.Item1 == parm.ID) ?? new Tuple<int,string>(0,"")).Item2
+
 					});
 
                     }
 
 					return l;
                 }
-
-
-				//while(reader.Read())
-				//{
-				//	l.Add(new Column{
-				//			ObjectId = (int)reader[1],
-				//		    Name = (string)reader[2],
-				//		    Type = (string) reader[3],
-				//		    MaxLength = (short)reader[4],
-				//		    AllowsNull = (bool)reader[5],
-				//			IsOutput = (bool)reader[6]
-				//	});
-				//}
-   
-				return l;
             });
 		}
 
@@ -250,7 +257,8 @@
 							  NULL
 							) dm
 							JOIN sys.types t ON t.system_type_id = dm.system_type_id
-							", objectId);
+							where t.name <> 'sysname' " , objectId);
+							//remove the sysname from being a type name, because it adds redundant entry into the results when joining.
 
 			return (command) => {
 				command.CommandText = commandText; 

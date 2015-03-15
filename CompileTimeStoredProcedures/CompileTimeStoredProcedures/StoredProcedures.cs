@@ -9,30 +9,34 @@
 
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
+ 
 
 
 /*Start Table Valued Columns*/ 
 
-		namespace CompileTimeStoredProcedures.TableValuedParameter.dbo
+		namespace CompileTimeStoredProceduresTableValuedParameter.dbo
 		{ 
 			public partial class CategoryTableType {
 				public int? CategoryID{get;set;}
 public string CategoryName{get;set;}
-			}
+			} 
 
 		}
 
 		/*End Table Valued Columns*/
+  
+
+
+
  
-
-
-
   namespace CompileTimeStoredProcedures.Query.dbo
   { 
-
+   
 	  public partial class InsertUpdateLogEntry : IDbQuery {
-	
+	 
 	  	public InsertUpdateLogEntry ( 
 			string productName,
 int major,
@@ -44,7 +48,7 @@ int patch
 _major = major;
 _minor = minor;
 _patch = patch;
-		}
+		} 
 		
 			public String Query {get{return "InsertUpdateLogEntry";}}
 			private readonly string _productName;
@@ -67,20 +71,22 @@ private readonly int _patch;
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
 		public partial class InsertUpdateLogEntry_Result {
+
 				}
 	}
 
+ 
   namespace CompileTimeStoredProcedures.Query.dbo
   { 
-
+   
 	  public partial class SelectLogEntry : IDbQuery {
-	
+	 
 	  	public SelectLogEntry ( 
 			
 		)
 		{
 			
-		}
+		} 
 		
 			public String Query {get{return "SelectLogEntry";}}
 			
@@ -93,6 +99,7 @@ private readonly int _patch;
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
 		public partial class SelectLogEntry_Result {
+
 		public DateTime DateApplied {get;set;}
 				
 				public int UpdateLogId {get;set;}
@@ -106,6 +113,39 @@ private readonly int _patch;
 				public int? ExampleField {get;set;}
 				
 				public string ProductName {get;set;}
+				
+						}
+	}
+
+ 
+  namespace CompileTimeStoredProcedures.Query.dbo
+  { 
+   
+	  public partial class UseTempTable : IDbQuery {
+	 
+	  	public UseTempTable ( 
+			IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> categories
+		)
+		{
+			_categories = categories;
+		} 
+		
+			public String Query {get{return "UseTempTable";}}
+			private readonly IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> _categories;
+	
+			[Parameter("@Categories")] 
+ public IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> Categories{get {return _categories;}}
+	
+		}
+	}
+
+	namespace CompileTimeStoredProcedures.Result.dbo
+	{ 
+		public partial class UseTempTable_Result {
+
+		public int? CategoryID {get;set;}
+				
+				public string CategoryName {get;set;}
 				
 						}
 	}
