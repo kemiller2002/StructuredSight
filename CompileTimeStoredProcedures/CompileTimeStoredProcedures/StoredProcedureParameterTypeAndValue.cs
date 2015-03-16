@@ -6,11 +6,9 @@ using System.Threading.Tasks;
 
 namespace CompileTimeStoredProcedures
 {
-    public interface IDbQuery
+    public class StoredProcedureParameterTypeAndValue
     {
-        string Query {get;}
-
-        IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters { get; }
-
+        public string ParameterName { get; set; }
+        public object Value { get; set; }
     }
 }

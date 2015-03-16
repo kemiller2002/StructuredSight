@@ -56,14 +56,27 @@ private readonly int _major;
 private readonly int _minor;
 private readonly int _patch;
 	
-			[Parameter("@ProductName")] 
- public string ProductName{get {return _productName;}}
-[Parameter("@Major")] 
- public int Major{get {return _major;}}
-[Parameter("@Minor")] 
- public int Minor{get {return _minor;}}
-[Parameter("@Patch")] 
- public int Patch{get {return _patch;}}
+			public string ProductName{get {return _productName;}}
+public int Major{get {return _major;}}
+public int Minor{get {return _minor;}}
+public int Patch{get {return _patch;}}
+
+
+			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters {
+				get {
+					
+					
+					if(_productName != null)							{
+								yield return new StoredProcedureParameterTypeAndValue {Value = _productName, ParameterName = "@ProductName"};
+
+							}								yield return new StoredProcedureParameterTypeAndValue {Value = _major, ParameterName = "@Major"};
+															yield return new StoredProcedureParameterTypeAndValue {Value = _minor, ParameterName = "@Minor"};
+															yield return new StoredProcedureParameterTypeAndValue {Value = _patch, ParameterName = "@Patch"};
+														
+					
+				}
+
+			}
 	
 		}
 	}
@@ -92,6 +105,17 @@ private readonly int _patch;
 			
 	
 			
+
+
+			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters {
+				get {
+					
+					return new StoredProcedureParameterTypeAndValue[0];
+												
+					
+				}
+
+			}
 	
 		}
 	}
@@ -129,8 +153,19 @@ private readonly int _patch;
 			public String Query {get{return "UseTempTable";}}
 			private readonly IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> _categories;
 	
-			[Parameter("@Categories")] 
- public IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> Categories{get {return _categories;}}
+			public IEnumerable<CompileTimeStoredProceduresTableValuedParameter.dbo.CategoryTableType> Categories{get {return _categories;}}
+
+
+			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters {
+				get {
+					
+					
+													yield return new StoredProcedureParameterTypeAndValue {Value = _categories, ParameterName = "@Categories"};
+														
+					
+				}
+
+			}
 	
 		}
 	}

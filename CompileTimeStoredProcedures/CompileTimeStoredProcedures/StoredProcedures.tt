@@ -76,8 +76,43 @@ using System.Linq;
 			public String Query {get{return "<#=procedure.Name#>";}}
 			<#= String.Join(System.Environment.NewLine, procedure.Columns.Select (parm => "private readonly "  + parm.GetCSType(_tvpNamespace) + " _" + parm.CamelCase + ";")) #>
 	
-			<#=String.Join (System.Environment.NewLine, procedure.Columns.Select(parm => "[Parameter(\"" + parm.Name + "\")] \r\n public " + 
+			<#=String.Join (System.Environment.NewLine, procedure.Columns.Select(parm => "public " + 
 								parm.GetCSType(_tvpNamespace) + " " + parm.CSName + "{get {return _" + parm.CamelCase + ";}}"))#>
+
+
+			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters {
+				get {
+					
+					<#if(procedure.Columns.Count() == 0){#>return new StoredProcedureParameterTypeAndValue[0];<#}#>
+
+					<#foreach(var parameter in procedure.Columns)
+					{
+						if(parameter.AllowsNull)
+                        {
+							if(parameter.GetCSType(_tvpNamespace).Contains("?"))//using HasValue for nullables instead of checking for null
+							{
+								#>if(!_<#=parameter.CamelCase#>.HasValue)<#
+                            }
+							else{
+								#>if(_<#=parameter.CamelCase#> != null)<#
+                            }
+							#>
+							{
+								yield return new StoredProcedureParameterTypeAndValue {Value = _<#=parameter.CamelCase#>, ParameterName = "<#=parameter.Name#>"};
+
+							}<#
+                        }
+						else 
+						{
+							#>
+								yield return new StoredProcedureParameterTypeAndValue {Value = _<#=parameter.CamelCase#>, ParameterName = "<#=parameter.Name#>"};
+							<#		
+                        }
+                    }	#>							
+					
+				}
+
+			}
 	
 		}
 	}
