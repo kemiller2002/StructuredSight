@@ -39,15 +39,23 @@ namespace Consumer
                 command.Connection = connection;
 
                 command.CommandType = System.Data.CommandType.StoredProcedure;
-                var sqlParameterCollection = new DynamicParameters();
+                command.CommandText = query.Query;
 
                 foreach (var parameter in query.SqlParameters)
                 {
-                    sqlParameterCollection.Add(parameter.ParameterName, parameter.Value);
+                    command.Parameters.Add(parameter.ParameterName, parameter.Value);
                 }
 
+                var reader = command.ExecuteReader();
+                
+                var tType = typeof(T);
 
-                return connection.Query<T>(query.Query, param: sqlParameterCollection, commandType: System.Data.CommandType.StoredProcedure);
+                var constructor = tType.GetConstructor(new [] {typeof(System.Data.IDataReader)});
+
+                while (reader.Read())
+                {
+                    yield return (T)constructor.Invoke(new[] {reader});
+                }
 
             }
 

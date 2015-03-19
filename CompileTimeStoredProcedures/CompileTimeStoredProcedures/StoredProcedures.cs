@@ -85,6 +85,12 @@ public int Patch{get {return _patch;}}
 	{ 
 		public partial class InsertUpdateLogEntry_Result {
 
+		public InsertUpdateLogEntry_Result (System.Data.IDataReader reader)
+		{
+					}
+
+
+
 				}
 	}
 
@@ -123,6 +129,37 @@ public int Patch{get {return _patch;}}
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
 		public partial class SelectLogEntry_Result {
+
+		public SelectLogEntry_Result (System.Data.IDataReader reader)
+		{
+									DateApplied = (DateTime)reader[5 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+											Major = (int)reader[2 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+											Minor = (int)reader[3 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+											Patch = (int)reader[4 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+											ProductName = (string)reader[1 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+							}
+
+
 
 		public DateTime DateApplied {get;set;}
 				
@@ -173,6 +210,22 @@ public int Patch{get {return _patch;}}
 	namespace CompileTimeStoredProcedures.Result.dbo
 	{ 
 		public partial class UseTempTable_Result {
+
+		public UseTempTable_Result (System.Data.IDataReader reader)
+		{
+									CategoryID = (int?)reader[1 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+											CategoryName = (string)reader[2 -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+							}
+
+
 
 		public int? CategoryID {get;set;}
 				

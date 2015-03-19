@@ -121,6 +121,27 @@ using System.Linq;
 	{ 
 		<#=createResultColumnHeader(procedure)#>
 
+		public <#=procedure.Name#>_Result (System.Data.IDataReader reader)
+		{
+			<#	foreach(var returnField in procedure.ReturnFields) 
+				{
+					#>
+						<#=returnField.CSName#> = (<#=Parameters.GetParameterType(returnField)#>)reader[<#=returnField.ObjectId#> -1] ;
+						//the object is the ordinal position of the column.
+						//-1 because of 0 based array in C#.
+
+
+					<#
+			
+			
+			
+			
+			
+				}#>
+		}
+
+
+
 		<#
 			foreach(var returnField in procedure.ReturnFields)
 			{
