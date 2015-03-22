@@ -91,7 +91,7 @@
 	public static class Parameters {
 		public static string GetParameterType(IDataType data)
 		{
-			switch (data.Type) 
+			switch (data.Type.ToLower()) 
 			{
 				case "bigint": {return "long" + (data.AllowsNull ? "?" : "");}
 
@@ -180,7 +180,14 @@
 
 			
     }
-
+	
+	public class ProcedureParameterInformation
+	{
+		public string Name {get;set;}
+		public string Schema {get;set;}
+		public string Type {get;set;}
+		public int	ObjectId {get;set;}
+    }
 
 	public static class HelperFunctions 
 	{
@@ -204,13 +211,18 @@
 						
 						var reader = x.ExecuteReader ();
 						
-						var parameterSchemaInformation = new List<Tuple<int,string>>();
+						var parameterSchemaInformation = new List<ProcedureParameterInformation>();
 
 						try
 						{
 							while(reader.Read())
 							{
-								parameterSchemaInformation.Add(new Tuple<int,string>((int)reader[0], (string)reader[7]));
+								parameterSchemaInformation.Add(new ProcedureParameterInformation{
+									ObjectId = GetValue<int>(reader,0), 
+									Schema = GetValue<string>(reader,7),
+									Name = GetValue<string>(reader,2),
+									Type = GetValue<string>(reader, 3) 
+								});
 							}
 
                         } catch(Exception ex) {throw new Exception("Reading Paremeters", ex);}
@@ -264,14 +276,18 @@
 								{
 									try
 									{
+										var currentParameter = parameterSchemaInformation.FirstOrDefault(pSc=>pSc.ObjectId == parm.ID);
 										l.Add(new Column{
 											ObjectId = parm.ID, 
 										    Name = parm.Name,
-										    Type = parm.DataType.ToString(), 
+										    Type = currentParameter.Type, 
+												//We have to use this, because of custom types.  
+												//With custom Types SMO only shows "UserDefinedValue" 
+												//and not the underlying value.
 										    MaxLength = 4,
 										    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue),
 											IsOutput = parm.IsOutputParameter
-											,Schema = (parameterSchemaInformation.FirstOrDefault(pSc=>pSc.Item1 == parm.ID) ?? new Tuple<int,string>(0,"")).Item2
+											,Schema = currentParameter.Schema
 										});
 
 								    }

@@ -48,7 +48,7 @@ public DateTime CheckDate{get {return _checkDate;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _startProductID, ParameterName = "@StartProductID"};
 															yield return new StoredProcedureParameterTypeAndValue {Value = _checkDate, ParameterName = "@CheckDate"};
@@ -154,7 +154,7 @@ public DateTime CheckDate{get {return _checkDate;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _businessEntityID, ParameterName = "@BusinessEntityID"};
 														
@@ -252,7 +252,7 @@ public DateTime CheckDate{get {return _checkDate;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _businessEntityID, ParameterName = "@BusinessEntityID"};
 														
@@ -354,7 +354,7 @@ public DateTime CheckDate{get {return _checkDate;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _startProductID, ParameterName = "@StartProductID"};
 															yield return new StoredProcedureParameterTypeAndValue {Value = _checkDate, ParameterName = "@CheckDate"};
@@ -450,7 +450,7 @@ DateTime hireDate,
 DateTime rateChangeDate,
 Single rate,
 byte payFrequency,
-IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> currentFlag
+Boolean currentFlag
 		)
 		{
 			_businessEntityID = businessEntityID;
@@ -469,7 +469,7 @@ private readonly DateTime _hireDate;
 private readonly DateTime _rateChangeDate;
 private readonly Single _rate;
 private readonly byte _payFrequency;
-private readonly IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> _currentFlag;
+private readonly Boolean _currentFlag;
 	
 			public int BusinessEntityID{get {return _businessEntityID;}}
 public string JobTitle{get {return _jobTitle;}}
@@ -477,14 +477,14 @@ public DateTime HireDate{get {return _hireDate;}}
 public DateTime RateChangeDate{get {return _rateChangeDate;}}
 public Single Rate{get {return _rate;}}
 public byte PayFrequency{get {return _payFrequency;}}
-public IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> CurrentFlag{get {return _currentFlag;}}
+public Boolean CurrentFlag{get {return _currentFlag;}}
 
 
 			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters 
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _businessEntityID, ParameterName = "@BusinessEntityID"};
 															yield return new StoredProcedureParameterTypeAndValue {Value = _jobTitle, ParameterName = "@JobTitle"};
@@ -528,7 +528,7 @@ string organizationNode,
 string loginID,
 string jobTitle,
 DateTime hireDate,
-IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> currentFlag
+Boolean currentFlag
 		)
 		{
 			_businessEntityID = businessEntityID;
@@ -545,21 +545,21 @@ private readonly string _organizationNode;
 private readonly string _loginID;
 private readonly string _jobTitle;
 private readonly DateTime _hireDate;
-private readonly IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> _currentFlag;
+private readonly Boolean _currentFlag;
 	
 			public int BusinessEntityID{get {return _businessEntityID;}}
 public string OrganizationNode{get {return _organizationNode;}}
 public string LoginID{get {return _loginID;}}
 public string JobTitle{get {return _jobTitle;}}
 public DateTime HireDate{get {return _hireDate;}}
-public IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> CurrentFlag{get {return _currentFlag;}}
+public Boolean CurrentFlag{get {return _currentFlag;}}
 
 
 			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters 
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _businessEntityID, ParameterName = "@BusinessEntityID"};
 															yield return new StoredProcedureParameterTypeAndValue {Value = _organizationNode, ParameterName = "@OrganizationNode"};
@@ -613,7 +613,7 @@ public IEnumerable<CompileTimeStoredProcedures.TableValuedParameter.sys.Flag> Cu
 			{
 				get 
 				{
-					
+					 
 					return new StoredProcedureParameterTypeAndValue[0];
 												
 					
@@ -677,7 +677,7 @@ public string Gender{get {return _gender;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _businessEntityID, ParameterName = "@BusinessEntityID"};
 															yield return new StoredProcedureParameterTypeAndValue {Value = _nationalIDNumber, ParameterName = "@NationalIDNumber"};
@@ -730,7 +730,7 @@ public string Gender{get {return _gender;}}
 			{
 				get 
 				{
-					
+					 
 					
 					if(!_errorLogID.HasValue)							{
 								yield return new StoredProcedureParameterTypeAndValue {Value = _errorLogID, ParameterName = "@ErrorLogID"};
@@ -793,7 +793,7 @@ public int? language{get {return _language;}}
 			{
 				get 
 				{
-					
+					 
 					
 													yield return new StoredProcedureParameterTypeAndValue {Value = _searchString, ParameterName = "@searchString"};
 							if(!_useInflectional.HasValue)							{

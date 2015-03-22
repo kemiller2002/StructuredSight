@@ -99,7 +99,7 @@ using System.Linq;
 			{
 				get 
 				{
-					
+					 
 					<#if(procedure.Columns.Count() == 0){#>return new StoredProcedureParameterTypeAndValue[0];<#}#>
 
 					<#foreach(var parameter in procedure.Columns)

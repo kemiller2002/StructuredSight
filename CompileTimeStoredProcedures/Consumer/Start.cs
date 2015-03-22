@@ -17,13 +17,13 @@ namespace Consumer
         static void Main(string[] args)
         {
 
-            var query = new CompileTimeStoredProcedures.Query.dbo.SelectLogEntry();
+            var query = new CompileTimeStoredProcedures.Query.dbo.uspSearchCandidateResumes("machinery personally as well as supervise the work of othe", true, true, null);
 
-            var results = QueryDatabase<CompileTimeStoredProcedures.Result.dbo.SelectLogEntry_Result>(query);
+            var results = QueryDatabase<CompileTimeStoredProcedures.Result.dbo.uspSearchCandidateResumes_Result>(query);
 
             foreach (var result in results)
             {
-                Console.WriteLine(result.ProductName);
+                Console.WriteLine(result.JobCandidateID + " " + result.RANK);
             }
 
             Console.ReadLine();
