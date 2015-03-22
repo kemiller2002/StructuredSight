@@ -14,15 +14,26 @@ using System.Collections.Generic;
 using System.Linq;
 
 <#
-	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=Scheduler;Integrated Security=SSPI;";
+	const string connectString = @"Data Source=localhost\sqlExpress;Initial Catalog=AdventureWorks2012;Integrated Security=SSPI;";
 
 //		command.CommandText = "SELECT Name, Object_Id FROM sys.procedures WHERE Name NOT LIKE 'sp_%'";
 
-		var tableValuedColumns = DbConnection.Invoke<IEnumerable<Table>>(connectString, HelperFunctions.GetTables); 
-		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, HelperFunctions.GetProcedure);
+	#>//Starting Table Valued Columns<#
+		var tableValuedColumns = DbConnection.Invoke<IEnumerable<Table>>(connectString, HelperFunctions.GetTables, "Table Valued Columns"); 
+
+	#>//Starting Procedures<#
+		var procedures = DbConnection.Invoke<IEnumerable<Procedure>>(connectString, HelperFunctions.GetProcedure, "Procedures");
+
+	#>//Starting Header<#
 		var createProcedureHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0} : IDbQuery {{", baseObject.Name));
+
+	#>//Starting Table Valued Column Header<#
 		var createTableValuedColumnHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0} {{", baseObject.Name));
+
+	#>//Starting Results Column Header<#
 		var createResultColumnHeader = new Func<BaseObject,string> (baseObject=>String.Format("public partial class {0}_Result {{", baseObject.Name));
+
+	#>//Starting Property<#
 		var createProperty = new Func<Column, string>(c => {
 			var columnDataType = Parameters.GetParameterType(c);
 			 
@@ -30,24 +41,28 @@ using System.Linq;
 #> 
 
 <#const string _codeNamspace = "CompileTimeStoredProcedures";#>
-<#const string _tvpNamespace = _codeNamspace + "TableValuedParameter";#>
+<#const string _tvpNamespace = _codeNamspace + ".TableValuedParameter";#>
 
 /*Start Table Valued Columns*/ 
 <# 
 	foreach(var t in tableValuedColumns)
 	{
+
+		try
+		{
 		#>
+		
+			namespace <#=_tvpNamespace#>.<#=t.Schema#>
+			{ 
+				<#=createTableValuedColumnHeader(t)#>
+					<#=String.Join(System.Environment.NewLine, 
+						t.Columns.Select(x=>"public " + x.GetCSType(_tvpNamespace) + " " + x.Name + "{get;set;}"))#>
+				} 
 
-		namespace <#=_tvpNamespace#>.<#=t.Schema#>
-		{ 
-			<#=createTableValuedColumnHeader(t)#>
-				<#=String.Join(System.Environment.NewLine, 
-					t.Columns.Select(x=>"public " + x.GetCSType(_tvpNamespace) + " " + x.Name + "{get;set;}"))#>
-			} 
-
-		}
+			}
 
 		<#
+		}catch (Exception ex){#><#=ex.Message#><#}
 		}
 #>
 /*End Table Valued Columns*/
@@ -80,8 +95,10 @@ using System.Linq;
 								parm.GetCSType(_tvpNamespace) + " " + parm.CSName + "{get {return _" + parm.CamelCase + ";}}"))#>
 
 
-			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters {
-				get {
+			public IEnumerable<StoredProcedureParameterTypeAndValue> SqlParameters 
+			{
+				get 
+				{
 					
 					<#if(procedure.Columns.Count() == 0){#>return new StoredProcedureParameterTypeAndValue[0];<#}#>
 
@@ -119,6 +136,7 @@ using System.Linq;
 
 	namespace <#=_codeNamspace#>.Result.<#=procedure.Schema#>
 	{ 
+
 		<#=createResultColumnHeader(procedure)#>
 
 		public <#=procedure.Name#>_Result (System.Data.IDataReader reader)
@@ -159,7 +177,6 @@ using System.Linq;
 	        }
       catch ( Exception ex )
       {
-		
           #>//{"Procedure": "<#=procedure.Name#>" Message: "<#=ex.Message#>"}<#
       }
 

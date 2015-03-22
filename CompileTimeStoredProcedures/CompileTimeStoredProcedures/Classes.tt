@@ -95,49 +95,54 @@
 			{
 				case "bigint": {return "long" + (data.AllowsNull ? "?" : "");}
 
+				case "rowversion":
 				case "varbinary":
 				case "image": 
 				case "binary": {return "byte[]";}
 
-				case "bit": {return "bool" + (data.AllowsNull ? "?" : "");}
+				case "bit": {return "Boolean" + (data.AllowsNull ? "?" : "");}
 
 				case "date": 
 				case "datetime": 
 				case "smalldatetime":
-				case "time":
 				case "datetime2": {return "DateTime" + (data.AllowsNull ? "?" : "");}
 
-				case "datetimeoffset": {return "";}
-				case "decimal": {return "" + (data.AllowsNull ? "?" : "");}
-				case "float": {return "" + (data.AllowsNull ? "?" : "");}
-				case "geography": {return "";}
-				case "geometry": {return "";}
+				case "datetimeoffset": {return "DateTimeOffset";}
+				case "decimal": {return "Decimal" + (data.AllowsNull ? "?" : "");}
+				case "float": {return "Double" + (data.AllowsNull ? "?" : "");}
+				case "geography": {return "Object";} //no direct mapping //https://msdn.microsoft.com/en-us/library/cc716729%28v=vs.110%29.aspx
+				case "geometry": {return "Object";} //no direct mapping
 
-				case "hierarchyid": 
+				case "hierarchyid": {return "string";}//no direct mapping string is the closest equivalent
+				//https://msdn.microsoft.com/en-us/library/bb677290(v=sql.100).aspx
 				case "int": {return "int" + (data.AllowsNull ? "?" : "");}
 
 				case "money": 
 				case "numeric": 
-				case "real": {return "float" + (data.AllowsNull ? "?" : "");}
+				case "real": {return "Single" + (data.AllowsNull ? "?" : "");}
 
-				case "nchar":
-				case "ntext": 
-				case "smallint": {return "short"+ (data.AllowsNull ? "?" : "");}
-				case "smallmoney": {return "money" + (data.AllowsNull ? "?" : "");}
+
+				case "smallint": {return "Int16"+ (data.AllowsNull ? "?" : "");}
+				case "smallmoney": {return "Decimal" + (data.AllowsNull ? "?" : "");}
 
 				case "timestamp": {return "Binary";}
 				case "tinyint": {return "byte"+ (data.AllowsNull ? "?" : "");}
 				case "uniqueidentifier": {return "Guid"+ (data.AllowsNull ? "?" : "");}
-
+				
+				case "nchar":
+				case "ntext": 
 				case "char": 
 				case "nvarchar": 
 				case "varchar": 
-				case "sysname": 
-				case "text": 
-				case "xml": {return "string";}
+				case "text": {return "string";}
+
+				case "xml": {return "Xml";}
+
+				case "sql_variant" : {return "Object";}
+				case "time" : {return "TimeSpan";}
 
 				default : {return null;}
-                    }
+			}
         }
 
     }
@@ -145,18 +150,29 @@
 
 	public static class DbConnection 
 	{
-		public static T Invoke <T>(string connectionString, Func<SqlCommand, T> cmd)
+		public static T Invoke <T>(string connectionString, Func<SqlCommand, T> cmd, string invokeName = "Not Specified")
 		{
-			using (var client = new SqlConnection())
-            {
-				client.ConnectionString = connectionString;
-				client.Open();
+			try
+			{
+				using (var client = new SqlConnection())
+	            {
+					client.ConnectionString = connectionString;
+					client.Open();
 
-				var command = new SqlCommand();
-
-				command.Connection = client;
+					var command = new SqlCommand();
+					
+					command.Connection = client;
 				
-				return cmd(command);
+					return cmd(command);
+				}
+            }
+			catch(Exception ex)
+			{ 
+					var tType = typeof(T);
+
+					var enumerableType = (tType.IsGenericType) ? String.Join(", " , tType.GenericTypeArguments.Select(x=>x.Name)) : "";
+			
+					throw new Exception("Invoke Name: " + invokeName + " Invoking: " + tType.Name + " " + enumerableType, ex); 
             }
 
         }
@@ -168,64 +184,119 @@
 
 	public static class HelperFunctions 
 	{
-		public static Func<SqlCommand, IEnumerable<Column>> GetParameters (int id, string procedureName) 
+		public static Func<SqlCommand, IEnumerable<Column>> GetParameters (int id, string procedureName, string schema) 
 		{
-			return new Func<SqlCommand, IEnumerable<Column>>(x=>{
-				x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
-					t.name as pType, t.max_length, has_default_value, is_output
-					,s.name
-					FROM 
-						sys.Parameters p 
-					JOIN sys.types t ON p.system_type_id = t.system_type_id
-					JOIN sys.schemas s ON t.schema_id = s.schema_id
-					WHERE
-					Object_id = " + id;
-				
-				var reader = x.ExecuteReader ();
-				
-				var parameterSchemaInformation = new List<Tuple<int,string>>();
-
-				while(reader.Read()){
-					parameterSchemaInformation.Add(new Tuple<int,string>((int)reader[0], (string)reader[7]));
-                }
-
-
-				var l = new List<Column>();
-				
-				using (var sqlConnection = new SqlConnection(x.Connection.ConnectionString))
-                {
-					//build a "serverConnection" with the information of the "sqlConnection"
-					Microsoft.SqlServer.Management.Common.ServerConnection serverConnection = 
-					new Microsoft.SqlServer.Management.Common.ServerConnection(sqlConnection);
-
-					//The "serverConnection is used in the ctor of the Server.
-					var server = new Microsoft.SqlServer.Management.Smo.Server(serverConnection);
-
-					var database = server.Databases[sqlConnection.Database];
-					var parms = database.StoredProcedures[procedureName].Parameters;
-					foreach( Microsoft.SqlServer.Management.Smo.StoredProcedureParameter parm in parms)
+			
+				return new Func<SqlCommand, IEnumerable<Column>>(x=>{
+					try
 					{
-						l.Add(new Column{
-							ObjectId = parm.ID, 
-						    Name = parm.Name,
-						    Type = parm.DataType.ToString(), 
-						    MaxLength = 4,
-						    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue),
-							IsOutput = parm.IsOutputParameter
-							,Schema = (parameterSchemaInformation.FirstOrDefault(pSc=>pSc.Item1 == parm.ID) ?? new Tuple<int,string>(0,"")).Item2
+						x.CommandText = @"SELECT parameter_id, object_id, p.Name, 
+							t.name as pType, t.max_length, has_default_value, is_output
+							,s.name
+							FROM 
+								sys.Parameters p 
+							JOIN sys.types t ON p.system_type_id = t.system_type_id
+							JOIN sys.schemas s ON t.schema_id = s.schema_id
+							WHERE
+							s.Name = 'sys'
+							AND	
+							Object_id = " + id;
+						
+						var reader = x.ExecuteReader ();
+						
+						var parameterSchemaInformation = new List<Tuple<int,string>>();
 
-					});
+						try
+						{
+							while(reader.Read())
+							{
+								parameterSchemaInformation.Add(new Tuple<int,string>((int)reader[0], (string)reader[7]));
+							}
 
-                    }
+                        } catch(Exception ex) {throw new Exception("Reading Paremeters", ex);}
 
-					return l;
-                }
+						var l = new List<Column>();
+						
+						using (var sqlConnection = new SqlConnection(x.Connection.ConnectionString))
+						{
+							try
+							{
+
+								//build a "serverConnection" with the information of the "sqlConnection"
+								Microsoft.SqlServer.Management.Common.ServerConnection serverConnection = 
+								new Microsoft.SqlServer.Management.Common.ServerConnection(sqlConnection);
+
+								//The "serverConnection is used in the ctor of the Server.
+								var server = new Microsoft.SqlServer.Management.Smo.Server(serverConnection);
+								Microsoft.SqlServer.Management.Smo.Database database;
+								Microsoft.SqlServer.Management.Smo.StoredProcedureParameterCollection parms = null;
+
+								try
+								{
+
+									database = server.Databases[sqlConnection.Database];
+									
+
+									foreach (
+										Microsoft.SqlServer.Management.Smo.StoredProcedure procedure in database.StoredProcedures)
+                                    {
+										if(procedure.Name.Equals(procedureName, StringComparison.OrdinalIgnoreCase)
+											&&
+											procedure.Schema.Equals(schema, StringComparison.OrdinalIgnoreCase))
+                                        {
+											parms = procedure.Parameters;
+											break;
+                                        }
+
+                                    }
+
+									//parms = (from procedure in database.StoredProcedures
+									//			where procedure.Schema.Equals(schema, StringComparison.OrdinalIgnoreCase)
+									//				&& procedure.Name.Equals(procedureName, StringComparison.OrdinalIgnoreCase)
+									//		select procedure		
+									//).First().Parameters;
+
+										
+
+                                }catch(Exception ex){throw new Exception("database and parms: " + schema + " " + procedureName, ex);}
+
+								foreach( Microsoft.SqlServer.Management.Smo.StoredProcedureParameter parm in parms)
+								{
+									try
+									{
+										l.Add(new Column{
+											ObjectId = parm.ID, 
+										    Name = parm.Name,
+										    Type = parm.DataType.ToString(), 
+										    MaxLength = 4,
+										    AllowsNull = !String.IsNullOrEmpty(parm.DefaultValue),
+											IsOutput = parm.IsOutputParameter
+											,Schema = (parameterSchemaInformation.FirstOrDefault(pSc=>pSc.Item1 == parm.ID) ?? new Tuple<int,string>(0,"")).Item2
+										});
+
+								    }
+									catch(Exception ex)
+									{
+										throw new Exception("parameter name: " + parm.Name, ex);
+									}
+								}
+
+								return l;
+                            }catch(Exception ex){throw new Exception("Using Statement", ex);}
+					}
+					}catch(Exception ex){throw new Exception ("id:" + id + " procedureName:" + procedureName , ex);}
             });
+            
 		}
 
+		public static T GetValue<T>(System.Data.SqlClient.SqlDataReader reader, int position)
+        {
+			try {return (T) reader[position];}catch(Exception ex){ throw new Exception("position: " + position, ex); }
+        }
 
 		public static IEnumerable<Procedure> GetProcedure (SqlCommand command)
 		{
+			try{
 			command.CommandText = @"SELECT p.Name, Object_Id, s.name FROM sys.procedures p
 							JOIN sys.schemas s ON p.schema_id = s.schema_id
 							WHERE p.Name NOT LIKE 'sp_%'";
@@ -235,30 +306,45 @@
 		
 			while(reader.Read())
 			{
-				l.Add(new Procedure{
-					 Name = (string)reader[0]
-					,ObjectId = (int)reader[1]
-					,Schema = (string)reader[2]
-					,Columns = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, HelperFunctions.GetParameters((int)reader[1], (string)reader[0]))
-					,ReturnFields = DbConnection.Invoke<IEnumerable<Column>>(command.Connection.ConnectionString, 
-						HelperFunctions.GetReturnInformationForProcedure((int)reader[1]))
+				try
+				{
+
+					var schema = GetValue<string>(reader, 2);
+
+
+					l.Add(new Procedure{
+						 Name = GetValue<string>(reader, 0)
+						,ObjectId = GetValue<int>(reader, 1)
+						,Schema = schema
+						,Columns = DbConnection.Invoke<IEnumerable<Column>>
+							(command.Connection.ConnectionString, HelperFunctions.GetParameters((int)reader[1], (string)reader[0], schema), "Procedure Parameters")
+						,ReturnFields = DbConnection.Invoke<IEnumerable<Column>>
+							(command.Connection.ConnectionString, HelperFunctions.GetReturnInformationForProcedure((int)reader[1]), "Procedure Return Fields")
 			    });
+                } catch(Exception ex) {throw new Exception((string)reader[0], ex);}
 			}
 
 			return l;
+            }catch(Exception ex) {throw;}
 		}
 
 		public static Func<SqlCommand, IEnumerable<Column>> GetReturnInformationForProcedure (int objectId)
 		{
-			string commandText = string.Format(@"SELECT column_ordinal, dm.name, dm.is_nullable, dm.system_type_id, t.name, dm.max_length --name, system_type_name
-							FROM sys.dm_exec_describe_first_result_set_for_object
+			try{
+			string commandText = string.Format(@"SELECT column_ordinal, dm.name, dm.is_nullable, dm.system_type_id, t.name as TypeName, dm.max_length
+							FROM sys.dm_exec_describe_first_result_set_for_object 
 							(
 							  {0}, 
 							  NULL
 							) dm
-							JOIN sys.types t ON t.system_type_id = dm.system_type_id
-							where t.name <> 'sysname' " , objectId);
-							//remove the sysname from being a type name, because it adds redundant entry into the results when joining.
+							JOIN sys.types t 
+								ON t.system_type_id = dm.system_type_id 
+								AND t.system_type_id = t.user_type_id
+								-- did this to remove all the duplicates from custom types.
+							WHERE t.name <> 'sysname' 
+							ORDER BY dm.name"  , objectId);
+							
+				//remove the sysname from being a type name, because it adds redundant entry into the results when joining.
 
 			return (command) => {
 				command.CommandText = commandText; 
@@ -282,7 +368,7 @@
 
 
             };
-
+            }catch(Exception ex){throw new Exception("object id: " + objectId + " " + ex.Message);}
         }
 		
 
@@ -331,7 +417,11 @@
 								Name  = (string)reader[1],
 								ObjectId = (int)reader[0]
 								,Columns = DbConnection.Invoke<IEnumerable<Column>>
-									(command.Connection.ConnectionString, HelperFunctions.GetColumnTypesForTable((int)reader[0]))
+									(		command.Connection.ConnectionString, 
+											HelperFunctions.GetColumnTypesForTable((int)reader[0]),
+											"Get Tables"
+											
+									)
 								,Schema = (string)reader[2]
 							});
 				}
