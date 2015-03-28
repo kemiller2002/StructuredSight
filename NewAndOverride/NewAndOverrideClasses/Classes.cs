@@ -37,7 +37,7 @@ namespace NewAndOverrideClasses
 
    
 
-    public class ChildClassNew : ParentClass, IGreetings
+    public class ChildClassNew : ParentClass//, IGreetings
     {
         public new string SayHelloWorld()
         {
