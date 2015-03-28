@@ -149,12 +149,30 @@ namespace ImplementationExamptes
 
             System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
             System.Diagnostics.Debug.WriteLine("");
+            
             System.Diagnostics.Debug.WriteLine("Child variable");
             System.Diagnostics.Debug.WriteLine(childClass.SayHelloWorld());
             System.Diagnostics.Debug.WriteLine("");
+
             System.Diagnostics.Debug.WriteLine("Parent variable");
             System.Diagnostics.Debug.WriteLine(newChildClass.SayHelloWorld());
+        }
 
+        [TestMethod]
+        public void DeclareAndUseImplicitTypeDeclaration()
+        {
+            NewAndOverrideClasses.ParentClass parentType = new NewAndOverrideClasses.ChildClassNew();
+            var childType = parentType;
+
+            System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            System.Diagnostics.Debug.WriteLine("");
+
+            System.Diagnostics.Debug.WriteLine("Parent variable");
+            System.Diagnostics.Debug.WriteLine(parentType.SayHelloWorld());
+            System.Diagnostics.Debug.WriteLine("");
+
+            System.Diagnostics.Debug.WriteLine("Child variable");
+            System.Diagnostics.Debug.WriteLine(childType.SayHelloWorld());
 
         }
 
