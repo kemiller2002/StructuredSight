@@ -141,6 +141,23 @@ namespace ImplementationExamptes
         }
 
 
+        [TestMethod]
+        public void DeclareAndChangeVariableType()
+        {
+            NewAndOverrideClasses.ChildClassNew childClass = new NewAndOverrideClasses.ChildClassNew();
+            NewAndOverrideClasses.ParentClass newChildClass = childClass;
+
+            System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.WriteLine("Child variable");
+            System.Diagnostics.Debug.WriteLine(childClass.SayHelloWorld());
+            System.Diagnostics.Debug.WriteLine("");
+            System.Diagnostics.Debug.WriteLine("Parent variable");
+            System.Diagnostics.Debug.WriteLine(newChildClass.SayHelloWorld());
+
+
+        }
+
 
     }
 }
