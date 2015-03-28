@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Dynamic;
 
 namespace ImplementationExamptes
 {
@@ -176,6 +177,18 @@ namespace ImplementationExamptes
 
         }
 
+
+
+        /*Using Dynamic*/
+        [TestMethod]
+        public void UsingDynamic()
+        {
+            NewAndOverrideClasses.ParentClass parentType = new NewAndOverrideClasses.ChildClassNew();
+            dynamic childType = parentType;
+
+            System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
+            System.Diagnostics.Debug.WriteLine(childType.SayHelloWorld() as string);
+        }
 
     }
 }
