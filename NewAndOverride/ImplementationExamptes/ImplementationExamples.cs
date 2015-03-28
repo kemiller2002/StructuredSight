@@ -93,14 +93,7 @@ namespace ImplementationExamptes
             System.Diagnostics.Debug.WriteLine(System.Reflection.MethodBase.GetCurrentMethod().Name);
             System.Diagnostics.Debug.WriteLine(childClass.SayHelloWorld());
         }
-
-
-
-
-
-
-
-
+        
 
 
 

@@ -26,7 +26,13 @@ namespace NewAndOverrideClasses
         {
             return SayHelloWorld();
         }
-        
+
+
+        public string ExampleOfChangingProperties()
+        {
+            return "base example.";
+        }
+
     }
 
 
@@ -44,6 +50,13 @@ namespace NewAndOverrideClasses
         {
             return "This is the new method.";
         }
+
+
+        public new void ExampleOfChangingProperties(string newParemeter)
+        {
+            System.Diagnostics.Debug.WriteLine(newParemeter);
+        }
+
     }
     
 
