@@ -24,7 +24,7 @@ namespace NewAndOverrideClasses
 
         public virtual string SayHelloWorld()
         {
-            return "This is the virtual method.";
+            return "This is the base method.";
         }
 
 
@@ -32,23 +32,10 @@ namespace NewAndOverrideClasses
         {
             return SayHelloWorld();
         }
-
-
-        public string ExampleOfChangingProperties()
-        {
-            return "base example.";
-        }
-
     }
 
 
-    public class ChildClassOverride : ParentClass
-    {
-        public override string SayHelloWorld()
-        {
-            return "This is the overridden method.";
-        }
-    }
+   
 
     public class ChildClassNew : ParentClass, IGreetings
     {
@@ -63,7 +50,13 @@ namespace NewAndOverrideClasses
         }
 
     }
-    
 
+    public class ChildClassOverride : ParentClass
+    {
+        public override string SayHelloWorld()
+        {
+            return "This is the overridden method.";
+        }
+    }
 
 }
