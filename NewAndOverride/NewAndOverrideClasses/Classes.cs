@@ -13,6 +13,12 @@ namespace NewAndOverrideClasses
         string SayHelloWorld () ;
     }
 
+    public interface IGreetings: IHelloWorld
+    {
+        string SayGoodBye();
+    }
+
+
     public class ParentClass : IHelloWorld
     {
 
@@ -44,17 +50,16 @@ namespace NewAndOverrideClasses
         }
     }
 
-    public class ChildClassNew : ParentClass,  IHelloWorld
+    public class ChildClassNew : ParentClass, IGreetings
     {
         public new string SayHelloWorld()
         {
             return "This is the new method.";
         }
 
-
-        public new void ExampleOfChangingProperties(string newParemeter)
+        public string SayGoodBye()
         {
-            System.Diagnostics.Debug.WriteLine(newParemeter);
+            return "Goodbye.";
         }
 
     }
