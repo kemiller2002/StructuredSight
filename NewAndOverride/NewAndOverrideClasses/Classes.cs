@@ -44,7 +44,7 @@ namespace NewAndOverrideClasses
         }
     }
 
-    public class ChildClassNew : ParentClass  /*IHelloWorld*/
+    public class ChildClassNew : ParentClass,  IHelloWorld
     {
         public new string SayHelloWorld()
         {
