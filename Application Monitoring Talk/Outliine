@@ -1,0 +1,87 @@
+Title: Application Performance Monitoring
+  Subtitle: building it from scratch using open source components
+
+Care: Why do we care?
+    Story:  The Donna Factor
+
+      Explanation: Manager calls and is angry that the application is slow.  This is based on anecdotal evidence.  No real information about if/what/why it's slow.
+
+      NotPayFor:  People care about performance, but they don't want to pay for it.  It's often an afterthought to the needs of the organization.
+
+Asking Management:
+    Request: Purchase a commercial product
+      Considerations:  Factors in getting it successfully
+        Expense: It's often expensive.
+        Hosting: Most organizations are concerned about letting data go.  Hippa for example.
+
+    Response: Normally response is a no.
+      Large Organizations: Large organizations will often have a solution, but it's too difficult to use and or outdated.
+
+Why Not Just Live with it:
+    Blame: Developers will ultimately get the blame.
+      Hardware: Even if it's true, management will rarely accept this.
+        Data: Information is required to spend money.
+    Proactive: We look like the hero if we start fix the problem before people start telling us there is one.
+      Psychological : This is actually a tactic for diffusing a situation.
+
+Left to Our Own Devices:
+  Things We Care About:
+
+  Correlation: We need a big picture of how the three parts fit together.
+    Goals:
+
+      Trend Analysis: We need a way to decipher data.
+        Story: The 9 o'clock problem at UAC.
+          Outcome: No analytics, had to reconfigure system.
+
+      Speed:  Ultimately our goal is to do this as quickly as possible.
+
+    Interaction: The request and the response.  We need to know what was requested and what was sent back.  Replaying the request is often key.
+
+    Timing: How long the process took, and what were the slowest parts.  Every method would be great, but we may have to live with certain critical parts.
+
+    Happenings:  What happened during the process. If there was an exception, we need to know what and why.
+
+Happenings:
+  Recording: Logging
+    Predefined ones: NLog, Log4Net, Enterprise Library
+    Importance: Not Fail, Configurable
+      Not Fail: Advise against custom frameworks.
+        Why: Problem has been solved. Building one normally has errors.
+          Story: Logging an exception that it can't log an exception.
+          Outcome: This ultimately defeats our overall goals.
+    Configurable How: Record enough information that we know what's going on.
+      Where to Log: Database, with caveats. Databases are fragile.  It's easy to accidentally have a problem: goes offline, password change and stops logging etc. Probably should log to a second place, at least for the major errors.
+        Why:  Our goal is to search and aggregate a lot of information from multiple sources.
+      Request Identifier
+  Examples: NLog
+    Example Method:
+      Designate type of log: low, medium, high
+      Message: What to log. -> Don't forget the nested exceptions.
+    Single Responsibility: Not all functions need to log.  They shouldn't.
+Timing:
+  MiniProfiler
+    Where it came from: Stack Exchange
+    What it does: Logs timing of overall request, and sub parts
+      Why is important: Show pain points.
+      Example: IO Reads.
+    Example:
+      IO : Beginning and Ending of a request.
+      DB : Timing db profiling.
+        Register For Dispose : Show automatically add to dispose for all req
+      All Else : Subsequent timings.
+      Also: Possible to automatically add it to all methods.
+
+Comings and goings:
+    Why: need to know what is happening to be able to diagnose.
+    Examples:
+      Miniprofiler: can do it for uri requests.
+      WCF (all inputs and outputs) : Show .net setup for WCF.
+      DB: Show how to capture database inputs.
+
+Putting it all together:
+  Timing Graph: See which ones were underperforming.
+  Exception Information:  Show last number of exceptions:
+    Grouping: Group by type.
+  Complete request: Be able to see all data for request.  Input, Output, Timings, and Exceptions.
+  Reporting: StackExchange Reporting.
