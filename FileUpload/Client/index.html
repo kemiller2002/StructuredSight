@@ -1,0 +1,38 @@
+<html>
+<head>
+
+
+</head>
+<body>
+  <input type="file" id="fileUpload">
+
+<script>
+(
+  function () {
+    var fU =  document.getElementById('fileUpload');
+
+    fU.onchange = function (e) {
+        var reader = new FileReader ();
+
+        reader.onloadend = function (e){
+            console.log(reader.result)
+
+        }
+
+        reader.readAsDataURL(fU.files[0]);
+    }
+
+
+
+  }
+
+  ());
+
+
+
+</script>
+
+</body>
+
+
+</html>
