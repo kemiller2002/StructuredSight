@@ -1,4 +1,4 @@
-System.register(['angular2/core', './instrument', './section.component'], function(exports_1) {
+System.register(['angular2/core', './instrument'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,8 +8,8 @@ System.register(['angular2/core', './instrument', './section.component'], functi
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, instrument_1, section_component_1;
-    var AppComponent;
+    var core_1, instrument_1;
+    var SectionComponent;
     return {
         setters:[
             function (core_1_1) {
@@ -17,32 +17,31 @@ System.register(['angular2/core', './instrument', './section.component'], functi
             },
             function (instrument_1_1) {
                 instrument_1 = instrument_1_1;
-            },
-            function (section_component_1_1) {
-                section_component_1 = section_component_1_1;
             }],
         execute: function() {
-            AppComponent = (function () {
-                function AppComponent() {
-                    this.instrument = new instrument_1.Assessments.Instrument();
-                    this.instrument.sections.push(new instrument_1.Assessments.Section());
-                    this.instrument.sections[0].description.text = "NEW NEW NEW";
+            SectionComponent = (function () {
+                function SectionComponent() {
                 }
-                AppComponent.prototype.onSectionSelect = function (section) {
-                    this.selectedSection = section;
+                SectionComponent.prototype.addItem = function (section) {
+                    section.items.push(new instrument_1.Assessments.Item());
                 };
-                AppComponent = __decorate([
+                SectionComponent.prototype.removeItem = function (section, item) {
+                };
+                SectionComponent.prototype.addDistractor = function (item) {
+                    item.distractors.push(new instrument_1.Assessments.Distractor());
+                };
+                SectionComponent = __decorate([
                     core_1.Component({
-                        selector: 'test-author',
-                        templateUrl: 'modules/author.html',
-                        directives: [section_component_1.SectionComponent]
+                        selector: 'section-detail',
+                        templateUrl: 'modules/section.html',
+                        inputs: ['section']
                     }), 
                     __metadata('design:paramtypes', [])
-                ], AppComponent);
-                return AppComponent;
+                ], SectionComponent);
+                return SectionComponent;
             })();
-            exports_1("AppComponent", AppComponent);
+            exports_1("SectionComponent", SectionComponent);
         }
     }
 });
-//# sourceMappingURL=app.component.js.map
+//# sourceMappingURL=section.component.js.map

@@ -1,9 +1,10 @@
 import {Component} from 'angular2/core';
 import {Assessments} from './instrument';
-
+import {SectionComponent} from './section.component';
 @Component({
     selector: 'test-author',
-    templateUrl: 'modules/author.html'
+    templateUrl: 'modules/author.html',
+    directives: [SectionComponent]
 })
 
 export class AppComponent {
@@ -15,14 +16,6 @@ export class AppComponent {
 
   public onSectionSelect(section:Assessments.Section) {
     this.selectedSection = section;
-  }
-
-  public addItem(section:Assessments.Section){
-    section.items.push(new Assessments.Item());
-  }
-
-  public removeItem(section:Assessments.Section, item:Assessments.Item){
-    
   }
 
   public selectedSection : Assessments.Section;

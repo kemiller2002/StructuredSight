@@ -1,0 +1,28 @@
+<div>
+  <label>Title:</label><input [(ngModel)]="section.description.text"/>
+</div>
+
+<div><label>Items</label></div>
+<div><input type="button" value="Add" (click)="addItem(section)"></div>
+<div *ngIf="section.items">
+  <div *ngFor="#item of section.items">
+      <div>
+        <label>Question Text:</label>
+        <textarea [(ngModel)]="item.question.text"></textarea>
+      </div>
+      <div>
+        <div>Distractors
+            <input type="button" value="Add" (click)="addDistractor(item)"/></div>
+
+      <div *ngFor="#distractor of item.distractors">
+        <label>Display Text:</label>
+        <textarea [(ngModel)]="distractor.display.text"></textarea>
+
+        <div>
+          <label>Weight:</label>
+          <input [(ngModel)]="distractor.weight"/>
+        </div>
+    </div>
+  </div>
+  </div>
+</div>

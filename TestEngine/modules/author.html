@@ -27,19 +27,5 @@
 
 
 <div *ngIf="selectedSection">
-  <div>
-    <label>Title:</label><input [(ngModel)]="selectedSection.description.text"/>
-  </div>
-
-  <div><label>Items</label></div>
-  <div><input type="button" value="Add" (click)="addItem(selectedSection)"></div>
-  <div *ngIf="selectedSection.items">
-    <div *ngFor="#item of selectedSection.items">
-        <textarea [(ngModel)]="item.question.text"></textarea>
-        <div *ngIf="item.distractors" *ngFor="#distractor of distractors">
-          <textarea [(ngModel)]="distractor.display.text"></textarea>
-          <input [(ngModel)]="distractor.weight"/>
-        </div>
-    </div>
-  </div>
+  <section-detail [section]="selectedSection"></section-detail>
 </div>
