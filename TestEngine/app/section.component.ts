@@ -1,6 +1,8 @@
 import {Component} from 'angular2/core'
 import {Assessments} from './instrument';
 import {ItemComponent} from './item.component';
+
+
 @Component({
     selector: 'section-detail',
     templateUrl: 'modules/section.html',
@@ -9,11 +11,13 @@ import {ItemComponent} from './item.component';
   }
 )
 
+
+
 export class SectionComponent {
   private _section:Assessments.Section
   public selectedItem:Assessments.Item;
   public newQuestionText : string;
-  
+
   public set section (section:Assessments.Section){
     this._section = section;
     console.log('set section');

@@ -2,7 +2,6 @@ import {Component} from 'angular2/core';
 import {Assessments} from './instrument';
 import {SectionComponent} from './section.component';
 import {Http, Headers} from 'angular2/http';
-import {ROUTER_PROVIDERS, RouteConfig} from 'angular2/router'
 import {ItemComponent} from './item.component';
 
 
@@ -12,7 +11,7 @@ import {ItemComponent} from './item.component';
     directives: [SectionComponent]
 })
 
-export class AppComponent {
+export class InstrumentComponent {
   constructor (public http:Http){
     var that = this;
 

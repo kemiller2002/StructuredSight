@@ -9,7 +9,7 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
     var core_1, section_component_1, http_1;
-    var AppComponent;
+    var InstrumentComponent;
     return {
         setters:[
             function (core_1_1) {
@@ -22,8 +22,8 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
                 http_1 = http_1_1;
             }],
         execute: function() {
-            AppComponent = (function () {
-                function AppComponent(http) {
+            InstrumentComponent = (function () {
+                function InstrumentComponent(http) {
                     this.http = http;
                     var that = this;
                     this.http.get("app/InstrumentExample.js")
@@ -31,20 +31,20 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
                         that.instrument = d.json();
                     });
                 }
-                AppComponent.prototype.onSectionSelect = function (section) {
+                InstrumentComponent.prototype.onSectionSelect = function (section) {
                     this.selectedSection = section;
                 };
-                AppComponent = __decorate([
+                InstrumentComponent = __decorate([
                     core_1.Component({
                         selector: 'test-author',
                         templateUrl: 'modules/author.html',
                         directives: [section_component_1.SectionComponent]
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
-                ], AppComponent);
-                return AppComponent;
+                ], InstrumentComponent);
+                return InstrumentComponent;
             })();
-            exports_1("AppComponent", AppComponent);
+            exports_1("InstrumentComponent", InstrumentComponent);
         }
     }
 });

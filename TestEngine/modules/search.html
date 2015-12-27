@@ -12,7 +12,7 @@
   </thead>
 
   <tbody *ngFor="#instrument of instruments" class=".table-hover">
-      <tr>
+      <tr (click)="showDetails(instrument)">
         <td>{{instrument.id.value}}</td>
         <td>{{instrument.title.text}}</td>
       </tr>
