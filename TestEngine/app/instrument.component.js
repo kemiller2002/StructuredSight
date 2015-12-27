@@ -1,4 +1,4 @@
-System.register(['angular2/core', './section.component', './item.component', 'angular2/http'], function(exports_1) {
+System.register(['angular2/core', './section.component', 'angular2/http'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', './section.component', './item.component', 'an
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, section_component_1, item_component_1, http_1;
+    var core_1, section_component_1, http_1;
     var AppComponent;
     return {
         setters:[
@@ -17,9 +17,6 @@ System.register(['angular2/core', './section.component', './item.component', 'an
             },
             function (section_component_1_1) {
                 section_component_1 = section_component_1_1;
-            },
-            function (item_component_1_1) {
-                item_component_1 = item_component_1_1;
             },
             function (http_1_1) {
                 http_1 = http_1_1;
@@ -31,7 +28,6 @@ System.register(['angular2/core', './section.component', './item.component', 'an
                     var that = this;
                     this.http.get("app/InstrumentExample.js")
                         .subscribe(function (d) {
-                        console.log(d.text());
                         that.instrument = d.json();
                     });
                 }
@@ -42,7 +38,7 @@ System.register(['angular2/core', './section.component', './item.component', 'an
                     core_1.Component({
                         selector: 'test-author',
                         templateUrl: 'modules/author.html',
-                        directives: [section_component_1.SectionComponent, item_component_1.ItemComponent]
+                        directives: [section_component_1.SectionComponent]
                     }), 
                     __metadata('design:paramtypes', [http_1.Http])
                 ], AppComponent);
@@ -52,4 +48,4 @@ System.register(['angular2/core', './section.component', './item.component', 'an
         }
     }
 });
-//# sourceMappingURL=app.component.js.map
+//# sourceMappingURL=instrument.component.js.map

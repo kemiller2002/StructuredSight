@@ -1,0 +1,21 @@
+<h1>Insturment Catalog</h1>
+
+<table class="table table-hover">
+
+  <thead>
+      <th>
+        Id
+      </th>
+      <th>
+        Title
+      </th>
+  </thead>
+
+  <tbody *ngFor="#instrument of instruments" class=".table-hover">
+      <tr>
+        <td>{{instrument.id.value}}</td>
+        <td>{{instrument.title.text}}</td>
+      </tr>
+  </tbody>
+
+</table>

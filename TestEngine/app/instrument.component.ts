@@ -1,14 +1,15 @@
 import {Component} from 'angular2/core';
 import {Assessments} from './instrument';
 import {SectionComponent} from './section.component';
-import {ItemComponent} from './item.component';
 import {Http, Headers} from 'angular2/http';
+import {ROUTER_PROVIDERS, RouteConfig} from 'angular2/router'
+import {ItemComponent} from './item.component';
 
 
 @Component({
     selector: 'test-author',
     templateUrl: 'modules/author.html',
-    directives: [SectionComponent, ItemComponent]
+    directives: [SectionComponent]
 })
 
 export class AppComponent {
@@ -17,7 +18,6 @@ export class AppComponent {
 
     this.http.get("app/InstrumentExample.js")
     .subscribe(d=>{
-      console.log(d.text());
       that.instrument = <Assessments.Instrument>d.json();
     });
   }

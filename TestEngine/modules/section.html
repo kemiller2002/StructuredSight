@@ -15,10 +15,22 @@
 
 <div class="row"><h3>Items</h3></div>
 
-<div><input type="button" value="Add" (click)="addItem(section)"></div>
+<div>
+  <textarea [(ngModel)]="newQuestionText"></textarea>
+  <input type="button" value="Add Question" (click)="addItem(section)"></div>
 
 <div *ngIf="section.items">
-  <div *ngFor="#item of section.items">
-      <item-detail [item]="item"></item-detail>
-  </div>
+  <table class="table table-hover">
+    <thead>
+      <th>Questions</th>
+    </thead>
+   <tbody *ngFor="#item of section.items" (click)="selectItem(item)">
+     <tr><td>t: {{item.question.text}}</td></tr>
+   </tbody>
+ </table>
+
+ <div *ngIf="selectedItem" class="row">
+   <h3>Item Details</h3>
+   <item-detail [item]="selectedItem"></item-detail>
+ </div>
 </div>
