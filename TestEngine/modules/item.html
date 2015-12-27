@@ -1,0 +1,22 @@
+<div class="row">
+  <h3>Question Text</h3>
+  <textarea class="form-control" [(ngModel)]="item.question.text"></textarea>
+</div>
+  <div class="row">
+      <h3>Distractors</h3>
+      <input type="button" value="Add" (click)="addDistractor(item)"/>
+  </div>
+
+<div *ngFor="#distractor of item.distractors">
+    <div class="row"><h3>Display Text:</h3></div>
+
+    <div class="row">
+        <div class=".col-md-8">
+          <textarea [(ngModel)]="distractor.display.text"></textarea>
+        </div>
+    </div>
+  <div>
+    <label>Weight:</label>
+    <input [(ngModel)]="distractor.weight" type="number"/>
+  </div>
+</div>

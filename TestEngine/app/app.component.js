@@ -1,4 +1,4 @@
-System.register(['angular2/core', './instrument', './section.component'], function(exports_1) {
+System.register(['angular2/core', './section.component', './item.component', 'angular2/http'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,25 +8,32 @@ System.register(['angular2/core', './instrument', './section.component'], functi
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, instrument_1, section_component_1;
+    var core_1, section_component_1, item_component_1, http_1;
     var AppComponent;
     return {
         setters:[
             function (core_1_1) {
                 core_1 = core_1_1;
             },
-            function (instrument_1_1) {
-                instrument_1 = instrument_1_1;
-            },
             function (section_component_1_1) {
                 section_component_1 = section_component_1_1;
+            },
+            function (item_component_1_1) {
+                item_component_1 = item_component_1_1;
+            },
+            function (http_1_1) {
+                http_1 = http_1_1;
             }],
         execute: function() {
             AppComponent = (function () {
-                function AppComponent() {
-                    this.instrument = new instrument_1.Assessments.Instrument();
-                    this.instrument.sections.push(new instrument_1.Assessments.Section());
-                    this.instrument.sections[0].description.text = "NEW NEW NEW";
+                function AppComponent(http) {
+                    this.http = http;
+                    var that = this;
+                    this.http.get("app/InstrumentExample.js")
+                        .subscribe(function (d) {
+                        console.log(d.text());
+                        that.instrument = d.json();
+                    });
                 }
                 AppComponent.prototype.onSectionSelect = function (section) {
                     this.selectedSection = section;
@@ -35,9 +42,9 @@ System.register(['angular2/core', './instrument', './section.component'], functi
                     core_1.Component({
                         selector: 'test-author',
                         templateUrl: 'modules/author.html',
-                        directives: [section_component_1.SectionComponent]
+                        directives: [section_component_1.SectionComponent, item_component_1.ItemComponent]
                     }), 
-                    __metadata('design:paramtypes', [])
+                    __metadata('design:paramtypes', [http_1.Http])
                 ], AppComponent);
                 return AppComponent;
             })();

@@ -1,17 +1,25 @@
 import {Component} from 'angular2/core';
 import {Assessments} from './instrument';
 import {SectionComponent} from './section.component';
+import {ItemComponent} from './item.component';
+import {Http, Headers} from 'angular2/http';
+
+
 @Component({
     selector: 'test-author',
     templateUrl: 'modules/author.html',
-    directives: [SectionComponent]
+    directives: [SectionComponent, ItemComponent]
 })
 
 export class AppComponent {
-  constructor (){
-    this.instrument = new Assessments.Instrument();
-    this.instrument.sections.push(new Assessments.Section())
-    this.instrument.sections[0].description.text = "NEW NEW NEW"
+  constructor (public http:Http){
+    var that = this;
+
+    this.http.get("app/InstrumentExample.js")
+    .subscribe(d=>{
+      console.log(d.text());
+      that.instrument = <Assessments.Instrument>d.json();
+    });
   }
 
   public onSectionSelect(section:Assessments.Section) {

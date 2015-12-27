@@ -35,6 +35,7 @@ System.register([], function(exports_1) {
                 var Section = (function () {
                     function Section() {
                         this.description = new Text();
+                        this.title = new Text();
                         this.items = new Array();
                     }
                     return Section;

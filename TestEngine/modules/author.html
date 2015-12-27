@@ -1,29 +1,41 @@
 <h1>Instrument Authoring</h1>
 
+<div *ngIf="instrument">
 <div>
-<label>Title:</label> <input [(ngModel)]="instrument.title.text" placeholder="Title" />
-
+  <div>
+    <h2>Title</h2>
+  </div>
+  <input [(ngModel)]="instrument.title.text" placeholder="Enter Title"
+  class="form-control" />
 </div>
 <br/>
 
-<div>
-  <div>
-      <label>Description:</label>
+  <div class=".col-md-8">
+      <h2>Description</h2>
   </div>
-  <div>
-    <textarea [(ngModel)]="instrument.description.text"></textarea>
+    <div class="row">
+      <div class=".col-md-8" >
+        <textarea data-provide="markdown"
+        [(ngModel)]="instrument.description.text"
+        class="form-control"
+        ></textarea>
+      </div>
+    </div>
+    <br/>
+    <div class="row"><h2>Sections</h2></div>
+    <div class="row">
+      <table class="table table-hover">
+        <tbody *ngFor="#section of instrument.sections" class=".table-hover">
+          <tr (click)="onSectionSelect(section)">
+            <td>
+              <div><h4>{{section.title.text}}</h4></div>
+              <div>{{section.description.text}}</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
-
-<br/>
-
-<div>
-  <label>Sections</label>
-  <ol *ngFor="#section of instrument.sections"
-    (click)="onSectionSelect(section)">
-    <li>{{section.description.text}}</li>
-  </ol>
-</div>
 
 
 <div *ngIf="selectedSection">

@@ -1,28 +1,24 @@
-<div>
-  <label>Title:</label><input [(ngModel)]="section.description.text"/>
+<div class="row">
+  <div class=".col-md-8">
+    <h3>Title</h3>
+    <input class="form-control" [(ngModel)]="section.title.text"/>
+  </div>
 </div>
 
-<div><label>Items</label></div>
+<div class="row">
+  <div class=".col-md-8">
+    <h3>Description</h3>
+    <input class="form-control" [(ngModel)]="section.description.text"/>
+  </div>
+</div>
+
+
+<div class="row"><h3>Items</h3></div>
+
 <div><input type="button" value="Add" (click)="addItem(section)"></div>
+
 <div *ngIf="section.items">
   <div *ngFor="#item of section.items">
-      <div>
-        <label>Question Text:</label>
-        <textarea [(ngModel)]="item.question.text"></textarea>
-      </div>
-      <div>
-        <div>Distractors
-            <input type="button" value="Add" (click)="addDistractor(item)"/></div>
-
-      <div *ngFor="#distractor of item.distractors">
-        <label>Display Text:</label>
-        <textarea [(ngModel)]="distractor.display.text"></textarea>
-
-        <div>
-          <label>Weight:</label>
-          <input [(ngModel)]="distractor.weight"/>
-        </div>
-    </div>
-  </div>
+      <item-detail [item]="item"></item-detail>
   </div>
 </div>

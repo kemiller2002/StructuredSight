@@ -33,8 +33,9 @@ export class Text implements DisplayText {
   }
 
   export class Section {
-    constructor(){
+    constructor() {
       this.description = new Text();
+      this.title = new Text();
       this.items = new Array<Item>();
     }
     items:Item[];
@@ -42,6 +43,7 @@ export class Text implements DisplayText {
     itemBanking:boolean;
     numberPerpage:number;
     description:DisplayText;
+    title:DisplayText;
   }
 
   export class Instrument {
