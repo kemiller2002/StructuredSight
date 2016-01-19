@@ -3,7 +3,7 @@ import {Assessments} from './instrument';
 import {SectionComponent} from './section.component';
 import {Http, Headers} from 'angular2/http';
 import {ItemComponent} from './item.component';
-
+import {ROUTER_PROVIDERS, RouteConfig, Router, RouteParams} from 'angular2/router'
 
 @Component({
     selector: 'test-author',
@@ -12,14 +12,11 @@ import {ItemComponent} from './item.component';
 })
 
 export class InstrumentComponent {
-  constructor (public http:Http){
-    var that = this;
-
-    this.http.get("app/InstrumentExample.js")
-    .subscribe(d=>{
-      that.instrument = <Assessments.Instrument>d.json();
-    });
+  constructor (private _router:Router, private _parms:RouteParams) {
+    this._currentId = _parms.get('id');
   }
+
+  private _currentId:string;
 
   public onSectionSelect(section:Assessments.Section) {
     this.selectedSection = section;

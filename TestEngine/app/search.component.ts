@@ -5,10 +5,12 @@ import {Http, Headers} from 'angular2/http';
 import {ROUTER_PROVIDERS, RouteConfig, Router} from 'angular2/router'
 import {ItemComponent} from './item.component';
 import {InstrumentComponent} from './instrument.component';
+import {InstrumentProxy} from './instrumentProxy.service';
 
 @Component({
     selector: 'search',
-    templateUrl: 'modules/search.html'
+    templateUrl: 'modules/search.html',
+    bindings : [InstrumentProxy]
 })
 
 @RouteConfig([
@@ -16,11 +18,12 @@ import {InstrumentComponent} from './instrument.component';
 ])
 
 export class SearchComponent {
-    constructor (private _http:Http, private _router: Router) {
-        var that = this;
+    constructor (private _router:Router, private instrumentProxy:InstrumentProxy) {
+    }
 
-        this._http.get('app/instrumentExampleList.js')
-        .subscribe(d=>that.instruments = <Assessments.Instrument[]>d.json());
+    ngOnInit(){
+      console.log('fire on Init -> search.')
+      this.instrumentProxy.getInstruments().subscribe(x=>this.instruments = x);
     }
 
     public showDetails(instrument:Assessments.Instrument) {

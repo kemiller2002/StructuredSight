@@ -1,4 +1,4 @@
-System.register(['angular2/core', './section.component', 'angular2/http'], function(exports_1) {
+System.register(['angular2/core', './section.component', 'angular2/router'], function(exports_1) {
     var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
         var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
         if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -8,7 +8,7 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
     var __metadata = (this && this.__metadata) || function (k, v) {
         if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
     };
-    var core_1, section_component_1, http_1;
+    var core_1, section_component_1, router_1;
     var InstrumentComponent;
     return {
         setters:[
@@ -18,18 +18,15 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
             function (section_component_1_1) {
                 section_component_1 = section_component_1_1;
             },
-            function (http_1_1) {
-                http_1 = http_1_1;
+            function (router_1_1) {
+                router_1 = router_1_1;
             }],
         execute: function() {
             InstrumentComponent = (function () {
-                function InstrumentComponent(http) {
-                    this.http = http;
-                    var that = this;
-                    this.http.get("app/InstrumentExample.js")
-                        .subscribe(function (d) {
-                        that.instrument = d.json();
-                    });
+                function InstrumentComponent(_router, _parms) {
+                    this._router = _router;
+                    this._parms = _parms;
+                    this._currentId = _parms.get('id');
                 }
                 InstrumentComponent.prototype.onSectionSelect = function (section) {
                     this.selectedSection = section;
@@ -40,7 +37,7 @@ System.register(['angular2/core', './section.component', 'angular2/http'], funct
                         templateUrl: 'modules/author.html',
                         directives: [section_component_1.SectionComponent]
                     }), 
-                    __metadata('design:paramtypes', [http_1.Http])
+                    __metadata('design:paramtypes', [router_1.Router, router_1.RouteParams])
                 ], InstrumentComponent);
                 return InstrumentComponent;
             })();

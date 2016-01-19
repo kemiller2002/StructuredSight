@@ -1,12 +1,18 @@
 Title: Application Performance Monitoring
   Subtitle: building it from scratch using open source components
 
+  Abstract:
+    Developers commonly face the problem of troubleshooting issues in a production environment with little or no information to accurately determine a resolution. Policies normally prohibit needed access to the servers, and error logs often show in complete picture surrounding issues.
+
+    In response to the development and operations staff finding and solving problems, organizations regularly do not consider the financial implications of not tracking their own production systems leading to outages and underperformance.  Additional expenditure for something which does not directly enhance an organizations profit is often denied, relying on human resources to manually determine the problem.
+
+    With this, developers must find a way to reduce the amount of time finding and analyzing potential issues without spending a large amount of capital or time. By using various systems from open source projects along with relying on small changes to programming, it becomes easy to track, analyze, and report problems in a clear and meaningful way. 
+
 Care: Why do we care?
     Story:  The Donna Factor
 
       Explanation: Manager calls and is angry that the application is slow.  This is based on anecdotal evidence.  No real information about if/what/why it's slow.
 
-      NotPayFor:  People care about performance, but they don't want to pay for it.  It's often an afterthought to the needs of the organization.
 
 Asking Management:
     Request: Purchase a commercial product
@@ -15,6 +21,8 @@ Asking Management:
         Hosting: Most organizations are concerned about letting data go.  Hippa for example.
 
     Response: Normally response is a no.
+      NotPayFor:  People care about performance, but they don't want to pay for it.  It's often an afterthought to the needs of the organization.
+
       Large Organizations: Large organizations will often have a solution, but it's too difficult to use and or outdated.
 
 Why Not Just Live with it:
@@ -35,6 +43,7 @@ Left to Our Own Devices:
           Outcome: No analytics, had to reconfigure system.
 
       Speed:  Ultimately our goal is to do this as quickly as possible.
+        Lesson: To organizations, time is money, and we're expensive.
 
     Interaction: The request and the response.  We need to know what was requested and what was sent back.  Replaying the request is often key.
 
