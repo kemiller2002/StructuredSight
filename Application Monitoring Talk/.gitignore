@@ -1,0 +1,5 @@
+[Pp]ackages/
+bin/
+obj/
+*.exe
+*.dll

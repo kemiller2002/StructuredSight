@@ -6,7 +6,7 @@ Title: Application Performance Monitoring
 
     In response to the development and operations staff finding and solving problems, organizations regularly do not consider the financial implications of not tracking their own production systems leading to outages and underperformance.  Additional expenditure for something which does not directly enhance an organizations profit is often denied, relying on human resources to manually determine the problem.
 
-    With this, developers must find a way to reduce the amount of time finding and analyzing potential issues without spending a large amount of capital or time. By using various systems from open source projects along with relying on small changes to programming, it becomes easy to track, analyze, and report problems in a clear and meaningful way. 
+    With this, developers must find a way to reduce the amount of time finding and analyzing potential issues without spending a large amount of capital or time. By using various systems from open source projects along with relying on small changes to programming, it becomes easy to track, analyze, and report problems in a clear and meaningful way.
 
 Care: Why do we care?
     Story:  The Donna Factor
@@ -30,7 +30,7 @@ Why Not Just Live with it:
       Hardware: Even if it's true, management will rarely accept this.
         Data: Information is required to spend money.
     Proactive: We look like the hero if we start fix the problem before people start telling us there is one.
-      Psychological : This is actually a tactic for diffusing a situation.
+      Psychological: This is actually a tactic for diffusing a situation.
 
 Left to Our Own Devices:
   Things We Care About:
@@ -44,6 +44,7 @@ Left to Our Own Devices:
 
       Speed:  Ultimately our goal is to do this as quickly as possible.
         Lesson: To organizations, time is money, and we're expensive.
+          (antecote, think about about how much money it costs to buy lunch.  Mine at Penn Station costs about 9 dollars.)
 
     Interaction: The request and the response.  We need to know what was requested and what was sent back.  Replaying the request is often key.
 
@@ -85,7 +86,7 @@ Comings and goings:
     Why: need to know what is happening to be able to diagnose.
     Examples:
       Miniprofiler: can do it for uri requests.
-      WCF (all inputs and outputs) : Show .net setup for WCF.
+      WCF (all inputs and outputs): Show .net setup for WCF.
       DB: Show how to capture database inputs.
 
 Putting it all together:

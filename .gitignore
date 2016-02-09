@@ -8,7 +8,7 @@ WindowsService/
 .project
 .metadata
 bin/
-tmp/
+tmp/ 
 *.tmp
 *.bak
 *.swp
