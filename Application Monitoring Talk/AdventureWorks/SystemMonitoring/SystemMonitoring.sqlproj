@@ -78,5 +78,6 @@
     <Build Include="Procedures\SystemLoggingSelect.sql" />
     <Build Include="Procedures\CallLogEntryTypeSelect.sql" />
     <Build Include="Procedures\MiniProfilerClientTimingsSelect.sql" />
+    <Build Include="dbo\Tables\SystemLogging.sql" />
   </ItemGroup>
 </Project>

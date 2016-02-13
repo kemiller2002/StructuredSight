@@ -31,7 +31,7 @@ namespace AdventureWorks
             MiniProfiler.Start();
 
             var identifier = Guid.NewGuid(); 
-
+            NLog.GlobalDiagnosticsContext.Set("systemLogId", identifier);
 
             MiniProfiler.Current.Id = identifier;
 
