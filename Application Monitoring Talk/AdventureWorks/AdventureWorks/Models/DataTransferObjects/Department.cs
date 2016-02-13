@@ -11,13 +11,13 @@ namespace AdventureWorks.Models.DataTransferObjects
 
         public Department(DbDataReader reader)
         {
-            DepartmentID = (Int16) reader["DepartmentID"];
+            DepartmentId = (Int16) reader["DepartmentID"];
             Name = (string) reader["Name"];
             GroupName = (string) reader["GroupName"];
             ModifiedDate = (DateTime) reader["ModifiedDate"];
         }
 
-        public Int16 DepartmentID {get; set; }
+        public Int16 DepartmentId {get; set; }
         public string Name { get; set; }
         public string GroupName { get; set; }
         public DateTime ModifiedDate { get; set; }

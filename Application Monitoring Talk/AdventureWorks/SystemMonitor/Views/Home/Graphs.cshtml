@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Graphs";
+}
+
+<script src="~/Scripts/Pages/Graphs.js"></script>
+<script type="text/javascript">
+
+    var apiDataStarted = "@Url.Content("~/MiniProfiler/Profiler/started")";
+
+    var apiMiniProfilerData = "@Url.Content("~/MiniProfiler/Profiler")";
+
+    var apiMiniProfilerLiveData = "@Url.Content("~/MiniProfiler/ProfilerLiveData")";
+
+    var apiMiniProfilerTimingsData = "@Url.Content("~/MiniProfilerTimings/Profiler")";
+
+    var apiMiniProfilerClientTimingsData = "@Url.Content("~/MiniProfilerClientTimings/Profiler")";
+
+</script>
+<div style="padding-left: 20px">
+    <h2 id="title">Timing Graphs</h2>
+    <span class="easterEgg">Made by Noam Rose</span>
+    <div ng-app="myApp" ng-controller="myCtrl1">
+        <div id="dashboardInputControls">
+            <div ng-cloak style="padding-bottom: 10px"><b>Data as of:</b> {{localTime(Started)}}
+            </div>
+            <div style="padding-bottom: 10px"><b>Record Count for Selected Dates: </b> {{log.length}}
+            </div>
+            <div class="form-group">
+                <div style="float: left">
+                    Begin Date:
+                    <div class='input-group date' id='beginDate' style="width: 150px">
+                        <input id="txtBeginDate" type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="float: left; margin-left: 15px">
+                    End Date:
+                    <div class='input-group date' id='endDate' style="width: 150px">
+                        <input id="txtEndDate" type='text' class="form-control"/>
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+                <div style="padding-top: 20px; margin-left: 15px; float: left">
+                    <button type="button" ng-click="getData()" class="btn btn-primary">Filter by Date</button>
+                </div>
+                <div class="liveGraphCheckBox">
+                    <input id="liveGraphData" type="checkbox" ng-model="checkboxModel.critical1.selected" ng-change="checkboxModel.checkboxModel_Click(checkboxModel.critical1)">Live Graph
+                    <select ng-model="seconds" ng-disabled="!checkboxModel.critical1.selected"
+                            ng-options="timer.lookupCode as timer.description for timer in seconds_description" ng-change="updateTimer(seconds)">
+                    </select>
+                   <timer id="timerId" ng-show="checkboxModel.critical1.selected" ng interval="1000"> Countdown: {{countDown}}</timer>
+                
+                </div>
+               
+                 
+
+                <script type="text/javascript">
+                    $(function() {
+                        $('#beginDate').datepicker({
+                            language: 'pt-BR'
+                        });
+                        $('#endDate').datepicker({
+                            language: 'pt-BR'
+                        });
+                    });
+
+                    function newWindow() {
+                        window.open("http://localhost:51782/MiniProfiler/ProfilerXL?beginDate=" + beginDate + "&endDate=" + endDate);
+                    }
+                </script>
+
+            </div>
+        </div>
+        <div id="chartWrapper">
+            <h4> Mini Profiler Duration in Milliseconds</h4>
+            <canvas id="lineGraph" width="600" height="400"></canvas>
+            <div id='chartLegend'></div>
+
+            <div style="height: 100px;"></div>
+        </div>
+    </div>
+   </div>
+ </div>
+
+
+
+

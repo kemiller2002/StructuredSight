@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "Call Log Entry Monitor";
+}
+
+<script src="~/Scripts/Pages/CallLogEntry.js"></script>
+<script type="text/javascript">
+    var apiCallLogEntryDates = "@Url.Content("~/CallLogEntry/Profiler")";
+
+    var apiCallLogEntryData = "@Url.Content("~/CallLogEntryType/Profiler")";
+
+    var apiCallLogEntryStartData = "@Url.Content("~/CallLogEntry/Profiler/date")"; 
+
+
+</script>
+<div style="padding-left: 20px">
+        <h2 id="title">Call Log Entry Monitor</h2>
+        <span class="easterEgg">Made by Noam Rose</span>
+        <div ng-app="myApp" ng-controller="myCtrl1">
+            <div id="dashboardInputControls">
+            <div ng-cloak style="padding-bottom: 10px"><b>Data as of:</b> {{localTime(Date)}}
+            </div>
+            <div style="padding-bottom: 10px"><b>Record Count for Selected Dates: </b> {{log.length}}
+            </div>
+                <div class="form-group">
+                <div style="float: left">
+                        Begin Date:
+                    <div class='input-group date' id='beginDate' style="width: 150px">
+                        <input id="txtBeginDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="float: left; margin-left: 15px">
+                        End Date:
+                    <div class='input-group date' id='endDate' style="width: 150px">
+                        <input id="txtEndDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="padding-top: 20px; margin-left: 15px; float: left">
+                        <button type="button" ng-click="getData()" class="btn btn-primary">Filter by Date</button>
+                    </div>
+                    <script type="text/javascript">
+                    $(function() {
+                            $('#beginDate').datepicker({
+                                language: 'pt-BR'
+                            });
+                            $('#endDate').datepicker({
+                                language: 'pt-BR'
+                            });
+                        });
+                    </script>
+                </div>
+
+            </div>
+            <div id="tableWrapper">
+                <table>
+                    <tr>
+                        <th class="tableHeaders"> 
+                            <a href="#" ng-click="orderByField='CallLogEntryId'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-barcode"></span> Call Log Entry Id <span ng-show="orderByField =='CallLogEntryId'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a></th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Date'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-calendar"></span> Date <span ng-show="orderByField =='Date'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Date'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-time"></span> Local Time <span ng-show="orderByField =='Date'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='StatusCode'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-barcode"></span> Status Code <span ng-show="orderByField =='StatusCode'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='CallLogEntryTypeId'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-barcode"></span> Call Log Entry Type Id <span ng-show="orderByField =='CallLogEntryTypeId'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                    </tr>
+                    <tr ng-repeat="x in log|orderBy:orderByField:reverseSort">
+                        <td ng-cloak>
+                            <button type="button" ng-click="Index(x.CallLogEntryId)" class="btn btn-info" data-toggle="modal" data-target="#myModal"> View ID: {{x.CallLogEntryId}}</button>
+                        </td>
+                    <td ng-cloak>{{x.Date | date: "M/d/yyyy, hh:mm:ss"}} <b>UTC</b></td>
+                        <td ng-cloak>{{localTime(x.Date)}}</td>
+                        <td ng-cloak>
+                            <button type="button" ng-click="Index(x.CallLogEntryId)" class="btn btn-success" data-toggle="modal" data-target="#myModal" ng-if="x.StatusCode == 'OK'"> {{x.StatusCode}}</button>
+                            <button type="button" ng-click="Index(x.CallLogEntryId)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" ng-if="x.StatusCode != 'OK' && x.StatusCode !=NULL"> {{x.StatusCode}}</button>
+                             
+                        </td>
+                        <td ng-cloak ng-if=" x.CallLogEntryTypeId == 1"> request </td>
+                    <td ng-cloak ng-if=" x.CallLogEntryTypeId == 2">
+                        <b>response</b>
+                    </td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div ng-class="{'modal-content panel-info': (log[rowIndex].CallLogEntryTypeId != 2 && log[rowIndex].StatusCode == NULL), 'modal-content panel-success': (log[rowIndex].StatusCode == 'OK'), 'modal-content panel-danger': (log[rowIndex].StatusCode !='OK') }">
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Call Log Entry Information</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div>
+                                <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+                                    <b>Call Log Entry</b>
+                                </h3>
+                            </div>
+
+                            <div>
+                                <b> Call Log Entry Id: </b>{{log[rowIndex].CallLogEntryId}}
+                            </div>
+                            <div>
+                                <b> Call Log Entry Type Id: </b>{{log[rowIndex].CallLogEntryTypeId}}
+                            </div>
+                            <div>
+                                <b> Date: </b> {{log[rowIndex].Date | date: "M/d/yyyy, hh:mm:ss"}} UTC
+                            </div>
+                            <div>
+                                <b> Local Time: </b> {{localTime(log[rowIndex].Date)}}
+                            </div>
+                            <div>
+                                <b> Request Identifier: </b>{{log[rowIndex].RequestIdentifier}}
+                            </div>
+                            <div>
+                                <b> Status Code: </b>{{log[rowIndex].StatusCode}}
+                            </div>
+                            <div>
+                                <b> Action: </b>{{log[rowIndex].Action}}
+                            </div>
+                            <div>
+                                <b> Message: </b>{{log[rowIndex].Message}}
+                            </div>
+                            <div>
+                                <b> Uri: </b>{{log[rowIndex].Uri}}
+                            </div>
+
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+     
+
+    </div>

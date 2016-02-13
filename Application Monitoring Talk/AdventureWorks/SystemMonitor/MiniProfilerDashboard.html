@@ -1,0 +1,237 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title> Mini Profiler Dash Board </title>
+    <script src="Scripts/angular.min.js"></script>
+    <!--<script src="bower_components\angular-modal-service\dst\angular-modal-service.min.js"></script>-->
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <script src="Scripts/bootstrap-datepicker.js"></script>
+
+
+</head>
+<body>
+        <div style="padding-left:20px">
+            <h2 id="title">Mini Profiler Monitor</h2>
+            <h4 id="easterEgg">Made by Noam Rose</h4>
+            <div ng-app="myApp" ng-controller="myCtrl1">
+                <div id="dashboardInputControls">
+                    <div class="form-group">
+                        <div style="float:left">
+                            Begin Date:
+                            <div class='input-group date' id='beginDate' style="width:150px">
+                                <input id="txtBeginDate" type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="float:left; margin-left:15px">
+                            End Date:
+                            <div class='input-group date' id='endDate' style="width:150px">
+                                <input id="txtEndDate" type='text' class="form-control" />
+                                <span class="input-group-addon">
+                                    <span class="glyphicon glyphicon-calendar"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div style="padding-top:20px;  margin-left:15px; float:left">
+                            <button type="button" ng-click="getData()" class="btn btn-primary">Filter by Date</button>
+                        </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#beginDate').datepicker({
+                                    language: 'pt-BR'
+                                });
+                                $('#endDate').datepicker({
+                                    language: 'pt-BR'
+                                });
+                            });
+                        </script>
+
+                    </div>
+                </div>
+                <div id="tableWrapper">
+                    <table>
+                        <tr>
+                            <th><span class="glyphicon glyphicon-calendar"></span> Date</th>
+                            <th><span class="glyphicon glyphicon-barcode"></span> Id</th>
+                            <th><span class="glyphicon glyphicon-barcode"></span> Root Timing Id</th>
+                            <th><span class="glyphicon glyphicon-user"></span> Has User Viewed</th>
+                            <th><span class="glyphicon glyphicon-time"></span> Duration in Milliseconds</th>
+                        </tr>
+                        <tr ng-repeat="x in log">
+                            <td>{{x.Started | date: "MM/dd/yyyy hh:mm:ss"}}</td>
+                            <td>{{x.Id}}</td>
+                            <td>{{x.RootTimingId}}</td>
+                            <td>
+                                <button type="button" ng-click="Index($index)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" ng-if="x.HasUserViewed == false"> {{x.HasUserViewed}}</button>
+                                <button type="button" ng-click="Index($index)" class="btn btn-success" data-toggle="modal" data-target="#myModal" ng-if="x.HasUserViewed != false">{{x.HasUserViewed}}</button>
+                            </td>
+                            <td>{{x.DurationMilliseconds}}</td>
+                        </tr>
+                    </table>
+                    <div style="height:100px;"></div>
+                </div>
+
+                <div class="modal fade" id="myModal" role="dialog">
+                    <div class="modal-dialog">
+                        <!-- Modal content-->
+                        <div ng-class="{'modal-content panel-danger': (log[rowIndex].HasUserViewed == false), 'modal-content panel-success': (log[rowIndex].HasUserViewed != false)}">
+                            <div class="modal-header panel-heading">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Mini Profiler Information</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div><h3 style="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"><b>Mini Profiler</b></h3></div>
+                                <div><b>Start Date:  </b>{{log[rowIndex].Started | date: "MM/dd/yyyy hh:mm:ss"}}</div>
+                                <div><b>Id: </b> {{log[rowIndex].Id}} </div>
+                                <div><b>Root Timing Id: </b>{{log[rowIndex].RootTimingId}} </div>
+                                <div><b>Has User Viewed: </b> {{log[rowIndex].HasUserViewed}}</div>
+                                <div><b>DurationMilliseconds: </b>{{log[rowIndex].DurationMillseconds}}</div>
+                                <div><b>User: </b>{{log[rowIndex].User}} </div>
+                                <div><b>Machine Name: </b>{{log[rowIndex].MachineName}} </div>
+                                <div><b>CustomLinksJson: </b>{{log[rowIndex].CustomLinksJson}} </div>
+                                <div><b>Client Timings Redirect Count: </b>{{log[rowIndex].ClientTimingsRedirectCount}} </div>
+
+                                <div><h3 style ="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"><b>Mini Profiler Timings</b></h3></div>
+
+                                <div><b>MiniProfilerId: </b>{{MiniProfilerTimings[rowIndex].MiniProfilerId}} </div>
+                                <div><b>Id: </b>{{MiniProfilerTimings[rowIndex].Id}} </div>
+                                <div><b>ParentTimingId: </b>{{MiniProfilerTimings[rowIndex].ParentTimingId}} </div>
+                                <div><b>Name: </b>{{MiniProfilerTimings[rowIndex].Name}} </div>
+                                <div><b>DurationMilliseconds: </b>{{MiniProfilerTimings[rowIndex].DurationMilliseconds}} </div>
+                                <div><b>StartMilliseconds: </b>{{MiniProfilerTimings[rowIndex].StartMilliseconds}} </div>
+                                <div><b>IsRoot: </b>{{MiniProfilerTimings[rowIndex].IsRoot}} </div>
+                                <div><b>Depth: </b>{{MiniProfilerTimings[rowIndex].Depth}} </div>
+                                <div><b>CustomTimingsJson: </b>{{MiniProfilerTimings[rowIndex].CustomTimingsJson}} </div>
+
+                                <div><h3 style="font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif"><b>Mini Profiler Client Timings</b></h3></div>
+
+                                <div><b>Id: </b>{{MiniProfilerClientTimings[rowIndex].Id}}</div>
+                                <div><b>Mini Profiler Id: </b>{{MiniProfilerClientTimings[rowIndex].MiniProfilerId}}</div>
+                                <div><b>Name: </b>{{MiniProfilerClientTimings[rowIndex].Name}}</div>
+                                <div><b>Start: </b>{{MiniProfilerClientTimings[rowIndex].Start}}</div>
+                                <div><b>Duration: </b>{{MiniProfilerClientTimings[rowIndex].Duration}}</div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <style>
+                table, th, td {
+                    border: 1px solid grey;
+                    border-collapse: collapse;
+                    padding: 5px;
+                }
+
+                    table tr:nth-child(odd) {
+                        background-color: #f1f1f1;
+                    }
+
+                    table tr:nth-child(even) {
+                        background-color: #ffffff;
+                    }
+
+                .btn {
+                    width: 150px;
+                }
+
+                .modal-dialog {
+                    width: 80%;
+                    max-height: 80%;
+                    overflow: visible;
+                    text-wrap: normal;
+                }
+
+                #dashboardInputControls {
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                    padding-left: 10px;
+                    margin-bottom: 30px;
+                }
+
+                #BeginDateWrapper {
+                    float: left;
+                }
+
+                #EndDateWrapper {
+                    float: left;
+                    padding-left: 15px;
+                }
+
+                #tableWrapper {
+                    clear: left;
+                    margin-top: 50px;
+                }
+
+                #title {
+                    font-family: Arial;
+                    color: #444;
+                    margin: 0;
+                    padding-top: 15px;
+                    line-height: 44px;
+                    letter-spacing: -2px;
+                    font-weight: bold;
+                }
+
+                #easterEgg {
+                    color: white;
+                }
+            </style>
+            <script>
+                var app = angular.module("myApp", []);
+                var rowIndex = 0;
+                var beginDate = new Date();
+                var endDate = new Date();
+                var defaultBeginDate = beginDate.getMonth() + 1 + "/" + (beginDate.getDate() + "/" + beginDate.getFullYear());
+                var defaultEndDate = endDate.getMonth() + 1 + "/" + (endDate.getDate() + "/" + endDate.getFullYear());
+
+
+                app.controller("myCtrl1", function ($scope, $http) {
+
+
+                    $scope.getData = function () {
+                        beginDate = txtBeginDate.value;
+                        endDate = txtEndDate.value;
+
+                        $http.get("http://localhost:51782/MiniProfiler/Profiler?beginDate=" + beginDate + "&endDate=" + endDate)
+                          .success(function (response) {
+                              $scope.log = response;
+                          });
+
+                        $http.get("http://localhost:51782/MiniProfilerTimings/Profiler")
+                         .success(function (response) {
+                             $scope.MiniProfilerTimings = response;
+                         });
+
+                        $http.get("http://localhost:51782/MiniProfilerClientTimings/Profiler")
+                        .success(function (response) {
+                            $scope.MiniProfilerClientTimings = response;
+                        }); 
+
+                    }
+
+                    $scope.Index = function (selectedIndex) {
+
+                        $scope.rowIndex = selectedIndex;
+                    }
+
+                    txtBeginDate.value = defaultBeginDate;
+                    txtEndDate.value = defaultEndDate;
+
+                    $scope.getData(defaultBeginDate, defaultEndDate);
+
+
+                })
+
+            </script>
+        </div>
+</body>
+</html>

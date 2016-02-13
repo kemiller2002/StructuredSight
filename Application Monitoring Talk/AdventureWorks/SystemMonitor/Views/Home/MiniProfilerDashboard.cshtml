@@ -1,0 +1,211 @@
+﻿@{
+    ViewBag.Title = "Mini Profiler Monitor";
+}
+
+<script src="~/Scripts/Pages/MiniProfiler.js"></script>
+
+<script type="text/javascript">
+
+    var apiByDates = "@Url.Content("~/MiniProfiler/Profiler")";
+
+    var apiMiniProfilerTimings = "@Url.Content("~/MiniProfilerTimings/Profiler")";
+
+    var apiMiniProfilerClientTimings = "@Url.Content("~/MiniProfilerClientTimings/Profiler")";
+
+    var apiMiniProfilerStartDate = "@Url.Content("~/MiniProfiler/Profiler/started")";
+
+</script>
+
+<div style="padding-left: 20px">
+        <h2 id="title">Mini Profiler Monitor</h2>
+    <div style="padding-bottom: 25px;"class="my-legend">
+             <div class="legend-padding">
+            <div class="legend-title">Legend</div>
+            <div class="legend-scale">
+                <ul class="legend-labels">
+                    <li class="legend-radiusGreen"> Success</li>
+                    <li class="legend-radiusYellow"> Danger </li>
+                    <li class="legend-radiusRed"> Warning </li>
+                </ul>
+            </div>
+                 </div>
+        </div>
+        <div ng-app="myApp" ng-controller="myCtrl1">
+            <div id="dashboardInputControls">
+            <div style="padding-bottom: 10px"><b>Data as of:</b> {{localTime(Started)}}
+            </div>
+            <div style="padding-bottom: 10px"><b>Record Count for Selected Dates: </b> {{log.length}}
+            </div>
+                <div class="form-group">
+                <div style="float: left">
+                        Begin Date:
+                    <div class='input-group date' id='beginDate' style="width: 150px">
+                        <input id="txtBeginDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="float: left; margin-left: 15px">
+                        End Date:
+                    <div class='input-group date' id='endDate' style="width: 150px">
+                        <input id="txtEndDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="padding-top: 20px; margin-left: 15px; float: left">
+                        <button type="button" ng-click="getData()" class="btn btn-primary">Filter by Date</button>
+                    </div>
+                    <script type="text/javascript">
+                    $(function() {
+                                $('#beginDate').datepicker({
+                                    language: 'pt-BR'
+                                });
+                                $('#endDate').datepicker({
+                                    language: 'pt-BR'
+                                });
+                            });
+
+                    </script>
+
+                </div>
+            </div>
+            <div id="tableWrapper">
+                <table>
+                    <tr>
+                        <th class="tableHeaders"><span class="glyphicon glyphicon-search"></span> View</th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='DurationMilliseconds'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-time"></span> Duration in Milliseconds <span ng-show="orderByField =='DurationMilliseconds'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Started'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-calendar"></span> Date <span ng-show="orderByField =='Started'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Started'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-time"></span> Local Time <span ng-show="orderByField =='Started'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                    </tr>
+                    <tr ng-repeat="x in log|orderBy:orderByField:reverseSort">
+                        <td ng-cloak>
+                            <button type="button" ng-click="Index(x.RowId)" class="btn btn-info" data-toggle="modal" data-target="#myModal"> View Row Id: {{x.RowId}} </button>
+                        </td>
+
+                        <td>
+                            <botton class="btn btn-success noDurationTimingsHover" ng-click="Index(x.RowId)" data-toggle="modal" data-target="#myModal" ng-if="(x.DurationMilliseconds < (mean + standard)) ">{{x.DurationMilliseconds}}</botton>
+                            <botton class="btn btn-warning noDurationTimingsHover" ng-click="Index(x.RowId)" data-toggle="modal" data-target="#myModal" ng-if="(x.DurationMilliseconds >= (mean + standard)) && (x.DurationMilliseconds <  (mean + (standard * 2)))">{{x.DurationMilliseconds}}</botton>
+                            <botton class="btn btn-danger noDurationTimingsHover" ng-click="Index(x.RowId)" data-toggle="modal" data-target="#myModal" ng-if="(x.DurationMilliseconds >=  (mean + (standard * 2)))"> {{x.DurationMilliseconds}}</botton>
+                        </td>
+
+                        <td ng-cloak>{{x.Started | date: "M/d/yyyy, hh:mm:ss"}} UTC</td>
+                        <td ng-cloak>{{localTime(x.Started)}}</td>
+
+                    </tr>
+                </table>
+            </div>
+
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div class="modal-content panel-info">
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">Mini Profiler Information</h4>
+                        </div>
+                        <div class="modal-body">
+                        <div>
+                            <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+                                <b>Mini Profiler</b>
+                            </h3>
+                        </div>
+
+                        <div><b>Start Date: </b>{{log[rowIndex].Started | date: "M/d/yyyy, hh:mm:ss"}} UTC
+                        </div>
+                        <div><b> Local Time</b> {{localTime(log[rowIndex].Started)}}
+                        </div>
+                        <div><b>Id: </b> {{log[rowIndex].Id}}
+                        </div>
+                        <div><b>Root Timing Id: </b>{{log[rowIndex].RootTimingId}}
+                        </div>
+                        <div><b>Has User Viewed: </b> {{log[rowIndex].HasUserViewed}}
+                        </div>
+                        <div><b>DurationMilliseconds: </b>{{log[rowIndex].DurationMillseconds}}
+                        </div>
+                        <div><b>User: </b>{{log[rowIndex].User}}
+                        </div>
+                        <div><b>Machine Name: </b>{{log[rowIndex].MachineName}}
+                        </div>
+                        <div><b>CustomLinksJson: </b>{{log[rowIndex].CustomLinksJson}}
+                        </div>
+                        <div><b>Client Timings Redirect Count: </b>{{log[rowIndex].ClientTimingsRedirectCount}}
+                        </div>
+
+                            <div>
+                                <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+                                    <b>Mini Profiler Timings</b>
+                                </h3>
+                            </div>
+                            <div ng-repeat="timing in MiniProfilerTimings">
+                                <div>
+                                    <b>MiniProfilerId: </b>{{timing.MiniProfilerId}}
+                                </div>
+                                <div>
+                                    <b>Id: </b>{{timing.Id}}
+                                </div>
+                                <div>
+                                    <b>ParentTimingId: </b>{{timing.ParentTimingId}}
+                                </div>
+                                <div>
+                                    <b>Name: </b>{{timing.Name}}
+                                </div>
+                                <div>
+                                    <b>DurationMilliseconds: </b>{{timing.DurationMilliseconds}}
+                                </div>
+                                <div>
+                                    <b>StartMilliseconds: </b>{{timing.StartMilliseconds}}
+                                </div>
+                                <div>
+                                    <b>IsRoot: </b>{{timing.IsRoot}}
+                                </div>
+                                <div>
+                                    <b>Depth: </b>{{timing.Depth}}
+                                </div>
+                                <div>
+                                    <b>CustomTimingsJson: </b>{{timing.CustomTimingsJson}}
+                                </div>
+                            </div>
+                        <div>
+                            <h3 style="font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif">
+                                <b>Mini Profiler Client Timings</b>
+                            </h3>
+                        </div>
+
+                        <div><b>Id: </b>{{MiniProfilerClientTimings[rowIndex].Id}}
+                        </div>
+                        <div><b>Mini Profiler Id: </b>{{MiniProfilerClientTimings[rowIndex].MiniProfilerId}}
+                        </div>
+                        <div><b>Name: </b>{{MiniProfilerClientTimings[rowIndex].Name}}
+                        </div>
+                        <div><b>Start: </b>{{MiniProfilerClientTimings[rowIndex].Start}}
+                        </div>
+                        <div><b>Duration: </b>{{MiniProfilerClientTimings[rowIndex].Duration}}
+                        </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+      
+  
+    </div>

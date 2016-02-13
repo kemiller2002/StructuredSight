@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using StackExchange.Profiling;
+using StackExchange.Profiling.Storage;
 
 namespace AdventureWorks
 {
@@ -22,12 +23,18 @@ namespace AdventureWorks
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            MiniProfiler.Settings.Storage = new SqlServerStorage("Data Source=localhost;Initial Catalog=SystemMonitoring;Integrated Security=sspi");
         }
 
         protected void Application_BeginRequest()
         {
             MiniProfiler.Start();
-            var identifier = Guid.NewGuid().ToString(); //must be string to work with integrations
+
+            var identifier = Guid.NewGuid(); 
+
+
+            MiniProfiler.Current.Id = identifier;
+
             profilerStep = MiniProfiler.Current.Step("Start");
         }
 

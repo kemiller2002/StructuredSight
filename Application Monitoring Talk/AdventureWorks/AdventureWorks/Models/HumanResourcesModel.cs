@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.IO;
 using System.Linq;
 using System.Web;
 using AdventureWorks.Models.DataTransferObjects;
+using StackExchange.Profiling;
 
 namespace AdventureWorks.Models
 {
@@ -27,6 +29,18 @@ namespace AdventureWorks.Models
                 yield return new Department(reader);
             }
 
+        }
+
+        
+        public static IEnumerable<String> GetPropDepartments(Stream fileStream)
+        {
+            using (MiniProfiler.Current.Step("File Read Operation"))
+            {
+                using (var writer = new StreamReader(fileStream))
+                {
+                    yield return writer.ReadLine();
+                }
+            }
         } 
 
 

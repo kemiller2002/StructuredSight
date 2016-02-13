@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title> System Logging Dash Board </title>
+<script src="Scripts/angular.min.js"></script>
+<!--<script src="bower_components\angular-modal-service\dst\angular-modal-service.min.js"></script>-->
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="Scripts/bootstrap-datepicker.js"></script>
+
+
+</head>
+<body>
+<div style="padding-left:20px">
+    <h2 id="title">System Logging Monitor</h2>
+    <h4 id="easterEgg">Made by Noam Rose</h4>
+<div ng-app="myApp" ng-controller="myCtrl1">
+    <div id="dashboardInputControls">
+        <div class="form-group">
+            <div style="float:left">
+                Begin Date:
+                <div class='input-group date' id='beginDate' style="width:150px">
+                    <input id="txtBeginDate" type='text' class="form-control" />
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+           <div style="float:left; margin-left:15px">
+               End Date:
+               <div class='input-group date' id='endDate' style="width:150px">
+                   <input id="txtEndDate" type='text' class="form-control" />
+                   <span class="input-group-addon">
+                       <span class="glyphicon glyphicon-calendar"></span>
+                   </span>
+               </div>
+           </div>
+            <div style="padding-top:20px; margin-left:15px; float:left">
+                <button type="button" ng-click="getData()" class="btn btn-primary">Filter Data</button>
+            </div>
+            <script type="text/javascript">
+                $(function () {
+                    $('#beginDate').datepicker({
+                        language: 'pt-BR'
+                    });
+                    $('#endDate').datepicker({
+                       language: 'pt-BR'
+                    });
+                });
+              </script>
+
+        </div>
+
+    </div>
+    <div id="tableWrapper">
+        <table>
+            <tr>
+                <th><span class=" glyphicon glyphicon-stats"></span> Level of Severity</th>
+                <th><span class="glyphicon glyphicon-calendar"></span> Date</th>
+                <th><span class="glyphicon glyphicon-envelope"></span> Message</th>
+                <th><span class="glyphicon glyphicon-barcode"></span> System Log Id </th>
+                <th><span class="glyphicon glyphicon-text-size"></span> Machine Name</th>
+            </tr>
+            <tr ng-repeat="x in log">
+                <td>
+                    <button type="button" ng-click="Index($index)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" ng-if="x.Level == 'Error'"> {{x.Level}}</button>
+                    <button type="button" ng-click="Index($index)" class="btn btn-success" data-toggle="modal" data-target="#myModal" ng-if="x.Level != 'Error'">{{x.Level}}</button>
+                </td>
+                <td>{{x.Date | date: "MM/d/yyyy hh:mm:ss"}}</td>
+                  <td>{{x.Message}}</td>
+                  <td>{{x.SystemLogId}}</td>
+                  <td>{{x.MachineName}}</td>
+              </tr>
+          </table>
+        <div style="height:100px;"></div>
+      </div>
+
+      <div class="modal fade" id="myModal" role="dialog">
+          <div class="modal-dialog">
+              <!-- Modal content-->
+              <div ng-class="{'modal-content panel-danger': (log[rowIndex].Level == 'Error'), 'modal-content panel-success': (log[rowIndex].Level != 'Error')}">
+                  <div class="modal-header panel-heading">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">System Logging Information</h4>
+                  </div>
+                  <div class="modal-body">
+                      <div><b> Level of Severity: </b>{{log[rowIndex].Level}}</div>
+                      <div><b> Date: </b> {{log[rowIndex].Date | date: "MM/d/yyyy hh:mm:ss"}} </div>
+                      <div><b> Message: </b>{{log[rowIndex].Message}} </div>
+                      <div><b> System Log Id: </b> {{log[rowIndex].SystemLogId}}</div>
+                      <div><b> Machine Name: </b>{{log[rowIndex].MachineName}}</div>
+                      <div><b> Module: </b>{{log[rowIndex].Module}} </div>
+                      <div><b> Logger: </b>{{log[rowIndex].Logger}} </div>
+                      <div><b> Username: </b>{{log[rowIndex].Username}} </div>
+                      <div><b> CallSite: </b>{{log[rowIndex].CallSite}} </div>
+                      <div><b> Thread: </b>{{log[rowIndex].Thread}} </div>
+                      <div><b> Stacktrace: </b><span class="align">{{log[rowIndex].Stacktrace}} </span></div>
+                  </div>
+                  <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  </div>
+              </div>
+              </div>
+
+          </div>
+      </div>
+  <style>
+      table, th, td {
+        border: 1px solid grey;
+          border-collapse: collapse;
+          padding: 5px;
+      }
+    table tr:nth-child(odd){
+        background-color:#f1f1f1;
+    }
+    table tr:nth-child(even){
+        background-color:#ffffff;
+    }
+    .btn {
+        width:150px;
+    }
+    .modal-dialog{
+        width:80%;
+        max-height:80%;
+        overflow:visible;
+        text-wrap:normal;
+    }
+   #dashboardInputControls{
+       padding-top:10px;
+       padding-bottom:10px;
+       padding-left:10px;
+       margin-bottom:30px;
+   }
+   #BeginDateWrapper{
+        float:left;
+   }
+   #EndDateWrapper{
+        float:left;
+       padding-left:15px;
+   }
+   #tableWrapper{
+        clear:left;
+        margin-top:50px; 
+   }
+   #title {
+      font-family: Arial; 
+      color:#444; 
+      margin: 0; 
+      padding-top: 15px; 
+      line-height: 44px; 
+      letter-spacing: -2px; 
+      font-weight: bold; 
+            }
+   #easterEgg{
+       color:white; 
+   }
+
+    </style>
+    <script>
+    var app = angular.module("myApp", []);
+    var rowIndex = 0;
+    var beginDate = new Date();
+    var endDate = new Date(); 
+    var defaultBeginDate = beginDate.getMonth() + 1 + "/" + (beginDate.getDate() + "/" + beginDate.getFullYear());
+    var defaultEndDate = endDate.getMonth() + 1 + "/" + (endDate.getDate() + "/" + endDate.getFullYear());
+ 
+    app.controller("myCtrl1", function ($scope, $http) {
+
+
+        $scope.getData = function () {
+            beginDate = txtBeginDate.value;
+            endDate = txtEndDate.value;
+
+          
+            $http.get("http://localhost:51782/SystemLogging/Profiler?beginDate=" + beginDate + "&endDate=" + endDate)
+                .success(function(response)
+               {
+                   $scope.log = response;
+               });
+        }
+
+        $scope.Index = function (selectedIndex) {
+
+            $scope.rowIndex = selectedIndex;
+        }
+
+        txtBeginDate.value = defaultBeginDate;
+        txtEndDate.value = defaultEndDate;
+
+        $scope.getData(defaultBeginDate, defaultEndDate);
+        
+
+    })
+    
+     </script>
+    </div>
+</body>
+</html>

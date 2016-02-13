@@ -13,6 +13,10 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Profiler.Models", "Profiler
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SystemMonitoring", "SystemMonitoring\SystemMonitoring.sqlproj", "{BC1774DD-A2E6-4013-AC2C-5288272E322D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNR.DOW.SystemMonitor", "..\DNR.DOW.SystemMonitor\DNR.DOW.SystemMonitor.csproj", "{43AEED45-E7F7-481E-BD5D-E1EDF48075F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DNR.DOW.SystemMonitor.Models", "..\DNR.DOW.SystemMonitor.Models\DNR.DOW.SystemMonitor.Models.csproj", "{9F0A83B4-4A1F-4B45-85D0-E701D2740157}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -41,6 +45,14 @@ Global
 		{BC1774DD-A2E6-4013-AC2C-5288272E322D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC1774DD-A2E6-4013-AC2C-5288272E322D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC1774DD-A2E6-4013-AC2C-5288272E322D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{43AEED45-E7F7-481E-BD5D-E1EDF48075F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43AEED45-E7F7-481E-BD5D-E1EDF48075F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43AEED45-E7F7-481E-BD5D-E1EDF48075F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43AEED45-E7F7-481E-BD5D-E1EDF48075F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F0A83B4-4A1F-4B45-85D0-E701D2740157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F0A83B4-4A1F-4B45-85D0-E701D2740157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F0A83B4-4A1F-4B45-85D0-E701D2740157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F0A83B4-4A1F-4B45-85D0-E701D2740157}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

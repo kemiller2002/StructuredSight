@@ -1,0 +1,153 @@
+﻿@{
+    ViewBag.Title = "System Logging Monitor";
+}
+
+<script src="~/Scripts/Pages/SystemLogging.js"></script>
+
+<script type="text/javascript">
+    var apiByDates = "@Url.Content("~/SystemLogging/Profiler")";
+
+
+    var dataFirstDate = "@Url.Content("~/SystemLogging/Profiler/date")";
+
+
+</script>
+
+<div style="padding-left: 20px">
+        <h2 id="title">System Logging Monitor</h2>
+        <span class="easterEgg">Made by Noam Rose</span>
+        <div ng-app="myApp" ng-controller="myCtrl1">
+            <div id="dashboardInputControls">
+            <div ng-cloak style="padding-bottom: 10px"><b>Data as of:</b> {{localTime(Date)}}
+            </div>
+            <div style="padding-bottom: 10px"><b>Record Count for Selected Dates: </b> {{log.length}}
+            </div>
+                <div class="form-group">
+                <div style="float: left">
+                        Begin Date:
+                    <div class='input-group date' id='beginDate' style="width: 150px">
+                        <input id="txtBeginDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="float: left; margin-left: 15px">
+                        End Date:
+                    <div class='input-group date' id='endDate' style="width: 150px">
+                        <input id="txtEndDate" type='text' class="form-control"/>
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        </div>
+                    </div>
+                <div style="padding-top: 20px; margin-left: 15px; float: left">
+                        <button type="button" ng-click="getData()" class="btn btn-primary">Filter by Date</button>
+                    </div>
+                    <script type="text/javascript">
+                    $(function() {
+                         $('#beginDate').datepicker({
+                            language: 'pt-BR'
+                            });
+                         $('#endDate').datepicker({
+                            language: 'pt-BR'
+                            });
+                     });
+                    </script>
+
+
+                </div>
+            </div>
+            <div id="tableWrapper">
+                <table>
+                    <tr>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Id'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-barcode"></span> Id <span ng-show="orderByField =='Id'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Level'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-stats"></span> Level of Severity <span ng-show="orderByField =='Level'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Date'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-calendar"></span> Date <span ng-show="orderByField =='Date'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Date'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-time"></span> Local Time <span ng-show="orderByField =='Date'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='Message'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-envelope"></span> Message <span ng-show="orderByField =='Message'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                        <th class="tableHeaders">
+                            <a href="#" ng-click="orderByField='MachineName'; reverseSort = !reverseSort">
+                                <span class="glyphicon glyphicon-text-size"></span> Machine Name <span ng-show="orderByField =='MachineName'"><span ng-show="!reverseSort">&#9650;</span><span ng-show="reverseSort">&#9660;</span></span>
+                            </a>
+                        </th>
+                    </tr>
+                    <tr ng-repeat="x in log|orderBy:orderByField:reverseSort ">
+                        <td ng-cloak>{{x.Id}}</td>
+                        <td ng-cloak>
+                            <button type="button" ng-click="Index(x.Id)" class="btn btn-danger" data-toggle="modal" data-target="#myModal" ng-if="x.Level == 'Error'"> {{x.Level}}</button>
+                            <button type="button" ng-click="Index(x.Id)" class="btn btn-success" data-toggle="modal" data-target="#myModal" ng-if="x.Level != 'Error'">{{x.Level}}</button>
+                        </td>
+                        <td ng-cloak>{{x.Date | date: "M/dd/yyyy, hh:mm:ss"}} UTC</td>
+                        <td ng-cloak>{{localTime(x.Date)}}</td>
+                        <td ng-cloak>{{x.Message}}</td>
+                        <td ng-cloak>{{x.MachineName}}</td>
+                    </tr>
+                </table>
+            </div>
+
+            <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog">
+                    <!-- Modal content-->
+                    <div ng-class="{'modal-content panel-danger': (log[rowIndex].Level == 'Error'), 'modal-content panel-success': (log[rowIndex].Level != 'Error')}">
+                        <div class="modal-header panel-heading">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">System Logging Information</h4>
+                        </div>
+                        <div class="modal-body">
+                        <div><b> Id: </b>{{log[rowIndex].Id}}
+                        </div>
+                        <div><b> Level of Severity: </b>{{log[rowIndex].Level}}
+                        </div>
+                        <div><b> Date: </b> {{log[rowIndex].Date | date: "M/dd/yyyy, hh:mm:ss"}} UTC
+                        </div>
+                        <div><b> Local Time: </b> {{localTime(log[rowIndex].Date)}}
+                        </div>
+                        <div><b> Message: </b>{{log[rowIndex].Message}}
+                        </div>
+                        <div><b> System Log Id: </b> {{log[rowIndex].SystemLogId}}
+                        </div>
+                        <div><b> Machine Name: </b>{{log[rowIndex].MachineName}}
+                        </div>
+                        <div><b> Module: </b>{{log[rowIndex].Module}}
+                        </div>
+                        <div><b> Logger: </b>{{log[rowIndex].Logger}}
+                        </div>
+                        <div><b> Username: </b>{{log[rowIndex].Username}}
+                        </div>
+                        <div><b> CallSite: </b>{{log[rowIndex].CallSite}}
+                        </div>
+                        <div><b> Thread: </b>{{log[rowIndex].Thread}}
+                        </div>
+                        <div>
+                            <b> Stacktrace: </b><span class="align">{{log[rowIndex].Stacktrace}} </span></div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>

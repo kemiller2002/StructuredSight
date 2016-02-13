@@ -57,11 +57,26 @@
   <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
   <ItemGroup>
     <Folder Include="Properties" />
-    <Folder Include="Tables" />
     <Folder Include="Procedures" />
+    <Folder Include="dbo\" />
+    <Folder Include="dbo\Tables\" />
   </ItemGroup>
   <ItemGroup>
-    <Build Include="Tables\LogEntry.sql" />
     <Build Include="Procedures\AddLoggingEntry.sql" />
+    <Build Include="Procedures\MiniProfilersSelect.sql" />
+    <Build Include="dbo\Tables\MiniProfilerTimings.sql" />
+    <Build Include="dbo\Tables\MiniProfilers.sql" />
+    <Build Include="dbo\Tables\MiniProfilerClientTimings.sql" />
+    <Build Include="Procedures\MiniProfilerDataAsOf.sql" />
+    <Build Include="Procedures\SystemLoggingDataAsOf.sql" />
+    <Build Include="Procedures\CallLogEntrySelect.sql" />
+    <Build Include="dbo\Tables\LogEntry.sql" />
+    <Build Include="Procedures\MiniProfilerTimingsSelect.sql" />
+    <Build Include="dbo\Tables\CallLogEntry.sql" />
+    <Build Include="Procedures\CallLogEntryDataAsOf.sql" />
+    <Build Include="dbo\Tables\CallLogEntryType.sql" />
+    <Build Include="Procedures\SystemLoggingSelect.sql" />
+    <Build Include="Procedures\CallLogEntryTypeSelect.sql" />
+    <Build Include="Procedures\MiniProfilerClientTimingsSelect.sql" />
   </ItemGroup>
 </Project>

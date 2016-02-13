@@ -1,0 +1,203 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.table-condensed td:hover {
+    cursor: pointer;
+}
+
+.prev {
+    cursor: pointer;
+}
+
+.next {
+    cursor: pointer;
+}
+
+table, th, td {
+    border-collapse: collapse;
+    padding: 15px;
+    text-align: center;
+    border-radius: 2px; 
+    
+}
+
+.tableHeaders{
+    background-color: #CFE0E9; 
+}
+
+td, th{
+    padding:10px 10px 13px;
+}
+
+
+    table tr:nth-child(odd) {
+        background-color: #f1f1f1;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #ffffff;
+    }
+.liveGraphCheckBox{
+    padding-left: 25px;  
+    padding-top: 25px;
+    float:left; 
+}
+
+.btn {
+    width: 140px;
+}
+
+.checkboxModel.critical1.selected {
+    color:grey; 
+}
+
+select[disabled] {
+   background-color: #CCC;
+}
+
+.legend-padding{
+    padding-top:10px; 
+}
+
+.legend-radiusGreen{
+    background:#5cb85c;
+    padding:5px; 
+    border-radius:5px;
+    color:white; 
+}
+
+.legend-radiusYellow{
+    background:#f0ad4e;
+    padding: 5px;  
+    border-radius:5px; 
+    color:white; 
+}
+
+.legend-radiusRed {
+    background:#d9534f;
+    padding:5px; 
+    border-radius:5px;
+    color:white; 
+}
+.modal-dialog {
+    width: 80%;
+    max-height: 80%;
+    overflow: visible;
+    text-wrap: normal;
+}
+
+#dashboardInputControls {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+}
+
+
+#BeginDateWrapper {
+    float: left;
+}
+
+#EndDateWrapper {
+    float: left;
+    padding-left: 15px;
+}
+
+#tableWrapper {
+    clear: left;
+    margin-top: 50px;
+    min-height: 300px;
+    width:90%; 
+}
+
+#title {
+    font-family: Arial ;
+    color: #000000;
+    margin: 0;
+    padding-top: 15px;
+    line-height: 44px;
+    letter-spacing: -2px;
+    font-weight: bold;
+}
+
+.easterEgg {
+    color: white;
+    float: right;
+}
+
+#chartWrapper {
+    padding-top:10px; 
+    clear: left;
+    width: 95%;
+}
+
+.liLegend {
+    padding-bottom: 5px;
+}
+
+.divLegend {
+    height: 20px;
+    width: 20px;
+    float: left;
+    margin-right: 5px;
+    border-radius: 5px;
+}
+
+.my-legend .legend-title {
+    text-align: left;
+    margin-bottom: 8px;
+    font-weight: bold;
+    font-size: 90%;
+}
+
+.noDurationTimingsHover {
+    cursor: pointer;
+}
+
+.my-legend .legend-scale ul {
+    margin: 0;
+    padding: 0;
+    float: left;
+    list-style: none;
+}
+
+.my-legend .legend-scale ul li {
+     display: block;
+     float: left;
+     width: 50px;
+     margin-bottom: 6px;
+     text-align: center;
+     font-size: 80%;
+     list-style: none;
+    }
+
+.my-legend ul.legend-labels li span {
+    display: block;
+    float: left;
+    height: 15px;
+    width: 50px;
+}
+
+.my-legend .legend-source {
+    font-size: 70%;
+    color: #999;
+    clear: both;
+}
+
+.my-legend a {
+    color: #777;
+}
