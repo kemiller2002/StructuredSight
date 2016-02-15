@@ -20,4 +20,4 @@ RowId
 FROM 
 	MiniProfilers 
 
-	WHERE (Started >= @BeginDate OR @BeginDate IS NULL) AND (Started <= @EndDate OR @EndDate IS NULL)
+	WHERE (Started >= @BeginDate OR @BeginDate IS NULL) AND (Started <= DATEADD(dd, 1, @EndDate) OR @EndDate IS NULL)

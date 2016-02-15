@@ -60,6 +60,7 @@
     <Folder Include="Procedures" />
     <Folder Include="dbo\" />
     <Folder Include="dbo\Tables\" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="Procedures\AddLoggingEntry.sql" />
@@ -79,5 +80,9 @@
     <Build Include="Procedures\CallLogEntryTypeSelect.sql" />
     <Build Include="Procedures\MiniProfilerClientTimingsSelect.sql" />
     <Build Include="dbo\Tables\SystemLogging.sql" />
+    <Build Include="Procedures\CallLogEntryInsert.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Scripts\SystemMonitoringSetup.sql" />
   </ItemGroup>
 </Project>

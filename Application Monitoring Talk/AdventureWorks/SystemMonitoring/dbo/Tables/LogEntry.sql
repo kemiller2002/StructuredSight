@@ -12,6 +12,6 @@
 	,serverName VARCHAR(100)   NULL    
 	,port VARCHAR(100)         NULL   
 	,url VARCHAR(100)         NULL   
-	,exception VARCHAR(200) NULL
+	,exception VARCHAR(500) NULL
 	,Date DATETIME NOT NULL DEFAULT(GETDATE())
 )

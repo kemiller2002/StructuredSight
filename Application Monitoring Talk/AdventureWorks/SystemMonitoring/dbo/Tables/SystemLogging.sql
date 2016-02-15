@@ -11,9 +11,10 @@
         Username VARChAR(100) NULL,
         CallSite VARChAR(500) NULL,
         Thread VARChAR(100) NULL,
-        Exception VARChAR(1000) NULL,
-        Stacktrace VARChAR(1000) NULL,
+        Exception VARChAR(MAX) NULL,
+        Stacktrace VARChAR(MAX) NULL,
         MethodName VARChAR(100) NULL,
         FilePath VARChAR(256) NULL,
-        LineNumber INT NULL
+        LineNumber INT NULL,
+		Date DATETIME DEFAULT(GETUTCDATE())
 )

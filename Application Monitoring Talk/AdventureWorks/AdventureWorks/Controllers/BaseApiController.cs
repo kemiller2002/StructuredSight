@@ -21,7 +21,7 @@ namespace AdventureWorks.Controllers
 
         protected System.Data.Common.DbCommand CreateDbCommand()
         {
-            var connectionString = "Data Source=localhost;Initial Catalog=AdventureWorks2014;Integrated Security=SSPI";
+            var connectionString = Constants.AdventureWorksConnectionString;
             var sqlConnection = new SqlConnection(connectionString);
 
             var connection = new StackExchange.Profiling.Data.ProfiledDbConnection

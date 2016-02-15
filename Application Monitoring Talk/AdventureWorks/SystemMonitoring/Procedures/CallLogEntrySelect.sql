@@ -4,4 +4,4 @@
 
 AS
 	
-		SELECT * FROM CallLogEntry WHERE (Date >= @BeginDate OR @BeginDate IS NULL ) AND (Date <= @EndDate OR @EndDate IS NULL)
+		SELECT * FROM CallLogEntry WHERE (Date >= @BeginDate OR @BeginDate IS NULL ) AND (Date <= DATEADD(dd, 1, @EndDate) OR @EndDate IS NULL)

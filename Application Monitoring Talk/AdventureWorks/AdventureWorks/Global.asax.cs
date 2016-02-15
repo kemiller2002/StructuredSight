@@ -23,7 +23,10 @@ namespace AdventureWorks
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            MiniProfiler.Settings.Storage = new SqlServerStorage("Data Source=localhost;Initial Catalog=SystemMonitoring;Integrated Security=sspi");
+            MiniProfiler.Settings.Storage = new SqlServerStorage(Constants.SystemMonitoringConnectionString);
+
+            GlobalConfiguration.Configuration.MessageHandlers.Add(new MessageLoggingHandler());
+
         }
 
         protected void Application_BeginRequest()
@@ -31,6 +34,9 @@ namespace AdventureWorks
             MiniProfiler.Start();
 
             var identifier = Guid.NewGuid(); 
+
+            HttpContext.Current.Items.Add(Constants.ContextCallKey, identifier);
+
             NLog.GlobalDiagnosticsContext.Set("systemLogId", identifier);
 
             MiniProfiler.Current.Id = identifier;

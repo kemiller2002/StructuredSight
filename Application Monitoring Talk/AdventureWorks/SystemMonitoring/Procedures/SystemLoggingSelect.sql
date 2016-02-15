@@ -3,4 +3,4 @@
 	,@EndDate DATETIME = NULL
 AS
 
-	SELECT * FROM LogEntry WHERE (LogEntry.Date >= @BeginDate OR @BeginDate IS NULL) AND (Date <= @EndDate OR @EndDate IS NULL)
+	SELECT * FROM SystemLogging WHERE (Date >= @BeginDate OR @BeginDate IS NULL) AND (Date <= DATEADD(dd, 1, @EndDate) OR @EndDate IS NULL)

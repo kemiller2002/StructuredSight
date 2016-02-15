@@ -126,10 +126,10 @@ app.controller("myCtrl1", function ($filter, $scope, $http, $timeout) {
              });
 
              //request to get data from the Mini Profiler Client Timings table
-              $http.get(apiMiniProfilerClientTimingsData)
+             /* $http.get(apiMiniProfilerClientTimingsData)
               .success(function (response) {
                   $scope.MiniProfilerClientTimings = response;
-              });
+              });*/
 
               //global variable that calculates the standard deviation of the duration in milliseconds 
               $scope.standard = math.abs((math.std(durationInMilliseconds)));
@@ -298,11 +298,13 @@ app.controller("myCtrl1", function ($filter, $scope, $http, $timeout) {
               }
           );
 
+              /*
               //request data from the Mini Profiler Timings Data table
               $http.get(apiMiniProfilerTimingsData)
              .success(function (response) {
                  $scope.MiniProfilerTimings = response;
              });
+             */
 
 
               //request data from the Mini Profiler Client Timings Data table 

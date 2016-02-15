@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using NLog;
 
 namespace AdventureWorks.Controllers
 {
@@ -32,6 +33,23 @@ namespace AdventureWorks.Controllers
            return "OK";
         }
 
+
+
+        [AcceptVerbs("GET")]
+        [Route("Exception")]
+        public string ThrowException()
+        {
+            try
+            {
+                throw new Exception("This is an example exception.");
+            }
+            catch (Exception ex)
+            {
+                Logger.Log(LogLevel.Error, ex, "Test Exception", null);
+            }
+
+            return "Exception thrown.";
+        }
 
 
 
