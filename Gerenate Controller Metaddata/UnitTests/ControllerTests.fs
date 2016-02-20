@@ -1,20 +1,12 @@
-﻿namespace UnitTests
-
+﻿namespace StructuredSight.Web.Api.Controller.UnitTests
 open NUnit.Common
-namespace StructuredSight.Web.Api.Controller.UnitTests
 
 open NUnit.Framework
 open System.Web.Http
 open System.Web
 open StructuredSight.Web.Api
+open UnitTests
 
-
-    [<RoutePrefix("TestPath")>]
-    type TestController () = 
-        inherit System.Web.Http.ApiController ()
-        
-        [<Route("Test")>]
-        member this.Test() = ""
 
 
     [<TestFixture>]
