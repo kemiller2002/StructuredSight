@@ -25,26 +25,12 @@ namespace AdventureWorks
             {
                 return Guid.Parse(HttpContext.Current.Items[Constants.ContextCallKey].ToString());
             }
-            else
-            {
-                var corrId = Guid.NewGuid();
-                HttpContext.Current.Items.Add(Constants.ContextCallKey, corrId);
 
-                return corrId;
-            }
+            var corrId = Guid.NewGuid();
+            HttpContext.Current.Items.Add(Constants.ContextCallKey, corrId);
+
+            return corrId;
         }
-
-        public static Guid GetParentCallId()
-        {
-            if (HttpContext.Current.Request.Headers[Constants.ContextCallKey] == null)
-            {
-                HttpContext.Current.Request.Headers.Add(Constants.ContextCallKey, Guid.Empty.ToString());
-            }
-
-            var id = HttpContext.Current.Request.Headers[Constants.ContextCallKey];
-            return Guid.Parse(id);
-        }
-
     }
 
     public abstract class MessageHandler : DelegatingHandler
@@ -52,6 +38,7 @@ namespace AdventureWorks
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            //Get the Request Identifier
             var corrId = CallLinking.GetCallGuid();
 
             //C# 6 interpolation instead of using String.Format;

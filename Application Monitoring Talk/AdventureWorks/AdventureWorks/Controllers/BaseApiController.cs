@@ -33,6 +33,7 @@ namespace AdventureWorks.Controllers
             Request.RegisterForDispose(command);
 
             Logger.Log(new LogEventInfo(LogLevel.Error,"Controller","Connection Returned."));
+
             connection.Open();
             return command;
         }

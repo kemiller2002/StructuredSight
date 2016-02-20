@@ -33,19 +33,14 @@ namespace AdventureWorks
         {
             MiniProfiler.Start();
 
-            var identifier = Guid.NewGuid(); 
+            NLog.GlobalDiagnosticsContext.Set("systemLogId", CallLinking.GetCallGuid());
 
-            HttpContext.Current.Items.Add(Constants.ContextCallKey, identifier);
-
-            NLog.GlobalDiagnosticsContext.Set("systemLogId", identifier);
-
-            MiniProfiler.Current.Id = identifier;
-
-            profilerStep = MiniProfiler.Current.Step("Start");
+            MiniProfiler.Current.Id = CallLinking.GetCallGuid();
         }
 
         protected void Application_EndRequest()
         {
+            //Stop also takes an optional boolean to discard results in case you don't want to save them.
             MiniProfiler.Stop();
         }
 

@@ -15,11 +15,11 @@ namespace AdventureWorks.Controllers
     [RoutePrefix("Department")]
     public class DepartmentsController : BaseApiController
     {
-
+        
         [Route("")]
         [AcceptVerbs("GET")]
         public IEnumerable<Department> GetDepartments() =>
-            new HumanResourcesModel(CreateDbCommand).GetDepartments();
+            new HumanResourcesModel(CreateDbCommand).GetDepartments(); //Expression Bodied Member
 
         [Route("Proposed")]
         [AcceptVerbs("Get")]
