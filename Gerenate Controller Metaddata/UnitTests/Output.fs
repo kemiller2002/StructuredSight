@@ -25,4 +25,14 @@ type Output () =
        let json = JsonConvert.SerializeObject(types)
 
        System.Console.WriteLine json
+
+
+    [<Test>]
+    member this.TypeOutputWithNesting () = 
+       let controllerInfo = ControllerInformation.Create typeof<TestControllerWithNesting>
+       let types = ControllerInformation.CreateTypeEntriesForControllers [controllerInfo]
+
+       let json = JsonConvert.SerializeObject(types)
+
+       System.Console.WriteLine json
        
