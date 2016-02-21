@@ -18,4 +18,5 @@ type TestController () =
      inherit System.Web.Http.ApiController ()
         
      [<Route("Test")>]
-     member this.Test() = ""
+     [<AcceptVerbs("post")>]
+     member this.Test() = new TestType()

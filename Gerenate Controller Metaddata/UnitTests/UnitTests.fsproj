@@ -57,6 +57,8 @@
     <Content Include="packages.config" />
     <Compile Include="MethodUnitTests.fs" />
     <Compile Include="VariableTests.fs" />
+    <Compile Include="TypeTests.fs" />
+    <Compile Include="Output.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
