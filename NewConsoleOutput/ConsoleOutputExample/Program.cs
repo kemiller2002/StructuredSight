@@ -158,14 +158,24 @@ namespace ConsoleOutputExample
         {
 
             Console.WriteLine("I am a console message.");
+            var primaryOut = Console.Out;
 
             using (var writer = File.CreateText("C:\\temp\\logfile.txt"))
             {
                 Console.SetOut(writer);
 
                 Console.WriteLine("This is a logged message to the file.");
+
+                Console.SetError(writer);
             }
+
+            Console.SetOut(primaryOut);
+
+            Console.WriteLine("This is logged to the console again.");
+
+            Console.ReadLine();
         }
+
 //new Program();
 
                 //Console.ReadLine();
