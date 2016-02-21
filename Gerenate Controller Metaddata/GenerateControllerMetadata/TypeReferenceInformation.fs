@@ -5,11 +5,8 @@ open StructuredSight
 open System.Web
 
 
-
-
-module VariableInformation =
-    let Create (name:string, oType:Type) = 
-       {
-            Variable.ObjectType = TypeReferenceInformation.Create oType
-            Name = name
-       }
+module TypeReferenceInformation = 
+     let Create (oType:Type) = 
+         {
+             TypeReference.Name = NameInformation.GetName(oType)
+         } 

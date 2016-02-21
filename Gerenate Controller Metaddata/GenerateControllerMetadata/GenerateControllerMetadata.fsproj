@@ -54,9 +54,16 @@
   </Choose>
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
-    <Compile Include="Extensions.fs" />
     <Compile Include="AssemblyInfo.fs" />
-    <Compile Include="Program.fs" />
+    <Compile Include="Extensions.fs" />
+    <Compile Include="Types.fs" />
+    <Compile Include="NameInformation.fs" />
+    <Compile Include="TypeReferenceInformation.fs" />
+    <Compile Include="VariableInformation.fs" />
+    <Compile Include="ParameterInformation.fs" />
+    <Compile Include="TypeInformation.fs" />
+    <Compile Include="MethodInformation.fs" />
+    <Compile Include="ControllerInformation.fs" />
     <None Include="App.config" />
     <Content Include="packages.config" />
   </ItemGroup>
