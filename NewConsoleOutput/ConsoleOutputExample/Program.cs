@@ -159,12 +159,16 @@ namespace ConsoleOutputExample
 
             Console.WriteLine("I am a console message.");
 
+            using (var writer = File.CreateText("C:\\temp\\logfile.txt"))
+            {
+                Console.SetOut(writer);
 
-            //new Program();
-
-            Console.ReadLine();
+                Console.WriteLine("This is a logged message to the file.");
+            }
         }
+//new Program();
 
+                //Console.ReadLine();
         Program()
         {
             ShowExampleFromMainProgram();
