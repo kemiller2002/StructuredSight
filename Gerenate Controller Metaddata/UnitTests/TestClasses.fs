@@ -19,4 +19,4 @@ type TestController () =
         
      [<Route("Test")>]
      [<AcceptVerbs("post")>]
-     member this.Test() = new TestType()
+     member this.Test([<FromBody>] bodyParameter:string) = new TestType()

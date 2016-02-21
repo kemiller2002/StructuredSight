@@ -40,4 +40,13 @@ open UnitTests
             Assert.AreEqual(1, Seq.length ci.Methods)
             Assert.AreEqual("TestType", ciMethod.ReturnType.Value.Name.Name)
             Assert.AreEqual("Test", ciMethod.Route.Value)
-            Assert.AreEqual("Post", (Seq.head ciMethod.Actions))
+            Assert.AreEqual(StructuredSight.Web.Api.Action.Post, (Seq.head ciMethod.Actions))
+
+        
+        [<Test>]
+        member this.GetControllers () = 
+            let testControllers = [typeof<TestController>; typeof<TestType>]
+
+            let controllers = testControllers |> ControllerInformation.FindControllerClasses
+
+            Assert.AreEqual(1, Seq.length controllers)
