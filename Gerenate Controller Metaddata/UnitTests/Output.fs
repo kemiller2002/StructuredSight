@@ -16,3 +16,13 @@ type Output () =
 
        System.Console.WriteLine json
        
+    
+    [<Test>]
+    member this.TypeOutput () = 
+       let controllerInfo = ControllerInformation.Create typeof<TestController>
+       let types = ControllerInformation.CreateTypeEntriesForControllers [controllerInfo]
+
+       let json = JsonConvert.SerializeObject(types)
+
+       System.Console.WriteLine json
+       

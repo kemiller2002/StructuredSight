@@ -57,3 +57,15 @@ module ControllerInformation =
 
     let ConvertControllersInAssembly (assembly:Assembly) = 
         FindAndConvertControllerClasses <| assembly.GetTypes()
+
+
+    let CreateTypeEntriesForControllers (controllers : Controller seq) = 
+        controllers |> 
+        Seq.map(fun x-> x.Methods) |>
+        Seq.concat |>
+        Seq.map(fun x-> seq {
+                                if x.ReturnType.IsSome then yield x.ReturnType.Value
+                                yield! (Seq.map (fun x-> x.Variable.ObjectType) x.Parameters)
+                            }
+                )
+        

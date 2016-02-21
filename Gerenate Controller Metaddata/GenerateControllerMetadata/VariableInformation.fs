@@ -5,8 +5,6 @@ open StructuredSight
 open System.Web
 
 
-
-
 module VariableInformation =
     let Create (name:string, oType:Type) = 
        {

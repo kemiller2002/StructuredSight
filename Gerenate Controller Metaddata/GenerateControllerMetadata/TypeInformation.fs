@@ -15,5 +15,8 @@ module TypeInformation =
     let Create (oType:Type) =
         {
             ObjectType.Name = GetName oType;
-            Properties  = GetProperties oType
+            Properties  = GetProperties oType;
+            GenericType = 
+                oType.GenericTypeArguments |> 
+                Seq.map (TypeReferenceInformation.Create)
         }

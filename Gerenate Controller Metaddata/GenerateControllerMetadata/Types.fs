@@ -14,7 +14,7 @@ type TypeReference = {Name:Name}
 
 type Variable = {ObjectType:TypeReference; Name:string;}
 
-type ObjectType = {Name:Name; Properties : Variable seq}
+type ObjectType = {Name:Name; Properties : Variable seq; GenericType: TypeReference seq}
 
 type Parameter = {Variable:Variable; FromBody:bool; HasDefaultValue:bool}
 
