@@ -37,6 +37,11 @@ namespace ConsoleOutputExample
 
         public override Encoding Encoding { get; }
 
+        /*
+    You'll want to override the rest of the Write, WriteLine, WriteAsync, and WriteLineAsync.
+    Any of these can be called, and if they aren't overridden, then the message will not appear in the logs.
+    */
+
         public override void Write(string value) => WriteEntry(value);
         public override void WriteLine(string value) => WriteEntry(value);
 
