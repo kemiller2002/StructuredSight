@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -16,10 +17,14 @@ namespace ConsoleOutputExample
             Console.WriteLine("I am a console message.");
             var primaryOut = Console.Out;
 
-            using (var stream = new FileStream ("C:\\temp\\log.xml", FileMode.OpenOrCreate))
+            //using (var stream = new FileStream ("C:\\temp\\log.xml", FileMode.OpenOrCreate))
+            using(var connection = new SqlConnection())
             {
-                var writer = new XmlFileWriter(stream);
+                connection.ConnectionString =
+                    "Data Source=localhost;Initial Catalog=SystemMonitoring;Integrated Security=SSPI";
+                connection.Open();
 
+                var writer = new DbWriter(connection);
                 Console.SetOut(writer);
 
                 var p = new Program();
