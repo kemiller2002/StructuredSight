@@ -6,7 +6,7 @@ namespace ConsoleOutputExample
     public class DbWriter : TextWriter
     {
         public override Encoding Encoding { get; }
-
+        
 
     }
 
