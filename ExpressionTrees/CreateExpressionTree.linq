@@ -115,7 +115,7 @@ class Code
 		}
 	}
 	
-	public static Func<int, int, int> CreateStatement (string statement) {
+	public static Func<double, int, double> CreateStatement (string statement) {
 		var statementParts = statement.Split(' ');
 		
 		var tree = ParseStatement(statementParts, null);
@@ -127,7 +127,7 @@ class Code
 		
 		var body = MakeBody(tree, travelParm, travelModifier);
 		
-		return Expression.Lambda<Func<int, int, int>> (body, parameterExpression).Compile();
+		return Expression.Lambda<Func<double, int, double>> (body, parameterExpression).Compile();
 	}
 
 	public static Expression MakeBody
