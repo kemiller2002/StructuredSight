@@ -17,7 +17,6 @@ namespace RegisterForDispose.Controllers
         [AcceptVerbs("Get")]
         public IEnumerable<string> Enumerate()
         {
-
             using (var connection = new SqlConnection())
             //var connection = new SqlConnection();
             {
