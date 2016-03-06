@@ -17,18 +17,18 @@
 
 void Main()
 {
-	var entries = System.IO.File.ReadAllLines("example.config");
-	
-	var keysAndValues = entries.Select(entry => {
+	var dictionary = System.IO.File.ReadAllLines(@"example.config")
+	.Select(entry => {
 		var keyAndValue = entry.Split(',');
 		return new KeyValuePair<string,string>(keyAndValue[0],keyAndValue[1]);
-	});
-
-	keysAndValues.Select
+	})
+	.Select
 		(
-			keyAndValue => new KeyValuePair<string,Func<int,double>>(keyAndValue.Key, )
-		);
+			keyAndValue => new KeyValuePair<string,Func<int,double>>
+			(keyAndValue.Key, Code.CreateStatement(keyAndValue.Value))
+		).ToDictionary(keyAndValue=>keyAndValue.Key, keyAndValue => keyAndValue.Value);
 	
+	dictionary["bus"](2);
 }
 
 
@@ -158,7 +158,7 @@ class Code
 	Expression.Constant("Configuration statement: " + statement));
 
 		var catchBlockCode = Expression.Block(logCatchException, logCatchStatement, 
-			Expression.Rethrow());
+			Expression.Rethrow(typeof(double)));
 
 		var catchBlock = Expression.MakeCatchBlock(typeof(Exception), parameterException ,catchBlockCode,null);
 		
