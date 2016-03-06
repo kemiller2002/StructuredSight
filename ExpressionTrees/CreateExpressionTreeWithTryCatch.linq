@@ -1,8 +1,8 @@
 <Query Kind="Program" />
 
-void Main()
+/*void Main()
 {
-	string code = "distanceToDestination * 4 + 2 * 2";
+	string code = "distanceToDestination * 4 / 0";
 	var output = Code.ParseStatement(code.Split(' '), null);
 	
 	Console.Write("Expected: ");
@@ -13,7 +13,22 @@ void Main()
 	Console.WriteLine(fn(2));
 	
 	Console.WriteLine(output);
+}*/
 
+void Main()
+{
+	var entries = System.IO.File.ReadAllLines("example.config");
+	
+	var keysAndValues = entries.Select(entry => {
+		var keyAndValue = entry.Split(',');
+		return new KeyValuePair<string,string>(keyAndValue[0],keyAndValue[1]);
+	});
+
+	keysAndValues.Select
+		(
+			keyAndValue => new KeyValuePair<string,Func<int,double>>(keyAndValue.Key, )
+		);
+	
 }
 
 
@@ -118,19 +133,63 @@ class Code
 				}
 		}
 	}
-	
-	public static Func<int, double> CreateStatement (string statement) 
+
+	public static Func<int, double> CreateStatement(string statement)
 	{
 		var statementParts = statement.Split(' ');
-		
+
 		var tree = ParseStatement(statementParts, null);
+
+		var travelParm = Expression.Parameter(typeof(int), "distanceToDestination");
+
+
+		var mainBody = CreateBody(tree,travelParm);		
+
+		var parameterException = Expression.Parameter(typeof(Exception));
 		
-		var travelParm = Expression.Parameter(typeof(int), "distanceToDestination");		
-		var parameterExpression = new ParameterExpression[] {travelParm};
 		
+		var logCatchException = Expression.Call(typeof(Console).GetMethod("WriteLine",
+			new Type[1] { typeof(string) }),
+			Expression.Call(parameterException, typeof(Exception).GetMethod("ToString"))
+        );
+
+ var logCatchStatement = Expression.Call(typeof(Console).GetMethod("WriteLine",
+    new Type[1] { typeof(string) }),
+	Expression.Constant("Configuration statement: " + statement));
+
+		var catchBlockCode = Expression.Block(logCatchException, logCatchStatement, 
+			Expression.Rethrow());
+
+		var catchBlock = Expression.MakeCatchBlock(typeof(Exception), parameterException ,catchBlockCode,null);
+		
+		var tryCatch = Expression.TryCatch(mainBody, catchBlock);
+
+		return Expression.Lambda<Func<int, double>>(tryCatch, new ParameterExpression[] {travelParm}).Compile();
+	}
+
+	static Expression CreateBody(EquationPart tree, ParameterExpression travelParm)
+	{
 		var body = MakeBody(tree, travelParm);
+
+		var result = Expression.Variable(typeof(double));
 		
-		return Expression.Lambda<Func<int, double>> (body, parameterExpression).Compile();
+		var infinityCondition = CreateInfinityCondition(result);
+	
+		var assign = Expression.Assign(result, body);
+		var write = Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[1] { typeof(double) }),
+		   result);
+
+		return Expression.Block(new ParameterExpression[] { result }, 
+			assign, write, infinityCondition ,result);
+	}
+
+	static Expression CreateInfinityCondition(ParameterExpression resultToCheck)
+	{
+        var test = Expression.Call(typeof(double).GetMethod("IsInfinity", new Type[1] {typeof(double)}), resultToCheck);
+		var trueBlock = Expression.Throw(Expression.Constant(new Exception("Result is infinity")));
+		
+		return Expression.Condition(test, trueBlock, Expression.Empty());
+		
 	}
 
 	public static Expression MakeBody

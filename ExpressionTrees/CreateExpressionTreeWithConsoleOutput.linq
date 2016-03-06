@@ -118,19 +118,27 @@ class Code
 				}
 		}
 	}
-	
-	public static Func<int, double> CreateStatement (string statement) 
+
+	public static Func<int, double> CreateStatement(string statement)
 	{
 		var statementParts = statement.Split(' ');
-		
+
 		var tree = ParseStatement(statementParts, null);
-		
-		var travelParm = Expression.Parameter(typeof(int), "distanceToDestination");		
-		var parameterExpression = new ParameterExpression[] {travelParm};
-		
+
+		var travelParm = Expression.Parameter(typeof(int), "distanceToDestination");
+		var parameterExpression = new ParameterExpression[] { travelParm };
+
 		var body = MakeBody(tree, travelParm);
+
+		var result = Expression.Variable(typeof(double), "result");
+        
+		var assign = Expression.Assign(result, body);
+		var write = Expression.Call(typeof(Console).GetMethod("WriteLine", new Type[1]{typeof(double)}), 
+		   result);
+
+		var block = Expression.Block(new ParameterExpression[] {result},assign,write,result);
 		
-		return Expression.Lambda<Func<int, double>> (body, parameterExpression).Compile();
+		return Expression.Lambda<Func<int, double>> (block, parameterExpression).Compile();
 	}
 
 	public static Expression MakeBody
