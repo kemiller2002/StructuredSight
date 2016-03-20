@@ -8,16 +8,15 @@
     <form>
     Get Image: <input type="file" id="fileUpload" name="fileUpload"
      onChange="uploadImage(event)" />
+     <div>
+       <img id="displayImage" src="" />
+     </div>
 
-    <img id="displayImage" src="" />
-
-    <div>
-      Imgur Url: <span id="url"></span>
-    </div>
+     <div style="display:none;">
+       Imgur Url: <span id="url"></span>
+      </div>
 
    </form>
-
-   <iframe src="getAccessToken.html" style="display:none;" id="token"></iframe>
 
   <script src="https://code.jquery.com/jquery-2.2.2.min.js"
       integrity="sha256-36cp2Co+/62rEAAYHLmRCPIych47CvdM+uTBJwSzWjI="
@@ -25,10 +24,11 @@
 
   <script src="postImage.js"></script>
 
-  <h3>Image Text:</h3>
+  <h3>Image Text</h3>
   <div><span>Language:</span> <span id="language"></span></div>
   <div><span>Orientation:</span> <span id="orientation"></span></div>
 
+  <h4>Text:</h4>
   <div id="response"></div>
 
   </body>

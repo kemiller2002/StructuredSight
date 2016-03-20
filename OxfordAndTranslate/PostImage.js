@@ -59,10 +59,9 @@ function ocrImage (url, id) {
       let text = response
         .regions
         .map(r=>r.lines
-                  .map(l=>l.words.map(w=>.text).join("<br/>")
+                  .map(l=>l.words.map(w=>w.text).join("<br/>"))
                   .join("<br/><br/>")
-            ).join("<br/><br/>")
-        );
+            ).join("<br/><br/>");
 
       $("#response").html(text);
     },
