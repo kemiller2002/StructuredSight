@@ -5,30 +5,21 @@ function uploadImage (event) {
   var reader = new FileReader();
   reader.onload = function () {
     var dataURL = reader.result;
+    $('#displayImage').attr('src', dataURL);
+
     postImage(dataURL);
   }
+
 
     reader.readAsDataURL(input.files[0]);
 }
 
 
 function postImage (img) {
-  //ocrImage('http://i.imgur.com/t4zpzAu.png');
-  //return;
-
-    $('#displayImage').attr('src', img);
-
-
-    var formData = new FormData($('form')[0]);
-    let clientId = 'ad65ed241de3567';
-    let clientToken = `Client-ID ${clientId}`;
-
-    console.log(clientToken);
-
     $.ajax({
         url: 'https://api.imgur.com/3/image',
         headers: {
-            'Authorization': clientToken
+            'Authorization': 'Client-ID ad65ed241de3567'
         },
         type: 'POST',
         data: {
@@ -37,7 +28,6 @@ function postImage (img) {
         success: function(response) {
           console.log(response);
           ocrImage(response.data.link, response.data.deletehash);
-          $("#url").text(response.data.link);
         }
     });
 }
