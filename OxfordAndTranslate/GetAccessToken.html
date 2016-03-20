@@ -1,0 +1,18 @@
+<html>
+
+<body>
+  <form id="token" action="https://datamarket.accesscontrol.windows.net/v2/OAuth2-13/" method="post">
+    <input type="text" name="grant_type" id="grant_type" value="client_credentials"/>
+    <input type="text" name="client_id" value="OxfordDemoApplication"/>
+    <input type="text" name="client_secret" value="ThisIsTheClientSecret"/>
+    <input type="text" name="scope" value="http://api.microsofttranslator.com"/>
+  </form>
+
+  <script>
+    (function(){
+      document.getElementById("token").submit();
+    } ());
+  </script>
+</body>
+
+</html>
