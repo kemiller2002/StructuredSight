@@ -63,9 +63,7 @@ function ocrImage (url, id) {
 function deleteImage(id){
   let clientId = 'ad65ed241de3567';
   let clientToken = `Client-ID ${clientId}`;
-  return ;
-  alert('not deleteing');
-  
+
   $.ajax({
       url: `https://api.imgur.com/3/image/${id}`,
       headers: {
