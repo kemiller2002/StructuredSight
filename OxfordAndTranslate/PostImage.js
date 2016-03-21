@@ -34,7 +34,7 @@ function postImage (img) {
 
 function ocrImage (url, id) {
   $.ajax({
-    url: 'https://api.projectoxford.ai/vision/v1/ocr?detectOrientation=true',
+    url: 'https://api.projectoxford.ai/vision/v1/ocr',
     headers:{
       'Ocp-Apim-Subscription-Key' : '197a2be138ac41f79ef06255d6db5a7c',
     },
