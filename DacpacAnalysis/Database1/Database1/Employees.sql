@@ -1,0 +1,7 @@
+﻿CREATE TABLE [dbo].[ExampleTable]
+(
+	[Id] INT NOT NULL PRIMARY KEY
+	,FirstName VARCHAR(100) NOT NULL
+	,LastName VARCHAR(100) NOT NULL
+	,PhoneNumber VARCHAR(10) NULL
+)
