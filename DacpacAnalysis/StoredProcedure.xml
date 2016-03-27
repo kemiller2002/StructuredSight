@@ -1,0 +1,57 @@
+<Element Type="SqlProcedure" Name="[dbo].[SelectEmployees]">
+<Property Name="BodyScript">
+<Value>
+<![CDATA[
+SELECT * FROM dbo.Employees
+ WHERE @id = Id OR @Id IS NULL
+]]>
+</Value>
+</Property>
+<Property Name="IsAnsiNullsOn" Value="True"/>
+<Relationship Name="BodyDependencies">
+<Entry>
+<References Name="[dbo].[Employees]"/>
+</Entry>
+<Entry>
+<References Name="[dbo].[SelectEmployees].[@Id]"/>
+</Entry>
+<Entry>
+<References Name="[dbo].[Employees].[Id]"/>
+</Entry>
+</Relationship>
+<Relationship Name="Parameters">
+<Entry>
+<Element Type="SqlSubroutineParameter" Name="[dbo].[SelectEmployees].[@Id]">
+<Property Name="DefaultExpressionScript">
+<Value>
+<![CDATA[ NULL ]]>
+</Value>
+</Property>
+<Relationship Name="Type">
+<Entry>
+<Element Type="SqlTypeSpecifier">
+<Relationship Name="Type">
+<Entry>
+<References ExternalSource="BuiltIns" Name="[int]"/>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+<Relationship Name="Schema">
+<Entry>
+<References ExternalSource="BuiltIns" Name="[dbo]"/>
+</Entry>
+</Relationship>
+<Annotation Type="SysCommentsObjectAnnotation">
+<Property Name="Length" Value="124"/>
+<Property Name="StartLine" Value="1"/>
+<Property Name="StartColumn" Value="1"/>
+<Property Name="HeaderContents" Value="CREATE PROCEDURE [dbo].[SelectEmployees]
+ @Id INT = NULL
+ AS"/>
+</Annotation>
+</Element>
