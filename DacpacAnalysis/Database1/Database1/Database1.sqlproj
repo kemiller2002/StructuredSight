@@ -60,5 +60,10 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="Employees.sql" />
+    <Build Include="SelectEmployees.sql" />
+    <Build Include="EmployeeJoinedName.sql" />
+    <Build Include="EmployeeNameLength.sql" />
+    <Build Include="PhoneNumber.sql" />
+    <Build Include="SSN.sql" />
   </ItemGroup>
 </Project>

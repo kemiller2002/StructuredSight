@@ -1,0 +1,93 @@
+<Element Type="SqlTable" Name="[dbo].[Employees]">
+  <Property Name="IsAnsiNullsOn" Value="True"/>
+    <Relationship Name="Columns">
+      <Entry>
+        <Element Type="SqlSimpleColumn" Name="[dbo].[Employees].[Id]">
+          <Property Name="IsNullable" Value="False"/>
+          <Relationship Name="TypeSpecifier">
+            <Entry>
+              <Element Type="SqlTypeSpecifier">
+                <Relationship Name="Type">
+                  <Entry>
+                    <References ExternalSource="BuiltIns" Name="[int]"/>
+                  </Entry>
+                </Relationship>
+              </Element>
+            </Entry>
+          </Relationship>
+         <AttachedAnnotation Disambiguator="3"/>
+      </Element>
+    </Entry>
+    <Entry>
+      <Element Type="SqlSimpleColumn" Name="[dbo].[Employees].[FirstName]">
+<Property Name="IsNullable" Value="False"/>
+<Relationship Name="TypeSpecifier">
+  <Entry>
+      <Element Type="SqlTypeSpecifier">
+           <Property Name="Length" Value="100"/>
+           <Relationship Name="Type">
+             <Entry>
+                <References ExternalSource="BuiltIns" Name="[varchar]"/>
+              </Entry>
+            </Relationship>
+           </Element>
+          </Entry>
+        </Relationship>
+      </Element>
+    </Entry>
+<Entry>
+<Element Type="SqlSimpleColumn" Name="[dbo].[Employees].[LastName]">
+<Property Name="IsNullable" Value="False"/>
+<Relationship Name="TypeSpecifier">
+<Entry>
+<Element Type="SqlTypeSpecifier">
+<Property Name="Length" Value="100"/>
+<Relationship Name="Type">
+<Entry>
+<References ExternalSource="BuiltIns" Name="[varchar]"/>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+<Entry>
+<Element Type="SqlSimpleColumn" Name="[dbo].[Employees].[PhoneNumber]">
+<Relationship Name="TypeSpecifier">
+<Entry>
+<Element Type="SqlTypeSpecifier">
+<Property Name="Length" Value="10"/>
+<Relationship Name="Type">
+<Entry>
+<References ExternalSource="BuiltIns" Name="[varchar]"/>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+<Entry>
+<Element Type="SqlSimpleColumn" Name="[dbo].[Employees].[SocialSecurityNumber]">
+<Property Name="IsNullable" Value="False"/>
+<Relationship Name="TypeSpecifier">
+<Entry>
+<Element Type="SqlTypeSpecifier">
+<Relationship Name="Type">
+<Entry>
+<References Name="[dbo].[SSN]"/>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+</Element>
+</Entry>
+</Relationship>
+<Relationship Name="Schema">
+<Entry>
+<References ExternalSource="BuiltIns" Name="[dbo]"/>
+</Entry>
+</Relationship>
+</Element>
