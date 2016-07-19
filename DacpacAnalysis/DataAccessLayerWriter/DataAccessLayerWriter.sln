@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccessLayerWriter", "DataAccessLayerWriter.csproj", "{6613CEDB-6B0A-41A2-9839-394086341E3A}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database1", "\\Mac\Home\GitHub\StructuredSight\DacpacAnalysis\Database1\Database1\Database1.sqlproj", "{11BB0C8C-15F0-4388-BAC3-55C106975BE1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6613CEDB-6B0A-41A2-9839-394086341E3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6613CEDB-6B0A-41A2-9839-394086341E3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6613CEDB-6B0A-41A2-9839-394086341E3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6613CEDB-6B0A-41A2-9839-394086341E3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11BB0C8C-15F0-4388-BAC3-55C106975BE1}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
