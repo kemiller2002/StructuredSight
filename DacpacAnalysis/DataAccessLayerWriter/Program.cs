@@ -75,11 +75,8 @@ namespace DataAccessLayerWriter
             var procedureNamespace = nameAttributeValueParts[0].RemoveSquareBrackets();
             var procedureName = nameAttributeValueParts[0].RemoveSquareBrackets();
 
-      
-
             var parameters = node.SelectNodes("d:Relationship[@Name='Parameters']/d:Entry", manager)
                 .Cast<XmlNode>().Select(n => CreateParameterEntry(n, manager));
-
 
             return parameters.Count().ToString();
         }
