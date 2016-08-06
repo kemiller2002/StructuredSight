@@ -3,6 +3,7 @@
 
 
 open System;
+open Newtonsoft;
 
 
 type Distractor = {Text : string; Answer : bool; OriginalPosition:char}
@@ -123,6 +124,10 @@ let main argv =
     printfn "%A" argv
 
     let filePath = @"K:\Personal\TestText\C#Test.txt"
+    let parts = filePath.Split('\\') 
+    let name = parts |> Seq.last
+    let path = parts |> Seq.take(parts.Length - 1) |> (fun x->String.Join("\\", x))
+    let outputName = name.Split('.') |> (fun x-> x.[0] + ".json")
 
     let fileContents = System.IO.File.ReadAllLines filePath; 
 
@@ -130,7 +135,9 @@ let main argv =
 
     let questions = ParseLine list [] |> Seq.map (Unpack)
 
+    let contents = Json.JsonConvert.SerializeObject(questions)
 
+    System.IO.File.WriteAllText(path + outputName, contents)
 
 
 
