@@ -5,7 +5,7 @@
 open System;
 
 
-type Distractor = {Text : string; Answer : bool}
+type Distractor = {Text : string; Answer : bool; OriginalPosition:char}
 
 type QuestionParts =
 | Header of string
@@ -14,7 +14,7 @@ type QuestionParts =
 | Answer of string
 
 
-type Question = {Header:string; Question:string; Answer:string; Distractors:string seq}
+type Question = {Header:string; Question:string; Answer:char seq; Distractors:Distractor seq}
 
 let AddCustomSeperator(seperator:char)(findInString:string)(searchString:string) = 
     searchString.Replace(findInString, seperator.ToString() + findInString);
@@ -31,16 +31,21 @@ let rec RetrieveQuestion(lines : string list) =
                 (l, QuestionParts.Header(h) :: q)            
                 
             | h when h.StartsWith("A.") || h.StartsWith("B.") || h.StartsWith("C.") || h.StartsWith("D.") -> 
-                let sH = 
+                let l, q = RetrieveQuestion t
+
+                let distractors = 
                     h 
                     |> addSeperator "A." 
                     |> addSeperator "B." 
                     |> addSeperator "C." 
                     |> addSeperator "D." 
-                    |> fun x-> x.Split(seperator)
+                    |> fun x-> x.Split([|seperator|], System.StringSplitOptions.RemoveEmptyEntries)
+                    |> Seq.map(fun x->QuestionParts.Distractor x)
+                    |> Seq.toList
+                    |> List.append q
 
-                let l, q = RetrieveQuestion t
-                (l, QuestionParts.Distractor(h) :: q)
+                
+                (l, distractors)
           
             | h when h.Contains("Answer") -> 
                 (t, [QuestionParts.Answer h])
@@ -79,6 +84,13 @@ let JoinNewLine (items) = Join System.Environment.NewLine items
 
 let ParseAnswer (answer:string) = answer.Replace("Explanation", "").Trim().Split(',')
 
+let MakeDistractorEntry (answers: char seq)(data: string) = 
+    let originalPosition = data.Trim() |> Seq.head
+    let text = data |> Seq.skip(2) |> fun x-> String.Join("", x)
+    let answer = Seq.contains originalPosition answers
+
+    {Text = text; Answer = answer;  OriginalPosition = originalPosition}
+
 let Unpack (question:QuestionParts list) = 
     let header = 
         question 
@@ -96,11 +108,13 @@ let Unpack (question:QuestionParts list) =
             |> Array.collect(fun x->x)
             |> Join " "
             |> fun x-> x.Replace("Answer:", "").Replace(":", "").Trim()
+            |> fun x-> x.Split([|' '|], System.StringSplitOptions.RemoveEmptyEntries)
+            |> Seq.map (fun x-> x.[0])
 
     let distractors = 
             question 
             |> List.choose(fun x -> match x with QuestionParts.Distractor(i) -> Some(i) | _-> None) 
-
+            |> List.map(MakeDistractorEntry answer)
 
     {Header = header; Question = questionText; Distractors = distractors; Answer = answer}
 
