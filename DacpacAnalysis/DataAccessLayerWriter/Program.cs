@@ -46,10 +46,10 @@ namespace DataAccessLayerWriter
                      .Where(n => n.Attributes["Type"].Value.Equals("SqlProcedure"))
                      .Select(n => ParseProcedure(n, manager));
 
-                Console.WriteLine(code);
+                code.ToList().ForEach(i=>File.WriteAllText($"{outputFolder}{i.Item1}", i.Item2));
 
-                return code.Any();
-                
+                return true;
+
             }
 
         }
