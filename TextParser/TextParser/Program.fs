@@ -2,6 +2,8 @@
 // See the 'F# Tutorial' project for more help.
 
 
+open System;
+
 
 type Distractor = {Text : string; Answer : bool}
 
@@ -14,7 +16,12 @@ type QuestionParts =
 
 type Question = {Header:string; Question:string; Answer:string; Distractors:string seq}
 
+let AddCustomSeperator(seperator:char)(findInString:string)(searchString:string) = 
+    searchString.Replace(findInString, seperator.ToString() + findInString);
+ 
 let rec RetrieveQuestion(lines : string list) = 
+    let seperator = '~'
+    let addSeperator = AddCustomSeperator seperator
     match lines with 
     | [] -> ([], [])
     | h::t -> 
@@ -24,6 +31,14 @@ let rec RetrieveQuestion(lines : string list) =
                 (l, QuestionParts.Header(h) :: q)            
                 
             | h when h.StartsWith("A.") || h.StartsWith("B.") || h.StartsWith("C.") || h.StartsWith("D.") -> 
+                let sH = 
+                    h 
+                    |> addSeperator "A." 
+                    |> addSeperator "B." 
+                    |> addSeperator "C." 
+                    |> addSeperator "D." 
+                    |> fun x-> x.Split(seperator)
+
                 let l, q = RetrieveQuestion t
                 (l, QuestionParts.Distractor(h) :: q)
           
@@ -62,6 +77,7 @@ let rec GetValue (question:QuestionParts) (part:SearchType) (foundItems:Question
 let Join (seperator:string) (items : string seq) = System.String.Join(seperator, items)
 let JoinNewLine (items) = Join System.Environment.NewLine items
 
+let ParseAnswer (answer:string) = answer.Replace("Explanation", "").Trim().Split(',')
 
 let Unpack (question:QuestionParts list) = 
     let header = 
@@ -72,15 +88,20 @@ let Unpack (question:QuestionParts list) =
         question 
             |> List.choose(fun x -> match x with QuestionParts.Text(i) -> Some(i) | _-> None) 
             |> JoinNewLine 
-  
+    let answer = 
+            question 
+            |> List.choose(fun x -> match x with QuestionParts.Answer(i) -> Some(i) | _-> None)
+            |> List.map ParseAnswer
+            |> List.toArray
+            |> Array.collect(fun x->x)
+            |> Join " "
+            |> fun x-> x.Replace("Answer:", "").Replace(":", "").Trim()
+
     let distractors = 
             question 
             |> List.choose(fun x -> match x with QuestionParts.Distractor(i) -> Some(i) | _-> None) 
 
-    let answer = 
-            question 
-            |> List.choose(fun x -> match x with QuestionParts.Answer(i) -> Some(i) | _-> None) 
-            |> JoinNewLine
+
     {Header = header; Question = questionText; Distractors = distractors; Answer = answer}
 
 [<EntryPoint>]
