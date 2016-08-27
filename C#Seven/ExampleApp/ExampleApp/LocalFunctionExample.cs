@@ -15,5 +15,18 @@ namespace ExampleApp
    
             return Multiply(number);
         }
+
+
+        public string MakeFirstCharacterUpperCase(string name)
+        {
+            string MakeUpperCase()
+            {
+                string JoinString(IEnumerable<char> array) => String.Join("", array);
+                return name[0].ToString().ToUpper() + JoinString(name.Skip(1));
+            }
+
+            return MakeUpperCase();
+        }
+
     }
 }

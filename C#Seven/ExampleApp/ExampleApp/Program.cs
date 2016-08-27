@@ -19,8 +19,6 @@ namespace ExampleApp
 
             var localFunctionMethods = typeof(LocalFunctionExample)
                     .GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
-
-            
         }
 
         public static (string, string) ChangeNameToJenny((string, string) nameAndPhone)
