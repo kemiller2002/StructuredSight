@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ExampleApp
 {
-    class NameAndPhone {
+    struct NameAndPhone {
         public string Name;
         public string Phone; 
     }
@@ -15,12 +15,12 @@ namespace ExampleApp
     {
         static void Main(string[] args)
         {
-            var janePhone = ("Jane", "867-5309");
+            var local = new LocalFunctionExample();
 
-            var janePhoneToo = ("Jane", "867-5309");
+            var localFunctionMethods = typeof(LocalFunctionExample)
+                    .GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
 
-            var equal = janePhone.Equals(janePhoneToo);
-
+            
         }
 
         public static (string, string) ChangeNameToJenny((string, string) nameAndPhone)
