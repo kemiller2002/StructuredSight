@@ -17,7 +17,10 @@ namespace ExampleApp
         {
             var janePhone = ("Jane", "867-5309");
 
-            var jennyPhone = ChangeNameToJenny(janePhone);
+            var janePhoneToo = ("Jane", "867-5309");
+
+            var equal = janePhone.Equals(janePhoneToo);
+
         }
 
         public static (string, string) ChangeNameToJenny((string, string) nameAndPhone)
