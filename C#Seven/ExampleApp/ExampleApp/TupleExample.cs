@@ -13,7 +13,7 @@ namespace ExampleApp
         {
             var nameAndWord = GetWordCount("test,test,test,test,test");
 
-            Console.WriteLine(nameAndWord.)
+            Console.WriteLine(nameAndWord.Item1);
 
         }
 
@@ -21,7 +21,7 @@ namespace ExampleApp
         {
             var messageArray = message.Split(',');
 
-            return (messageArray.Length, messageArray[0]);
+            return (count:messageArray.Length, name:messageArray[0]);
         }
 
         public Tuple<string,string,string> GetNameAddressPhone ()
@@ -46,10 +46,23 @@ namespace ExampleApp
         }
 
 
-        public bool CheckIfItsJenny((string name, string number) nameAndNumber)
+        /*public bool CheckIfItsJenny((string name, string number) nameAndNumber)
         {
             var isJennyResponse = OtherLanguageAssembly.IntegrationAssembly.CheckNameAndPhone(nameAndNumber);
             return isJennyResponse.Item1;
+        }*/
+
+
+        /*public Tuple<string,string> ChangeTupleName(Tuple<string,string> nameAndPhone)
+        {
+            nameAndPhone.Item1 = "Jane"; //Can't set value.
+            return nameAndPhone;
+        }*/
+
+        public static (string, string) ChangeTupleName((string,string) nameAndPhone)
+        {
+            nameAndPhone.Item1 = "Jenny";
+            return nameAndPhone;
         }
     }
 

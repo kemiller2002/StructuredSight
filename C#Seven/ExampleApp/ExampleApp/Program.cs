@@ -6,15 +6,33 @@ using System.Threading.Tasks;
 
 namespace ExampleApp
 {
+    class NameAndPhone {
+        public string Name;
+        public string Phone; 
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
+            var janePhone = ("Jane", "867-5309");
+
+            var jennyPhone = ChangeNameToJenny(janePhone);
         }
 
+        public static (string, string) ChangeNameToJenny((string, string) nameAndPhone)
+        {
+            nameAndPhone.Item1 = "Jenny";
+            return nameAndPhone;
+        }
 
+        public static NameAndPhone ChangeNameToJenny (NameAndPhone nameAndPhone)
+        {
+            nameAndPhone.Name = "Jenny";
 
+            return nameAndPhone;
 
+        }
 
 
 
