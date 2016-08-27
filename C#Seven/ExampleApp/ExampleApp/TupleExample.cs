@@ -49,7 +49,7 @@ namespace ExampleApp
         public bool CheckIfItsJenny((string name, string number) nameAndNumber)
         {
             var isJennyResponse = OtherLanguageAssembly.IntegrationAssembly.CheckNameAndPhone(nameAndNumber);
-            return isJennyResponse.
+            return isJennyResponse.Item1;
         }
     }
 
