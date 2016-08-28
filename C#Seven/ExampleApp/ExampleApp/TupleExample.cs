@@ -30,13 +30,15 @@ namespace ExampleApp
         }
 
 
-        public (string Phone, string Name, string Address) GetNameAdressAndPhoneByNewTuple() => ("867-5309", "Jenny", "NY Ny");
+        
         public string GetName()
         {
             var tuple = GetNameAdressAndPhoneByNewTuple();
 
             return tuple.Name;
-        } 
+        }
+
+        public (string Phone, string Name, string Address) GetNameAdressAndPhoneByNewTuple() => ("867-5309", "Jenny", "NY Ny");
 
         public (string, string) GetNameAndPhoneNumber ()
         {

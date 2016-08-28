@@ -17,15 +17,19 @@ namespace ExampleApp
         }
 
 
-        public string MakeFirstCharacterUpperCase(string name)
+        public string MakeUpperCaseWithLamda  (string lowerName)
         {
-            string MakeUpperCase()
-            {
-                string JoinString(IEnumerable<char> array) => String.Join("", array);
-                return name[0].ToString().ToUpper() + JoinString(name.Skip(1));
-            }
+            Func<string,string> makeUpperCase = (name) => name[0].ToString().ToUpper() + String.Join("", name.Take(1));
 
-            return MakeUpperCase();
+            return makeUpperCase(lowerName);
+        }
+
+
+        public string MakeFirstCharacterUpperCase(string lowerName)
+        {
+            string MakeUpperCase(string name) => name[0].ToString().ToUpper() + String.Join("", name.Take(1));
+
+            return MakeUpperCase(lowerName);
         }
 
     }
