@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExampleApp", "ExampleApp\Ex
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "OtherLanguageAssembly", "OtherLanguageAssembly\OtherLanguageAssembly.fsproj", "{182640F5-92C7-4A0C-9F71-849F6D92B1A1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OutExamples", "OutExamples\OutExamples.csproj", "{D51443D9-C554-4496-ABAD-F1A32AC24D73}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{182640F5-92C7-4A0C-9F71-849F6D92B1A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{182640F5-92C7-4A0C-9F71-849F6D92B1A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{182640F5-92C7-4A0C-9F71-849F6D92B1A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D51443D9-C554-4496-ABAD-F1A32AC24D73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D51443D9-C554-4496-ABAD-F1A32AC24D73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D51443D9-C554-4496-ABAD-F1A32AC24D73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D51443D9-C554-4496-ABAD-F1A32AC24D73}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -15,27 +15,36 @@ namespace ExampleApp
     {
         static void Main(string[] args)
         {
-            var local = new LocalFunctionExample();
+            /* var local = new LocalFunctionExample();
 
-            var localFunctionMethods = typeof(LocalFunctionExample)
-                    .GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+             var localFunctionMethods = typeof(LocalFunctionExample)
+                     .GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
 
-            var iterations = 100000;
-            var localFunctionTime = TimeLocalFunction(iterations);
-            var lambdaFunctionTime = TimeLambda(iterations);
+             var iterations = 100000;
+             var localFunctionTime = TimeLocalFunction(iterations);
+             var lambdaFunctionTime = TimeLambda(iterations);
+
+             Console.WriteLine(localFunctionTime);
+             Console.WriteLine(lambdaFunctionTime);
+             Console.ReadLine();
+             */
+
+            var enumerator = LocalFunctionExample.MakeUpperCaseAndReturnParts("");
+
+            var enumeratorLocalFunction = LocalFunctionExample.MakeUpperCaseAndReturnPartsLocalFunction("");
         }
 
 
         static double TimeLocalFunction (int iterations)
         {
-            var localFunctionExample = new LocalFunctionExample();
+            //var localFunctionExample = new LocalFunctionExample();
             var stopwatch = new System.Diagnostics.Stopwatch();
 
             stopwatch.Start();
 
             for(var ii = 0; ii < iterations; ii++)
             {
-                localFunctionExample.MakeFirstCharacterUpperCase("jenny");    
+                LocalFunctionExample.MakeUpperCaseWithLocalFunction("jenny jenny");    
             }
 
             stopwatch.Stop();
@@ -53,7 +62,7 @@ namespace ExampleApp
 
             for (var ii = 0; ii < iterations; ii++)
             {
-                localFunctionExample.MakeUpperCaseWithLamda("jenny");
+                LocalFunctionExample.MakeUpperCaseWithLambda("jenny jenny");
             }
 
             stopwatch.Stop();
