@@ -6,6 +6,7 @@ using System.Web;
 
 namespace AdventureWorks.Models.DataTransferObjects
 {
+    [Serializable]
     public class Department
     {
 

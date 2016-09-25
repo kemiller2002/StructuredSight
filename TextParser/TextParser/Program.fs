@@ -14,8 +14,8 @@ type QuestionParts =
 | Distractor of string 
 | Answer of string
 
-
 type Question = {Header:string; Question:string; Answer:char seq; Distractors:Distractor seq}
+type Section = { Header : string;  Questions : Question seq}
 
 let AddCustomSeperator(seperator:char)(findInString:string)(searchString:string) = 
     searchString.Replace(findInString, seperator.ToString() + findInString);
@@ -26,7 +26,10 @@ let rec RetrieveQuestion(lines : string list) =
     match lines with 
     | [] -> ([], [])
     | h::t -> 
-            match h.Trim() with 
+            let hTrimmed = h.Trim().Replace("\"Pass Any Exam. Any Time.\"","").Replace("- www.actualtests.com", "")
+
+
+            match hTrimmed with 
             | h when h.Contains("QUESTION NO") -> 
                 let l, q = RetrieveQuestion t
                 (l, QuestionParts.Header(h) :: q)            
@@ -119,11 +122,38 @@ let Unpack (question:QuestionParts list) =
 
     {Header = header; Question = questionText; Distractors = distractors; Answer = answer}
 
+
+type SectionRawData = {Header: string seq; question : string seq}
+type RawDataType = 
+    | Header of string seq
+    | Questions of string seq
+
+
+let rec GetSubSectionContents (lines:string list)(comparer:string -> bool) = 
+         let data,contents  = 
+            match lines.Head with 
+            | h when comparer h -> ([""], lines.Tail)
+            | _ -> GetSubSectionContents (lines.Tail) (comparer)
+
+         (lines.Head :: data, contents)
+
+let rec CreateSections (lines:string list) =
+    match lines.Head with 
+    | h when h.StartsWith("topic",System.StringComparison.OrdinalIgnoreCase) -> 
+        let head = 
+
+    | h when h.StartsWith("question", System.StringComparison.OrdinalIgnoreCase) -> ""
+    | _ -> "" 
+
+
 [<EntryPoint>]
 let main argv = 
     printfn "%A" argv
 
-    let filePath = @"K:\Personal\TestText\C#Test.txt"
+    //let filePath = @"K:\Personal\TestText\C#Test.txt"
+    
+    let filePath = "@K:\personal\testText\Essentials of Developing Windows Store Apps Using C#.txt";
+
     let parts = filePath.Split('\\') 
     let name = parts |> Seq.last
     let path = parts |> Seq.take(parts.Length - 1) |> (fun x->String.Join("\\", x))
@@ -133,9 +163,11 @@ let main argv =
 
     let list = fileContents |> Array.toList
 
-    let questions = ParseLine list [] |> Seq.map (Unpack)
+    let sections = CreateSections list;
 
-    let contents = Json.JsonConvert.SerializeObject(questions)
+    let questions = ParseLine list [] |> Seq.map (Unpack) |> Seq.where(fun q -> not <| Seq.isEmpty q.Distractors)
+
+    let contents = Json.JsonConvert.SerializeObject(questions, Json.Formatting.Indented)
 
     System.IO.File.WriteAllText(path + outputName, contents)
 

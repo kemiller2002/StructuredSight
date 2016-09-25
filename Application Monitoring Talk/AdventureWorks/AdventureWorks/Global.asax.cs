@@ -41,7 +41,7 @@ namespace AdventureWorks
         protected void Application_EndRequest()
         {
             //Stop also takes an optional boolean to discard results in case you don't want to save them.
-            MiniProfiler.Stop();
+            MiniProfiler.Stop(false);
         }
 
 
