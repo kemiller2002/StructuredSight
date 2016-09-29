@@ -43,6 +43,7 @@ let rec RetrieveQuestion(lines : string list) =
                     |> addSeperator "B." 
                     |> addSeperator "C." 
                     |> addSeperator "D." 
+                    |> addSeperator "E."
                     |> fun x-> x.Split([|seperator|], System.StringSplitOptions.RemoveEmptyEntries)
                     |> Seq.map(fun x->QuestionParts.Distractor x)
                     |> Seq.toList
@@ -129,22 +130,51 @@ type RawDataType =
     | Questions of string seq
 
 
-let rec GetSubSectionContents (lines:string list)(comparer:string -> bool) = 
-         let data,contents  = 
-            match lines.Head with 
-            | h when comparer h -> ([""], lines.Tail)
-            | _ -> GetSubSectionContents (lines.Tail) (comparer)
+let LookFor (word:string)(search:string) = 
+    search.StartsWith(word,  System.StringComparison.OrdinalIgnoreCase)
 
-         (lines.Head :: data, contents)
+let rec GetSubSectionContents (lines:string list)(comparer:string -> bool) = 
+
+        if Seq.isEmpty lines then 
+            ([],[])
+        else 
+            match lines.Head.Trim() with 
+            | h when comparer h -> ([], lines)
+            | h -> let d, c = GetSubSectionContents (lines.Tail) (comparer)
+                   (h :: d, c)
+
+type SectionBreakdown =
+| Header of string seq
+| Questions of string seq
+
+type SectionDesignation = Header | Questions
 
 let rec CreateSections (lines:string list) =
-    match lines.Head with 
-    | h when h.StartsWith("topic",System.StringComparison.OrdinalIgnoreCase) -> 
-        let head = 
 
-    | h when h.StartsWith("question", System.StringComparison.OrdinalIgnoreCase) -> ""
-    | _ -> "" 
+    let lookQuestion = LookFor "question"
+    let lookTopic = LookFor "topic"
 
+
+    let lookType = 
+        match lines.Head.Trim() with 
+        | h when lookTopic h -> (SectionDesignation.Header, lookQuestion)
+        | h when lookQuestion h -> (SectionDesignation.Questions, lookTopic)
+
+    let section, predicate = lookType
+    let sectionPart, remainingLines = GetSubSectionContents(lines) predicate
+
+    let sectionPartWithDesignation = 
+        if section = SectionDesignation.Header then SectionBreakdown.Header sectionPart 
+        else SectionBreakdown.Questions sectionPart    
+
+    if(Seq.isEmpty remainingLines) then 
+        [sectionPartWithDesignation]
+    else
+        sectionPartWithDesignation :: CreateSections(remainingLines)
+
+
+let ParseQuestion (list : string list) = 
+    ParseLine list [] |> Seq.map (Unpack) |> Seq.where(fun q -> not <| Seq.isEmpty q.Distractors)
 
 [<EntryPoint>]
 let main argv = 
@@ -152,7 +182,8 @@ let main argv =
 
     //let filePath = @"K:\Personal\TestText\C#Test.txt"
     
-    let filePath = "@K:\personal\testText\Essentials of Developing Windows Store Apps Using C#.txt";
+    let filePath = @"K:\personal\testText\Essentials of Developing Windows Store Apps Using C#.txt";
+
 
     let parts = filePath.Split('\\') 
     let name = parts |> Seq.last
@@ -165,7 +196,7 @@ let main argv =
 
     let sections = CreateSections list;
 
-    let questions = ParseLine list [] |> Seq.map (Unpack) |> Seq.where(fun q -> not <| Seq.isEmpty q.Distractors)
+     //parse into questions and sections -> use ParseQuestion. 
 
     let contents = Json.JsonConvert.SerializeObject(questions, Json.Formatting.Indented)
 
