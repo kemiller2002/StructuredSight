@@ -4,9 +4,9 @@
 
 open System;
 open Newtonsoft;
+open System.Runtime.Serialization;
 
-
-type Distractor = {Text : string; Answer : bool; OriginalPosition:char}
+type Distractor = {[<field: DataMember(Name="text")>]Text : string; [<field: DataMember(Name="answer")>]Answer : bool; [<field: DataMember(Name="originalPosition")>]OriginalPosition:char}
 
 type QuestionParts =
 | Header of string
@@ -14,8 +14,10 @@ type QuestionParts =
 | Distractor of string 
 | Answer of string
 
-type Question = {Header:string; Question:string; Answer:char seq; Distractors:Distractor seq}
-type Section = { Header : string;  Questions : Question seq}
+type Question = {[<field: DataMember(Name="header")>]Header:string; [<field: DataMember(Name="question")>]Question:string; [<field: DataMember(Name="answer")>]Answer:char seq; 
+                    [<field: DataMember(Name="distractors")>]Distractors:Distractor seq}
+
+type Section = { [<field: DataMember(Name="header")>]Header : string;  [<field: DataMember(Name="questions")>]Questions : Question seq}
 
 let AddCustomSeperator(seperator:char)(findInString:string)(searchString:string) = 
     searchString.Replace(findInString, seperator.ToString() + findInString);
@@ -147,6 +149,10 @@ type SectionBreakdown =
 | Header of string seq
 | Questions of string seq
 
+type SectionBreakdownParsed = 
+| Header of string
+| Question of Question seq
+
 type SectionDesignation = Header | Questions
 
 let rec CreateSections (lines:string list) =
@@ -172,9 +178,18 @@ let rec CreateSections (lines:string list) =
     else
         sectionPartWithDesignation :: CreateSections(remainingLines)
 
-
 let ParseQuestion (list : string list) = 
     ParseLine list [] |> Seq.map (Unpack) |> Seq.where(fun q -> not <| Seq.isEmpty q.Distractors)
+
+let MapParts(section: SectionBreakdown) = 
+    match section with 
+    | SectionBreakdown.Header(h) -> SectionBreakdownParsed.Header <| String.Join(System.Environment.NewLine, h)
+    | SectionBreakdown.Questions(q) -> q |> Seq.toList |> ParseQuestion |> SectionBreakdownParsed.Question
+
+
+
+let MakeSectionBreakDown
+
 
 [<EntryPoint>]
 let main argv = 
@@ -182,7 +197,9 @@ let main argv =
 
     //let filePath = @"K:\Personal\TestText\C#Test.txt"
     
-    let filePath = @"K:\personal\testText\Essentials of Developing Windows Store Apps Using C#.txt";
+    //let filePath = @"K:\personal\testText\Essentials of Developing Windows Store Apps Using C#.txt";
+
+    let filePath = @"C:\Projects\test pdfs\70-484.txt";
 
 
     let parts = filePath.Split('\\') 
@@ -194,13 +211,14 @@ let main argv =
 
     let list = fileContents |> Array.toList
 
-    let sections = CreateSections list;
+    let sections = CreateSections list |> Seq.map MapParts;
 
-     //parse into questions and sections -> use ParseQuestion. 
+    
 
     let contents = Json.JsonConvert.SerializeObject(questions, Json.Formatting.Indented)
+    let outputfile = sprintf "%s\%s"path outputName
 
-    System.IO.File.WriteAllText(path + outputName, contents)
+    System.IO.File.WriteAllText(outputfile, contents)
 
 
 
