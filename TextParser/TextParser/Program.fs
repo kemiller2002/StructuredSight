@@ -187,9 +187,25 @@ let MapParts(section: SectionBreakdown) =
     | SectionBreakdown.Questions(q) -> q |> Seq.toList |> ParseQuestion |> SectionBreakdownParsed.Question
 
 
+let ConvertSectionPartToArray (sections: SectionBreakdownParsed list) = 
+    if List.isEmpty sections then (Seq.empty<Question>, List.empty<SectionBreakdownParsed>)
+    else 
+        match sections.Head with 
+        | SectionBreakdownParsed.Question(q) -> (q, sections.Tail)
+        | SectionBreakdownParsed.Header(h) -> (Seq.empty<Question>, sections.Tail) 
 
-let MakeSectionBreakDown
+let rec MakeSectionBreakdown(sections: SectionBreakdownParsed list) = 
+    if List.isEmpty sections then []
+    else 
+        let section, remainingSections = 
+            match sections.Head with 
+            | SectionBreakdownParsed.Header(h) -> 
+                        let questions, remainingSections = ConvertSectionPartToArray sections.Tail
+                        ({Header = h; Questions = questions }, remainingSections)
+            | SectionBreakdownParsed.Question(q) -> 
+                        ({Header = ""; Questions = q}, sections.Tail)
 
+        section :: MakeSectionBreakdown remainingSections
 
 [<EntryPoint>]
 let main argv = 
@@ -211,11 +227,11 @@ let main argv =
 
     let list = fileContents |> Array.toList
 
-    let sections = CreateSections list |> Seq.map MapParts;
+    let sections = CreateSections list |> Seq.map MapParts |> Seq.toList;
 
-    
+    let sectionsWithQuestions = MakeSectionBreakdown sections
 
-    let contents = Json.JsonConvert.SerializeObject(questions, Json.Formatting.Indented)
+    let contents = Json.JsonConvert.SerializeObject(sectionsWithQuestions, Json.Formatting.Indented)
     let outputfile = sprintf "%s\%s"path outputName
 
     System.IO.File.WriteAllText(outputfile, contents)
