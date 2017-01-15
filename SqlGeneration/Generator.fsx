@@ -7,7 +7,7 @@
         
         member x.FormatName = sprintf "[%s]" x.FieldName
 
-let Notify (message:string) = sprintf "RAISERROR('%s', 0, 0) WITH NOWAIT" message
+let Notify (message:string) = sprintf "RAISERROR('%s', 0, 0) WITH NOWAIT" message.Replace("'", "''")
 
 let GenerateComparison (field:Entry) = 
     sprintf "%s=%s" field.FormatName field.FormatValue
