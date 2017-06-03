@@ -13,7 +13,7 @@ namespace ExamplesDotNetFramework
         {
             string jennysNumber = "867-5309";
 
-           Console.WriteLine(jennysNumber is string);
+            Console.WriteLine(jennysNumber is string);
         }
 
         public static void ShowIsTypeWithVar()

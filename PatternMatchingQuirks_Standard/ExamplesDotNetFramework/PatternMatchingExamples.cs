@@ -8,12 +8,20 @@ namespace ExamplesDotNetFramework
 {
     class PatternMatchingExamples
     {
-        static void NullExample ()
+        public static void NullExample ()
         {
-            string jennysNumber = "867-5309";
+            string jennysNumber = null; //"867-5309";
 
             switch (jennysNumber)
             {
+
+                case string s when (s is null):
+                    Console.WriteLine("It's a string and it's null");
+                break;
+
+                case var s when (s is null):
+                    Console.WriteLine("It doesn't know what type it is, but it knows its null");
+                break;
 
                 case null:
                     Console.WriteLine("There is no Jenny's Number");
@@ -21,11 +29,7 @@ namespace ExamplesDotNetFramework
                 case string s:
                     Console.WriteLine("Well at least it is a string");
                     break;
-
-
             }
-
-
         }
 
 

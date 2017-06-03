@@ -12,22 +12,24 @@ namespace ExamplesDotNetFramework
         static void Main(string[] args)
         {
             Execute(IsExamples.ShowIsType);
-            Execute(IsExamples.ShowIsTypeWithVar);
-            Execute(IsExamples.ShowIsTypeNull);
-            Execute(IsExamples.ShowIsTypeWithQuestion);
-            Execute(IsExamples.ShowIsTypeWithQuestionWithParentheses);
-
+           // Execute(IsExamples.ShowIsTypeWithVar);
+           // Execute(IsExamples.ShowIsTypeNull);
+           // Execute(IsExamples.ShowIsTypeWithQuestion);
+           // Execute(IsExamples.ShowIsTypeWithQuestionWithParentheses);
+           // Execute(PatternMatchingExamples.NullExample);
 
             Console.ReadLine();
         }
 
         static void Execute (Action method)
         {
-            Console.WriteLine("Starting  : " + method.Method.Name);
+            Console.WriteLine("***** Starting  : " + method.Method.Name + " *****");
+            Console.WriteLine();
 
             method();
 
-            Console.WriteLine("Ending : " + method.Method.Name);
+            Console.WriteLine();
+            Console.WriteLine("***** Ending : " + method.Method.Name + " *****");
             Console.WriteLine(System.Environment.NewLine);
         }
 
