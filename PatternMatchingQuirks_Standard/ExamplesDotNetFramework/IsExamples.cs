@@ -38,6 +38,13 @@ namespace ExamplesDotNetFramework
             Console.WriteLine("What is Jenny's Number? " + jennysNumber is string);
         }
 
+        public static void ShowIsTypeWithQuestionFlipped()
+        {
+            string jennysNumber = "867-5309";
+
+            Console.WriteLine((jennysNumber is string) + " What is Jenny's Number? ");
+        }
+
         public static void ShowIsTypeWithQuestionWithParentheses()
         {
             string jennysNumber = "867-5309";
