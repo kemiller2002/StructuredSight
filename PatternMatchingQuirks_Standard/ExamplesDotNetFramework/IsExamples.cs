@@ -31,6 +31,13 @@ namespace ExamplesDotNetFramework
             Console.WriteLine(jennysNumber is string);
         }
 
+        public static void ShowCanDetermineNull ()
+        {
+            string jennysNumber = null;
+
+            Console.WriteLine(jennysNumber is null);
+        }
+
         public static void ShowIsTypeWithQuestion ()
         {
             string jennysNumber = "867-5309";

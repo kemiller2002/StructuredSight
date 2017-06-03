@@ -11,13 +11,15 @@ namespace ExamplesDotNetFramework
     {
         static void Main(string[] args)
         {
-           // Execute(IsExamples.ShowIsType);
-           // Execute(IsExamples.ShowIsTypeWithVar);
-           // Execute(IsExamples.ShowIsTypeNull);
-            //Execute(IsExamples.ShowIsTypeWithQuestion);
+            // Execute(IsExamples.ShowIsType);
+            // Execute(IsExamples.ShowIsTypeWithVar);
+            // Execute(IsExamples.ShowIsTypeNull);
+            // Execute(IsExamples.ShowIsTypeWithQuestion);
             // Execute(IsExamples.ShowIsTypeWithQuestionWithParentheses);
-            Execute(IsExamples.ShowIsTypeWithQuestionFlipped);
-           // Execute(PatternMatchingExamples.NullExample);
+            // Execute(IsExamples.ShowIsTypeWithQuestionFlipped);
+            // Execute(PatternMatchingExamples.NullExample);
+            Execute(IsExamples.ShowCanDetermineNull);
+            
 
             Console.ReadLine();
         }
