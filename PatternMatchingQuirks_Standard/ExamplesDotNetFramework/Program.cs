@@ -11,9 +11,9 @@ namespace ExamplesDotNetFramework
     {
         static void Main(string[] args)
         {
-            Execute(IsExamples.ShowIsType);
+           // Execute(IsExamples.ShowIsType);
            // Execute(IsExamples.ShowIsTypeWithVar);
-           // Execute(IsExamples.ShowIsTypeNull);
+            Execute(IsExamples.ShowIsTypeNull);
            // Execute(IsExamples.ShowIsTypeWithQuestion);
            // Execute(IsExamples.ShowIsTypeWithQuestionWithParentheses);
            // Execute(PatternMatchingExamples.NullExample);
