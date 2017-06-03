@@ -47,7 +47,6 @@ namespace ExamplesDotNetFramework
 
         public static void ShowIsTypeWithInt ()
         {
-
             int jennysNumber = 8675309;
 
             Console.WriteLine("What is Jenny's Number? " + jennysNumber is int);
