@@ -49,9 +49,44 @@ namespace ExamplesDotNetFramework
 
             }
         }
-         
-         
 
+        public static void VarCase()
+        {
+            String jennysNumber = null;
+
+            switch (jennysNumber)
+            {
+                case string s:
+                    Console.WriteLine("This is a string");
+                    break;
+                case var o:
+                    Console.WriteLine("var option has been hit. Is its type string?");
+                    Console.WriteLine(o is string);
+                    break;
+                default:
+                    Console.WriteLine("This is the default case");
+                    break;
+            }
+        }
+
+        public static void ObjectCase()
+        {
+            Object jennysNumber = null;
+
+            switch (jennysNumber)
+            {
+                case string s:
+                    Console.WriteLine("This is a string");
+                    break;
+                case Object o when (o is null):
+                    Console.WriteLine("var option has been hit. It its type string?");
+                    Console.WriteLine(o is string);
+                    break;
+                default:
+                    Console.WriteLine("This is the default case");
+                    break;
+            }
+        }
 
 
     }
