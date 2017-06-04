@@ -28,33 +28,29 @@ namespace ExamplesDotNetFramework
             }
         }
 
-        /*
+        
          
-                public static void NullExample ()
+        public static void NullWithObjectExample ()
         {
-            string jennysNumber = null; //"867-5309";
+            Object jennysNumber = null;
 
             switch (jennysNumber)
             {
 
-                case string s when (s is null):
-                    Console.WriteLine("It's a string and it's null");
-                break;
-
-                case var s when (s is null):
-                    Console.WriteLine("It doesn't know what type it is, but it knows its null");
-                break;
-
-                case null:
-                    Console.WriteLine("There is no Jenny's Number");
-                    break;
                 case string s:
-                    Console.WriteLine("Well at least it is a string");
-                    break;
+                    Console.WriteLine("This is a string");
+                break;
+                case Object o:
+                    Console.WriteLine("It's an object");
+                break;
+                case null:
+                    Console.WriteLine("This is the null case");
+                break;
+
             }
         }
          
-         */
+         
 
 
 
