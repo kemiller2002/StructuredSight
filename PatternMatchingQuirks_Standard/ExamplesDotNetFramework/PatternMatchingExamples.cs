@@ -10,6 +10,28 @@ namespace ExamplesDotNetFramework
     {
         public static void NullExample ()
         {
+            string jennysNumber = null;
+
+            switch (jennysNumber)
+            {
+                case string s:
+                    Console.WriteLine("It's a string and it's null");
+                break;
+
+                case null:
+                    Console.WriteLine("There is no Jenny's Number");
+                    break;
+
+                default:
+                    Console.WriteLine("This is the default case.");
+                    break;
+            }
+        }
+
+        /*
+         
+                public static void NullExample ()
+        {
             string jennysNumber = null; //"867-5309";
 
             switch (jennysNumber)
@@ -31,6 +53,8 @@ namespace ExamplesDotNetFramework
                     break;
             }
         }
+         
+         */
 
 
 

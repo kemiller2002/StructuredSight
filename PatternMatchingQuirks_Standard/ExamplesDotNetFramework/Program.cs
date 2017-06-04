@@ -17,8 +17,8 @@ namespace ExamplesDotNetFramework
             // Execute(IsExamples.ShowIsTypeWithQuestion);
             // Execute(IsExamples.ShowIsTypeWithQuestionWithParentheses);
             // Execute(IsExamples.ShowIsTypeWithQuestionFlipped);
-            // Execute(PatternMatchingExamples.NullExample);
-            Execute(IsExamples.ShowCanDetermineNull);
+             Execute(PatternMatchingExamples.NullExample);
+            //Execute(IsExamples.ShowCanDetermineNull);
             
 
             Console.ReadLine();
