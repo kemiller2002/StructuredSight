@@ -50,6 +50,22 @@ namespace ExamplesDotNetFramework
             }
         }
 
+        public static void ExplicitCast()
+        {
+            String jennysNumber = null;
+
+            switch ((string) jennysNumber)
+            {
+                case string s:
+                    Console.WriteLine("This is a string");
+                    break;
+                default:
+                    Console.WriteLine("This is the default case");
+                    break;
+            }
+        }
+
+
         public static void VarCase()
         {
             String jennysNumber = null;
@@ -59,7 +75,7 @@ namespace ExamplesDotNetFramework
                 case string s:
                     Console.WriteLine("This is a string");
                     break;
-                case var o:
+                case var o when (o != null):
                     Console.WriteLine("var option has been hit. Is its type string?");
                     Console.WriteLine(o is string);
                     break;
@@ -86,6 +102,25 @@ namespace ExamplesDotNetFramework
                     Console.WriteLine("This is the default case");
                     break;
             }
+        }
+
+        public static void ObjectOrString ()
+        {
+            Object jennysNumber = "867-5309";
+
+            switch (jennysNumber)
+            {
+                case string s:
+                    Console.WriteLine("This is a string");
+                    break;
+                case Object o:
+                    Console.WriteLine("This is an object");
+                    break;
+                default:
+                    Console.WriteLine("This is the default case");
+                    break;
+            }
+
         }
 
 

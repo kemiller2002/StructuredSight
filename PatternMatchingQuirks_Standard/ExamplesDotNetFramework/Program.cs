@@ -53,8 +53,8 @@ namespace ExamplesDotNetFramework
 
         static void Main(string[] args)
         {
-            //Execute(BaseExampleIsString);
-            Execute(BaseExampleNull);
+            // Execute(BaseExampleIsString);
+            // Execute(BaseExampleNull);
             // Execute(IsExamples.ShowIsType);
             // Execute(IsExamples.ShowIsTypeWithVar);
             // Execute(IsExamples.ShowIsTypeNull);
@@ -64,10 +64,10 @@ namespace ExamplesDotNetFramework
             // Execute(PatternMatchingExamples.NullExample);
             // Execute(PatternMatchingExamples.NullWithObjectExample);
             // Execute(PatternMatchingExamples.VarCase);
-            //Execute(PatternMatchingExamples.ObjectCase);
-
-            //Execute(IsExamples.ShowCanDetermineNull);
-            
+            // Execute(PatternMatchingExamples.ObjectCase);
+            // Execute(PatternMatchingExamples.ExplicitCast);
+            // Execute(IsExamples.ShowCanDetermineNull);
+            Execute(PatternMatchingExamples.ObjectOrString);
 
             Console.ReadLine();
         }
