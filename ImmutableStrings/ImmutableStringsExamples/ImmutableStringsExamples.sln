@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2009
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmutableStringsExamples", "ImmutableStringsExamples.csproj", "{1EC786B6-AC12-4EFB-B71E-5D6FE88C2557}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ImmutableStringTests", "..\ImmutableStringTests\ImmutableStringTests.csproj", "{B27C4B98-9E22-46C8-A918-18C2B40CF747}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecondLibraryOfSeasonsGreetings", "SecondLibraryOfSeasonsGreetings\SecondLibraryOfSeasonsGreetings.csproj", "{EF84832D-B7BE-416E-8844-5E91F98DCB3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1EC786B6-AC12-4EFB-B71E-5D6FE88C2557}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC786B6-AC12-4EFB-B71E-5D6FE88C2557}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC786B6-AC12-4EFB-B71E-5D6FE88C2557}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC786B6-AC12-4EFB-B71E-5D6FE88C2557}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B27C4B98-9E22-46C8-A918-18C2B40CF747}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B27C4B98-9E22-46C8-A918-18C2B40CF747}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B27C4B98-9E22-46C8-A918-18C2B40CF747}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B27C4B98-9E22-46C8-A918-18C2B40CF747}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF84832D-B7BE-416E-8844-5E91F98DCB3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF84832D-B7BE-416E-8844-5E91F98DCB3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF84832D-B7BE-416E-8844-5E91F98DCB3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF84832D-B7BE-416E-8844-5E91F98DCB3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {67E142AF-7982-4DA4-9421-6832D73BD56A}
+	EndGlobalSection
+EndGlobal
