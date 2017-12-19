@@ -75,16 +75,54 @@ namespace ImmutableStringTests
         [TestMethod]
         public void MutateLocalCopyOfStringInOtherMethod()
         {
+            var secondInstance = new ImmutableStringsExample();
+            var returnCopyPreRun = secondInstance.ReturnLocalCopyOfSeaonsGreetings();
+            secondInstance.ReturnLocalCopyOfSeaonsGreetings();
+
+            ImmutableStringsExample.ReturnLocalCopyOfSeaonsGreetingsFromStaticMethod();
+
             var immutableStrings = new ImmutableStringsExample();
             immutableStrings.MutateSeasonsGreetingsString();
 
-            var secondInstance = new ImmutableStringsExample();
+            //var secondInstance = new ImmutableStringsExample();
+            Console.WriteLine(
+                $"Second instance return from method pre modification: {returnCopyPreRun}");
 
             Console.WriteLine(
                 $"Second instance return from method: {secondInstance.ReturnLocalCopyOfSeaonsGreetings()}");
 
+
             Console.WriteLine(
                 $"Static method variable: " +
+                $"{ImmutableStringsExample.ReturnLocalCopyOfSeaonsGreetingsFromStaticMethod()}");
+        }
+
+
+        [TestMethod]
+        public void MutateStaticString()
+        {
+            var immutableStrings = new ImmutableStringsExample();
+
+            immutableStrings.MutateSeasonsGreetingsString();
+
+            Console.WriteLine(
+                $"Static method variable: " +
+                $"{ImmutableStringsExample.ReturnLocalCopyOfSeaonsGreetingsFromStaticMethod()}");
+        }
+
+        [TestMethod]
+        public void MutateStaticStringCallMethodTwice()
+        {
+            var immutableStrings = new ImmutableStringsExample();
+
+            Console.WriteLine(
+                $"Static method variable first call: " +
+                $"{ImmutableStringsExample.ReturnLocalCopyOfSeaonsGreetingsFromStaticMethod()}");
+
+            immutableStrings.MutateSeasonsGreetingsString();
+
+            Console.WriteLine(
+                $"Static method variable second call: " +
                 $"{ImmutableStringsExample.ReturnLocalCopyOfSeaonsGreetingsFromStaticMethod()}");
         }
 
@@ -109,6 +147,21 @@ namespace ImmutableStringTests
                     StaticSeasonsGreetings}");
 
         }
+
+
+        [TestMethod]
+        public void InstaniateSecondObjectAndCheckSeasonsGreetingString()
+        {
+            var immutableStrings = new ImmutableStringsExample();
+
+            Console.WriteLine(immutableStrings.ReturnLocalCopyOfSeaonsGreetings());
+
+            immutableStrings.MutateSeasonsGreetingsString();
+
+            var immutableStringsSecondInstance = new ImmutableStringsExample();
+            Console.WriteLine(immutableStringsSecondInstance.ReturnLocalCopyOfSeaonsGreetings());
+        }
+
 
     }
 }
